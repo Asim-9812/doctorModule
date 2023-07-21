@@ -42,6 +42,11 @@ class ColorManager {
   static Color yellowFellow = HexColor.fromHex('#FFD090');
   static Color brightPink = HexColor.fromHex('#FCCBFF');
   static Color blueContainer = HexColor.fromHex('#A8E1FF');
+  static Color goldContainer = HexColor.fromHex('#B8994A').withOpacity(0.8);
+  static Color silverContainer = HexColor.fromHex('#949087').withOpacity(0.6);
+  static Color premiumContainer = HexColor.fromHex('#BA7A7A').withOpacity(0.8);
+  static Color trialContainer = HexColor.fromHex('#261D1D').withOpacity(0.8);
+  static Color blackContainer = HexColor.fromHex('#1A1717');
 }
 
 extension HexColor on Color {

@@ -156,6 +156,8 @@ dependencies:
   #workmanager:
   workmanager: ^0.5.1
 
+  #shimmer:
+  shimmer: ^3.0.0
 
 
 

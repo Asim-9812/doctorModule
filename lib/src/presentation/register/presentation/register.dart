@@ -11,6 +11,7 @@ import 'package:medical_app/src/app/main_page.dart';
 import 'package:medical_app/src/presentation/login/presentation/login_page.dart';
 
 import '../../dashboard/presentation/home_page.dart';
+import '../../subscription-plan/presentation/subscription_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -362,7 +363,7 @@ class _RegisterPageState extends State<RegisterPage> {
           height: 18.h,
         ),
         ElevatedButton(
-          onPressed: ()=>Get.to(()=>MainPage(),transition: Transition.fade),
+          onPressed: ()=>Get.to(()=>SubscriptionPage(),transition: Transition.fade),
           style: TextButton.styleFrom(
               backgroundColor: ColorManager.primary,
               foregroundColor: Colors.white,
@@ -511,7 +512,7 @@ class _RegisterPageState extends State<RegisterPage> {
           height: 50.h,
         ),
         ElevatedButton(
-          onPressed: ()=>Get.to(()=>MainPage(),transition: Transition.fade),
+          onPressed: ()=>Get.to(()=>SubscriptionPage(),transition: Transition.fade),
           style: TextButton.styleFrom(
               backgroundColor: ColorManager.primary,
               foregroundColor: Colors.white,
@@ -637,7 +638,7 @@ class _RegisterPageState extends State<RegisterPage> {
           height: 50.h,
         ),
         ElevatedButton(
-          onPressed: ()=>Get.to(()=>MainPage(),transition: Transition.fade),
+          onPressed: ()=>Get.to(()=>SubscriptionPage(),transition: Transition.fade),
           style: TextButton.styleFrom(
               backgroundColor: ColorManager.primary,
               foregroundColor: Colors.white,

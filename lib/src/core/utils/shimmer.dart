@@ -70,3 +70,5 @@ class CustomShimmerState extends State<CustomShimmer> with SingleTickerProviderS
     return (begin + (end - begin) * _gradientPosition.value + 1.0) / 3.0 * widget.width;
   }
 }
+
+
