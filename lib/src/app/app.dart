@@ -25,7 +25,7 @@ class MyAppState extends State<MyApp> {
     return ScreenUtilInit(
       designSize: const Size(428, 926),
       builder: (context, child) {
-        return const GetMaterialApp(
+        return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           onGenerateRoute: RouteGenerator.getRoute,
           initialRoute: Routes.splashRoute,

@@ -163,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             h10,
                             Text(
-                              'Merchant',
+                              'Organization',
                               style: getRegularStyle(color: selectedOption == 0 ? ColorManager.black : ColorManager.textGrey, fontSize: 16),
                             )
                           ],

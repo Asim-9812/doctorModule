@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:medical_app/src/app/app.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -29,6 +30,6 @@ void main() {
   );
 
 
-  runApp(MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 

@@ -1,6 +1,10 @@
+import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
@@ -9,22 +13,31 @@ import 'package:medical_app/src/core/resources/value_manager.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:medical_app/src/app/main_page.dart';
 import 'package:medical_app/src/presentation/login/presentation/login_page.dart';
+import 'package:medical_app/src/presentation/register/data/register_provider.dart';
+import 'package:medical_app/src/presentation/register/presentation/register_organization.dart';
+import 'package:medical_app/src/presentation/subscription-plan/presentation/test_output.dart';
 
+import '../../../core/api.dart';
+import '../../common/snackbar.dart';
 import '../../dashboard/presentation/home_page.dart';
-import '../../subscription-plan/presentation/subscription_page.dart';
+import '../../subscription-plan/presentation/subscription_page_organization.dart';
+import '../data/data_provider.dart';
 
-class RegisterPage extends StatefulWidget {
+class RegisterPage extends ConsumerStatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  ConsumerState<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
-  List<String> accountType = ['Professional', 'Patient', 'Merchant'];
+class _RegisterPageState extends ConsumerState<RegisterPage> {
+  List<String> accountType = ['Merchant','Organization','Professional', 'Patient',];
+  int accountId =0;
+
+  int professionId = 0;
   List<String> professionType = ['Doctor', 'Admin', 'Account'];
   List<String> genderType = ['Male', 'Female', 'Other'];
-  String selectedAccountType = 'Professional';
+  String selectedAccountType = 'Organization';
   String selectedProfession = 'Doctor';
   String selectedGender = 'Male';
   bool _obscureText = true ;
@@ -39,7 +52,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final formKey = GlobalKey<FormState>();
   bool _isChecked = false;
-
+  bool isPostingData = false;
+  final dio =Dio();
   Color getColor(Set<MaterialState> states) {
     const Set<MaterialState> interactiveStates = <MaterialState>{
       MaterialState.pressed,
@@ -52,8 +66,11 @@ class _RegisterPageState extends State<RegisterPage> {
     return ColorManager.primary;
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -186,18 +203,21 @@ class _RegisterPageState extends State<RegisterPage> {
                     onChanged: (String? value) {
                       setState(() {
                         selectedAccountType = value!;
+                        accountId = accountType.indexOf(value)+1;
                       });
                     },
                   ),
-                  if(selectedAccountType == accountType[0])
+                  if(selectedAccountType == accountType[0]||selectedAccountType==accountType[1])
+                    RegisterOrganization(accountId: accountId,),
+
+
+                  if(selectedAccountType == accountType[2])
                     _buildProfessional(),
 
 
-                  if(selectedAccountType == accountType[1])
-                    _buildPatient(),
 
-                  if(selectedAccountType == accountType[2])
-                    _buildMerchant(),
+                  if(selectedAccountType == accountType[3])
+                    _buildPatient(),
 
 
                   SizedBox(height: 50.h,),
@@ -363,7 +383,8 @@ class _RegisterPageState extends State<RegisterPage> {
           height: 18.h,
         ),
         ElevatedButton(
-          onPressed: ()=>Get.to(()=>SubscriptionPage(),transition: Transition.fade),
+          onPressed: (){},
+              //()=>Get.to(()=>SubscriptionPage(),transition: Transition.fade),
           style: TextButton.styleFrom(
               backgroundColor: ColorManager.primary,
               foregroundColor: Colors.white,
@@ -512,7 +533,8 @@ class _RegisterPageState extends State<RegisterPage> {
           height: 50.h,
         ),
         ElevatedButton(
-          onPressed: ()=>Get.to(()=>SubscriptionPage(),transition: Transition.fade),
+          onPressed:(){},
+              //()=>Get.to(()=>SubscriptionPage(),transition: Transition.fade),
           style: TextButton.styleFrom(
               backgroundColor: ColorManager.primary,
               foregroundColor: Colors.white,
@@ -533,129 +555,5 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
 
-  /// For merchant account type...
-
-  Widget _buildMerchant() {
-    return Column(
-      children: [
-        SizedBox(
-          height: 18.h,
-        ),
-        TextFormField(
-          controller: _panController,
-          decoration: InputDecoration(
-              floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-              labelText: 'PAN',
-              labelStyle: getRegularStyle(color: ColorManager.black),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(
-                      color: ColorManager.black
-                  )
-              )
-          ),
-        ),
-        SizedBox(
-          height: 18.h,
-        ),
-        TextFormField(
-          controller: _firstNameController,
-          decoration: InputDecoration(
-              floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-              labelText: 'Name',
-              labelStyle: getRegularStyle(color: ColorManager.black),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(
-                      color: ColorManager.black
-                  )
-              )
-          ),
-        ),
-        SizedBox(
-          height: 18.h,
-        ),
-        TextFormField(
-          controller: _emailController,
-          decoration: InputDecoration(
-              floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-              labelText: 'E-mail',
-              labelStyle: getRegularStyle(color: ColorManager.black),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(
-                      color: ColorManager.black
-                  )
-              )
-          ),
-        ),
-        SizedBox(
-          height: 18.h,
-        ),
-        TextFormField(
-          controller: _mobileController,
-          keyboardType: TextInputType.phone,
-          decoration: InputDecoration(
-            floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-            labelText: 'Mobile Number',
-            labelStyle: getRegularStyle(color: ColorManager.black),
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
-                    color: ColorManager.black
-                )
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 18.h,
-        ),
-        TextFormField(
-          controller: _passController,
-          obscureText: _obscureText,
-          keyboardType: TextInputType.phone,
-          decoration: InputDecoration(
-            floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-            labelText: 'Password',
-            labelStyle: getRegularStyle(color: ColorManager.black),
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
-                    color: ColorManager.black
-                )
-            ),
-              suffixIcon: IconButton(
-                onPressed: (){
-                  setState(() {
-                    _obscureText = !_obscureText;
-                  });
-                },
-                icon: _obscureText? FaIcon(CupertinoIcons.eye,color: ColorManager.black,):FaIcon(CupertinoIcons.eye_slash,color: ColorManager.black,),
-              )
-          ),
-        ),
-        SizedBox(
-          height: 50.h,
-        ),
-        ElevatedButton(
-          onPressed: ()=>Get.to(()=>SubscriptionPage(),transition: Transition.fade),
-          style: TextButton.styleFrom(
-              backgroundColor: ColorManager.primary,
-              foregroundColor: Colors.white,
-              fixedSize: Size(380.w, 50.h),
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                BorderRadius.circular(10),
-              )),
-          child: Text(
-            'Register',
-            style: getMediumStyle(
-                color: ColorManager.white,
-                fontSize: 24.sp),
-          ),
-        ),
-      ],
-    );
-  }
 
 }

@@ -1,5 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
+
+import '../resources/value_manager.dart';
 
 class CustomShimmer extends StatefulWidget {
   final double width;
@@ -69,6 +72,66 @@ class CustomShimmerState extends State<CustomShimmer> with SingleTickerProviderS
   double gradientTranslation(double begin, double end) {
     return (begin + (end - begin) * _gradientPosition.value + 1.0) / 3.0 * widget.width;
   }
+}
+
+
+
+
+Widget buildShimmerEffect() {
+  // Custom shimmer effect for loading state
+  return Shimmer.fromColors(
+    baseColor: Colors.grey[300]!,
+    highlightColor: Colors.grey[100]!,
+    child: SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(
+            height: 30,
+            width: double.infinity,
+            child: Container(
+              color: Colors.white, // Make this container as a solid white background
+            ),
+          ),
+          h10,
+          SizedBox(
+            height: 100,
+            width: double.infinity,
+            child: Container(
+              color: Colors.white, // Make this container as a solid white background
+            ),
+          ),
+          h10,
+          SizedBox(
+            height: 40,
+            width: double.infinity,
+            child: Container(
+              color: Colors.white, // Make this container as a solid white background
+            ),
+          ),
+          h20,
+          buildShimmerTile(),
+          buildShimmerTile(),
+          buildShimmerTile(),
+          buildShimmerTile(),
+          // Add more shimmer tiles if needed
+        ],
+      ),
+    ),
+  );
+}
+
+Widget buildShimmerTile() {
+  // Custom shimmer tile for loading state
+  return Shimmer.fromColors(
+    baseColor: Colors.grey[300]!,
+    highlightColor: Colors.grey[100]!,
+    child: Container(
+      height: 100,
+      width: double.infinity,
+      margin: EdgeInsets.only(bottom: 10),
+      color: Colors.white, // Make this container as a solid white background
+    ),
+  );
 }
 
 
