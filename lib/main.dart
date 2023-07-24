@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:medical_app/src/app/app.dart';
+import 'package:medical_app/src/presentation/login/domain/model/user.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
 @pragma('vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
 void callbackDispatcher() {
@@ -11,10 +14,20 @@ void callbackDispatcher() {
   });
 }
 
-void main() {
+final box = Provider<String?>((ref) => null);
+
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
+
+  FlutterError.demangleStackTrace = (StackTrace stack) {
+    if (stack is stack_trace.Trace) return stack.vmTrace;
+    if (stack is stack_trace.Chain) return stack.toTrace().vmTrace;
+    return stack;
+  };
 
   Workmanager().initialize(
       callbackDispatcher, // The top level function, aka callbackDispatcher
@@ -30,6 +43,14 @@ void main() {
   );
 
 
-  runApp(ProviderScope(child: MyApp()));
+  await Hive.initFlutter();
+
+  final userBox = await Hive.openBox<String>('user');
+  runApp(ProviderScope(
+      overrides: [
+        box.overrideWithValue(userBox.get('userData')),
+      ],
+
+      child: MyApp()));
 }
 

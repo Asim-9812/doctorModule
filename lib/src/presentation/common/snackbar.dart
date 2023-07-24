@@ -99,4 +99,33 @@ class SnackbarUtil {
     );
   }
 
+
+  static SnackBar showProcessSnackbar({
+    required String message,
+    required Duration duration,
+  }) {
+    return SnackBar(
+      content: Center(
+          child: Text(
+            message,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          )
+      ),
+      backgroundColor: ColorManager.yellowFellow,
+      behavior: SnackBarBehavior.floating,
+      elevation: 10,
+      margin: const EdgeInsets.fromLTRB(40, 0, 40, 120),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.r),
+      ),
+      duration: duration,
+      dismissDirection: DismissDirection.horizontal,
+      animation: CurvedAnimation(parent: kAlwaysCompleteAnimation, curve: Curves.easeOut),
+    );
+  }
+
 }

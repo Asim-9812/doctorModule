@@ -44,6 +44,45 @@ class RegisterService {
       throw Exception('Dio error: ${err.message}');
     }}
 
+  Future<Either<String, dynamic>> docRegister({
+
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String password,
+    required String mobileNo,
+    required int subscriptionId,
+    required int genderId
+  }) async {
+    try {
+      final response = await dio.post(
+          Api.registerDoctor,
+          data: {
+            "doctorID": 0,
+            "docID": "",
+            "firstName": firstName,
+            "lastName": lastName,
+            "doctorEmail": email,
+            "doctorPassword": password,
+            "roleID": 1,
+            "referenceNo": "1",
+            "subscriptionID": subscriptionId,
+            "isActive": true,
+            "entryDate": "2023-07-17T10:43:10.315Z",
+            "genderID": 1,
+            "key": "12",
+            "flag": "Insert"
+          }
+      );
+
+
+
+      return Right(response.data);
+    } on DioException catch (err) {
+      print(err.response);
+      throw Exception('Dio error: ${err.message}');
+    }}
+
 
 
 }

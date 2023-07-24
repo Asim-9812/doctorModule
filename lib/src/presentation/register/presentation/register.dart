@@ -14,6 +14,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:medical_app/src/app/main_page.dart';
 import 'package:medical_app/src/presentation/login/presentation/login_page.dart';
 import 'package:medical_app/src/presentation/register/data/register_provider.dart';
+import 'package:medical_app/src/presentation/register/presentation/register_doctor.dart';
 import 'package:medical_app/src/presentation/register/presentation/register_organization.dart';
 import 'package:medical_app/src/presentation/subscription-plan/presentation/test_output.dart';
 
@@ -212,7 +213,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
 
 
                   if(selectedAccountType == accountType[2])
-                    _buildProfessional(),
+                    RegisterDoctor(accountId: accountId),
 
 
 

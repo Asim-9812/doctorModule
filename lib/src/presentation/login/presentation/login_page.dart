@@ -1,24 +1,32 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/core/resources/value_manager.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:medical_app/src/presentation/dashboard/presentation/home_page.dart';
 import 'package:medical_app/src/app/main_page.dart';
+import 'package:medical_app/src/presentation/login/presentation/status_page.dart';
 import 'package:medical_app/src/presentation/register/presentation/register.dart';
 
-class LoginPage extends StatefulWidget {
+import '../../../test/test.dart';
+import '../../common/snackbar.dart';
+import '../data/login_provider.dart';
+
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   List<String> accountType = ['Professional', 'Patient', 'Merchant'];
   String selectedValue = 'Professional';
   bool _obscureText = true ;
@@ -29,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final formKey = GlobalKey<FormState>();
   bool _isChecked = false;
+  bool isLoading = false;
 
   Color getColor(Set<MaterialState> states) {
     const Set<MaterialState> interactiveStates = <MaterialState>{
@@ -42,18 +51,50 @@ class _LoginPageState extends State<LoginPage> {
     return ColorManager.primary;
   }
 
+  late Box box1;
+
+  @override
+  void initState() {
+    super.initState();
+    createOpenBox();
+  }
+
+  /// create a box with this function below
+  void createOpenBox() async {
+    box1 = await Hive.openBox('logindata');
+    getData();
+  }
+
+
+  /// gets the stored data from the box and assigns it to the controllers
+  void getData() async {
+    if (box1.get('email') != null) {
+      _emailController.text = box1.get('email');
+      _isChecked = true;
+      setState(() {});
+    }
+    if (box1.get('password') != null) {
+      _passController.text = box1.get('password');
+      _isChecked = true;
+      setState(() {});
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: ColorManager.primaryDark,
-        body: Column(
-          children: [
-            _buildBody(),
-            _buildBody2()
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              _buildBody(),
+              _buildBody2()
 
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -107,6 +148,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _buildBody2() {
+
+    final authNotifier = ref.watch(authProvider.notifier);
+
     return SlideInUp(
       duration: const Duration(milliseconds: 700),
       child: Container(
@@ -248,6 +292,14 @@ class _LoginPageState extends State<LoginPage> {
                 h20,
                 TextFormField(
                   controller: _emailController,
+                  autovalidateMode:
+                  AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Email is required';
+                    }
+                    return null;
+                  },
                   decoration: InputDecoration(
                       floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
                       labelText: 'E-mail',
@@ -266,6 +318,13 @@ class _LoginPageState extends State<LoginPage> {
                 TextFormField(
                   controller: _passController,
                   obscureText: _obscureText,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Password is required';
+                    }
+                    return null;
+                  },
                   decoration: InputDecoration(
                       floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
                       labelText: 'Password',
@@ -332,7 +391,35 @@ class _LoginPageState extends State<LoginPage> {
                   height: 18.h,
                 ),
                 ElevatedButton(
-                  onPressed: ()=>Get.to(()=>MainPage(),transition: Transition.fade),
+                  onPressed: isLoading? null :
+                      () async {
+                        final scaffoldMessage = ScaffoldMessenger.of(context);
+                        if (formKey.currentState!.validate()) {
+                          authNotifier.userLogin(
+                            email: _emailController.text.trim(),
+                            password: _passController.text.trim(),
+                          ).then((value) {
+                            login();
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => StatusPage(),
+                              ),
+                            );
+                          }).catchError((error){
+                            scaffoldMessage.showSnackBar(
+                                SnackbarUtil.showFailureSnackbar(
+                                    message: error,
+                                    duration: const Duration(milliseconds: 1400)
+                                )
+                            );
+                            ref.invalidate(authProvider);
+                          });
+
+
+
+                        }
+                  },
                   style: TextButton.styleFrom(
                       backgroundColor: ColorManager.primary,
                       foregroundColor: Colors.white,
@@ -341,7 +428,9 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius:
                         BorderRadius.circular(10),
                       )),
-                  child: Text(
+                  child:isLoading ?
+                      SpinKitDualRing(color: ColorManager.white,size: 20,)
+                      :Text(
                     'Sign In',
                     style: getMediumStyle(
                         color: ColorManager.white,
@@ -365,5 +454,21 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  /// adds the user info into (box) the local database (Hive)
+  void login() {
+    if (_isChecked) {
+      box1.put('email', _emailController.value.text);
+      box1.put('password', _passController.value.text);
+    }
+  }
+
+  /// clears the box or removes the stored credentials.
+  void removeLoginInfo(){
+    if(!_isChecked){
+      box1.clear();
+    }
+  }
+
 
 }

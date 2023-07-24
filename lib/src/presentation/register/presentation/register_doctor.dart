@@ -11,6 +11,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:medical_app/src/presentation/register/domain/register_model/register_model.dart';
+import 'package:medical_app/src/presentation/subscription-plan/presentation/subscription_page_doctor.dart';
 
 import '../../../core/api.dart';
 import '../../../core/resources/color_manager.dart';
@@ -19,36 +21,40 @@ import '../../common/snackbar.dart';
 import '../../subscription-plan/presentation/subscription_page_organization.dart';
 import '../data/register_provider.dart';
 
-class RegisterOrganization extends ConsumerStatefulWidget {
+class RegisterDoctor extends ConsumerStatefulWidget {
   final int accountId;
-  RegisterOrganization({required this.accountId});
+  RegisterDoctor({required this.accountId});
 
   @override
-  ConsumerState<RegisterOrganization> createState() => _RegisterOrganizationState();
+  ConsumerState<RegisterDoctor> createState() => _RegisterOrganizationState();
 }
 
-class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
+class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
   final TextEditingController _emailController = TextEditingController();
 
-  final TextEditingController _panController = TextEditingController();
-
   final TextEditingController _passController = TextEditingController();
+  final TextEditingController _licenseController = TextEditingController();
 
   final TextEditingController _firstNameController = TextEditingController();
-
+  final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _mobileController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
+  int professionId = 0;
+  List<String> professionType = ['Doctor', 'Admin', 'Account'];
+  List<String> genderType = ['Male', 'Female'];
+  String selectedGender = 'Male';
+  int genderId = 0;
+  String selectedProfession = 'Doctor';
 
-  List<String> natureType = ['Service Provider', 'Payeer', 'Third Party'];
-  int natureId = 0;
-  String selectedNatureType = 'Service Provider';
   bool _obscureText = true ;
   bool _isChecked = false;
 
   bool isPostingData = false;
 
   final dio =Dio();
+
+  RegisterDoctorModel? registerDoctorModel;
 
   Color getColor(Set<MaterialState> states) {
     const Set<MaterialState> interactiveStates = <MaterialState>{
@@ -64,49 +70,14 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
 
   Map<String,dynamic> outputValue = {};
 
-  Future<Either<String, dynamic>> orgRegister({
-
-    required String orgName,
-    required int pan,
-    required String email,
-    required String mobileNo,
-    required int natureId,
-    required String password
-  }) async {
-    try {
-      final response = await dio.post(
-          Api.registerOrganization,
-          data: {
-            "organizationName": orgName,
-            "pan": pan,
-            "email": email,
-            "contact": mobileNo,
-            "natureId":natureId,
-            "password":password
-          }
-      );
-
-      print(response.data);
-      setState(() {
-        outputValue = response.data;
-      });
-      return Right(response.data);
-    } on DioException catch (err) {
-      print(err.response);
-
-
-      throw Exception('Dio error: ${err.message}');
-    }}
-
 
 
   @override
   Widget build(BuildContext context) {
-    return _buildMerchant();
+    return _buildProfessional();
   }
 
-  Widget _buildMerchant() {
-    final authNotifier = ref.watch(organizationRegister.notifier);
+  Widget _buildProfessional() {
     return Form(
       key: formKey,
       child: Column(
@@ -115,9 +86,9 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
             height: 18.h,
           ),
           DropdownButtonFormField<String>(
-            value: selectedNatureType,
+            value: selectedProfession,
             decoration: InputDecoration(
-              labelText: 'Select Nature Type',
+              labelText: 'Select Profession',
               labelStyle: getRegularStyle(color: ColorManager.primary),
               filled: true,
               fillColor: Colors.white,
@@ -130,7 +101,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
                 borderSide: BorderSide(color: Colors.black),
               ),
             ),
-            items: natureType
+            items: professionType
                 .map(
                   (String item) => DropdownMenuItem<String>(
                 value: item,
@@ -144,8 +115,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
                 .toList(),
             onChanged: (String? value) {
               setState(() {
-                selectedNatureType = value!;
-                natureId = natureType.indexOf(value)+1;
+                selectedProfession = value!;
               });
             },
           ),
@@ -153,27 +123,21 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
             height: 18.h,
           ),
           TextFormField(
-            controller: _panController,
+            controller: _licenseController,
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            keyboardType: TextInputType.phone,
             validator: (value){
               if (value!.isEmpty) {
-                return 'PAN is required';
+                return 'License number is required';
               }
-              if (value.length !=9) {
-                return 'Enter a valid PAN number';
-              }
-              if (value.contains(' ')) {
-                return 'Do not enter spaces';
-              }
-              if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
-                return 'PAN can only be in digits';
+
+              if (RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                return 'Please enter a valid License No';
               }
               return null;
             },
             decoration: InputDecoration(
                 floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                labelText: 'PAN',
+                labelText: 'License No.',
                 labelStyle: getRegularStyle(color: ColorManager.black),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -186,35 +150,114 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
           SizedBox(
             height: 18.h,
           ),
-          TextFormField(
-            controller: _firstNameController,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (value){
-              if (value!.isEmpty) {
-                return 'Name is required';
-              }
-              if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
-                return 'Invalid Name. Only use letters';
-              }
-              return null;
-            },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                height: 60.h,
+                width: 180.w,
+                child: TextFormField(
+                  controller: _firstNameController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value){
+                    if (value!.isEmpty) {
+                      return 'First Name is required';
+                    }
+                    if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
+                      return 'Invalid Name. Only use letters';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                      floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                      labelText: 'First Name',
+                      labelStyle: getRegularStyle(color: ColorManager.black),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                              color: ColorManager.black
+                          )
+                      )
+                  ),
+                ),
+              ),
+              Container(
+                height: 60.h,
+                width: 180.w,
+                child: TextFormField(
+                  controller: _lastNameController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value){
+                    if (value!.isEmpty) {
+                      return 'Last Name is required';
+                    }
+                    if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
+                      return 'Invalid Name. Only use letters';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                      floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                      labelText: 'Last Name',
+                      labelStyle: getRegularStyle(color: ColorManager.black),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                              color: ColorManager.black
+                          )
+                      )
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          SizedBox(
+            height: 18.h,
+          ),
+
+          DropdownButtonFormField<String>(
+            value: selectedGender,
             decoration: InputDecoration(
-                floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                labelText: 'Name',
-                labelStyle: getRegularStyle(color: ColorManager.black),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                        color: ColorManager.black
-                    )
-                )
+              labelText: 'Select Gender',
+              labelStyle: getRegularStyle(color: ColorManager.primary),
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: Colors.black),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: Colors.black),
+              ),
             ),
+            items: genderType
+                .map(
+                  (String item) => DropdownMenuItem<String>(
+                value: item,
+                child: Text(
+                  item,
+                  style: getRegularStyle(color: Colors.black),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            )
+                .toList(),
+            onChanged: (String? value) {
+              setState(() {
+                selectedGender = value!;
+                genderId = genderType.indexOf(value)+1;
+              });
+            },
           ),
           SizedBox(
             height: 18.h,
           ),
+
           TextFormField(
             controller: _emailController,
+            keyboardType: TextInputType.emailAddress,
             autovalidateMode:
             AutovalidateMode.onUserInteraction,
             validator: (value) {
@@ -226,7 +269,6 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
               }
               return null;
             },
-            keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
                 floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
                 labelText: 'E-mail',
@@ -271,6 +313,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
               ),
             ),
           ),
+
           SizedBox(
             height: 18.h,
           ),
@@ -322,65 +365,35 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
                 )
             ),
           ),
+
           SizedBox(
-            height: 50.h,
+            height: 18.h,
           ),
           ElevatedButton(
-            onPressed: isPostingData
-                ? null // Disable the button while posting data
-                :() async {
-              final scaffoldMessage = ScaffoldMessenger.of(context);
-              if (formKey.currentState!.validate()) {
-                if (widget.accountId == 2) {
-                  setState(() {
-                    isPostingData = true; // Show loading spinner
-                  });
-                  print('organization');
-                  print('natureId');
-                  await orgRegister(
-                  orgName: _firstNameController.text.trim(),
-                  pan: int.parse(_panController.text.trim()),
-                  email: _emailController.text.trim(),
-                  mobileNo: _mobileController.text.trim(),
-                  natureId: natureId,
-                  password: _passController.text.trim()
-                  ).then((value) {
-                    scaffoldMessage.showSnackBar(
-                      SnackbarUtil.showProcessSnackbar(
-                          message: 'Please select a plan',
-                          duration: const Duration(seconds: 2)
-                      ),
-                    );
+            onPressed: () async {
+              if(formKey.currentState!.validate()){
+                final scaffoldMessage = ScaffoldMessenger.of(context);
+                registerDoctorModel = RegisterDoctorModel(
+                    licenseNo:int.parse(_licenseController.text.trim()),
+                    genderId: genderId,
+                    contactNo: _mobileController.text.trim(),
+                    password: _passController.text.trim(),
+                    email: _emailController.text.trim(),
+                    lastName: _lastNameController.text.trim(),
+                    firstName: _firstNameController.text.trim()
+                );
+                scaffoldMessage.showSnackBar(
+                  SnackbarUtil.showProcessSnackbar(
+                      message: 'Please select a plan',
+                      duration: const Duration(seconds: 2)
+                  ),
+                );
+                Get.to(()=>SubscriptionPageDoctor(registerDoctorModel: registerDoctorModel!));
 
-                  }).then((value) {
-                    if(outputValue != {}){
-                      setState(() {
-                        isPostingData = false;
-                        formKey.currentState?.reset();
-                      });
-                      Get.to(()=>SubscriptionPageOrganization(outputValue: outputValue,password: _passController.text.trim(),));
-
-                    }
-                  }).catchError((e){
-                    print('organization error : $e');
-                    scaffoldMessage.showSnackBar(
-                      SnackbarUtil.showFailureSnackbar(
-                          message: '$e',
-                          duration: const Duration(seconds: 2)
-                      ),
-                    );
-                    setState(() {
-                      isPostingData = false;
-                    });
-                  });
-
-
-
-                }
               }
 
-
             },
+            //()=>Get.to(()=>SubscriptionPage(),transition: Transition.fade),
             style: TextButton.styleFrom(
                 backgroundColor: ColorManager.primary,
                 foregroundColor: Colors.white,
@@ -389,9 +402,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
                   borderRadius:
                   BorderRadius.circular(10),
                 )),
-            child:  isPostingData
-                ? SpinKitDualRing(color: ColorManager.white,size: 24,)
-                :Text(
+            child: Text(
               'Register',
               style: getMediumStyle(
                   color: ColorManager.white,

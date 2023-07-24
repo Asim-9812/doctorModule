@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:medical_app/src/presentation/login/presentation/login_page.dart';
+import 'package:medical_app/src/presentation/login/presentation/status_page.dart';
 
 import 'package:page_transition/page_transition.dart';
 
@@ -26,7 +27,7 @@ class SplashView extends ConsumerWidget {
     return AnimatedSplashScreen(
       backgroundColor: ColorManager.primaryDark,
       splash: 'assets/images/splash.gif',
-      nextScreen: LoginPage(),
+      nextScreen: StatusPage(),
       splashIconSize: 360.h,
       centered: true,
       curve: Curves.easeInOut,

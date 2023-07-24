@@ -8,6 +8,7 @@ class Api{
 
    ///register type accounts ...
    static const registerOrganization = '$baseUrl/api/Organization/Register';
+   static const registerDoctor = '$baseUrl/api/DoctorRegistration/DoctorRegister';
 
    ///register User account...
    static const userRegister = '$baseUrl/api/Users/UserRegister';
@@ -17,5 +18,8 @@ class Api{
    ///scheme - subscription plan...
    static const schemePlan = '$baseUrl/api/SchemePlan/GetList';
    static const subscriptionPlan = '$baseUrl/api/SchemeSubscription/Insert';
+
+   ///user Login...
+   static const userLogin = '$baseUrl/api/Users/UserLogin';
 
 }

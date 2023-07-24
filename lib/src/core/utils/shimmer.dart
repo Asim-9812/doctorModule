@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../resources/value_manager.dart';
@@ -76,45 +77,74 @@ class CustomShimmerState extends State<CustomShimmer> with SingleTickerProviderS
 
 
 
-
+/// shimmer subscription....
 Widget buildShimmerEffect() {
   // Custom shimmer effect for loading state
   return Shimmer.fromColors(
     baseColor: Colors.grey[300]!,
     highlightColor: Colors.grey[100]!,
-    child: SingleChildScrollView(
-      child: Column(
-        children: [
-          SizedBox(
-            height: 30,
-            width: double.infinity,
-            child: Container(
-              color: Colors.white, // Make this container as a solid white background
-            ),
+    child: SafeArea(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: SizedBox(
+                  height: 30,
+                  width: 150,
+                  child: Container(
+                    color: Colors.white, // Make this container as a solid white background
+                  ),
+                ),
+              ),
+              h10,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: SizedBox(
+                  height: 50,
+                  width: 300,
+                  child: Container(
+                    color: Colors.white, // Make this container as a solid white background
+                  ),
+                ),
+              ),
+              h10,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: SizedBox(
+                  height: 50,
+                  width: 150,
+                  child: Container(
+                    color: Colors.white, // Make this container as a solid white background
+                  ),
+                ),
+              ),
+              h10,
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: SizedBox(
+                    height: 200,
+                    width: 300,
+                    child: Container(
+                      color: Colors.white, // Make this container as a solid white background
+                    ),
+                  ),
+                ),
+              ),
+              h20,
+              buildShimmerTile(),
+              buildShimmerTile(),
+              buildShimmerTile(),
+              buildShimmerTile(),
+              // Add more shimmer tiles if needed
+            ],
           ),
-          h10,
-          SizedBox(
-            height: 100,
-            width: double.infinity,
-            child: Container(
-              color: Colors.white, // Make this container as a solid white background
-            ),
-          ),
-          h10,
-          SizedBox(
-            height: 40,
-            width: double.infinity,
-            child: Container(
-              color: Colors.white, // Make this container as a solid white background
-            ),
-          ),
-          h20,
-          buildShimmerTile(),
-          buildShimmerTile(),
-          buildShimmerTile(),
-          buildShimmerTile(),
-          // Add more shimmer tiles if needed
-        ],
+        ),
       ),
     ),
   );
@@ -126,10 +156,14 @@ Widget buildShimmerTile() {
     baseColor: Colors.grey[300]!,
     highlightColor: Colors.grey[100]!,
     child: Container(
-      height: 100,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.white,
+      ),
+      height: 70,
       width: double.infinity,
       margin: EdgeInsets.only(bottom: 10),
-      color: Colors.white, // Make this container as a solid white background
+       // Make this container as a solid white background
     ),
   );
 }

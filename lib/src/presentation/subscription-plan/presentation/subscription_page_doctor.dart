@@ -20,19 +20,21 @@ import 'package:shimmer/shimmer.dart';
 import '../../../core/api.dart';
 import '../../../core/resources/value_manager.dart';
 import '../../common/snackbar.dart';
+import '../../register/domain/register_model/register_model.dart';
 import '../../register/domain/register_service.dart';
 import '../domain/scheme_model.dart';
 
-class SubscriptionPageOrganization extends ConsumerStatefulWidget {
-  final Map<String,dynamic> outputValue ;
-  final String password;
-  SubscriptionPageOrganization({required this.outputValue,required this.password});
+class SubscriptionPageDoctor extends ConsumerStatefulWidget {
+  final RegisterDoctorModel registerDoctorModel;
+  SubscriptionPageDoctor({required this.registerDoctorModel});
 
   @override
-  ConsumerState<SubscriptionPageOrganization> createState() => _SubscriptionPageState();
+  ConsumerState<SubscriptionPageDoctor> createState() => _SubscriptionPageState();
 }
 
-class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization> {
+class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
+
+
 
 
 
@@ -44,8 +46,43 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
   bool isPostingData = false;
 
 
+  Map<String,dynamic> outputValue = {};
 
-  Future<dartz.Either<String, dynamic>> subscriptionPlan({
+  Future<dartz.Either<String, dynamic>> docRegister() async {
+    try {
+      final response = await dio.post(
+          Api.registerDoctor,
+          data: {
+            "doctorID": 0,
+            "docID": "",
+            "firstName": widget.registerDoctorModel.firstName,
+            "lastName": widget.registerDoctorModel.lastName,
+            "doctorEmail": widget.registerDoctorModel.email,
+            "doctorPassword": widget.registerDoctorModel.password,
+            "roleID": 1,
+            "referenceNo": "1",
+            "subscriptionID": schemePlanId,
+            "isActive": true,
+            "entryDate": "2023-07-17T10:43:10.315Z",
+            "genderID": 1,
+            "key": "12",
+            "flag": "Insert"
+          }
+      );
+
+      setState(() {
+        outputValue = response.data;
+      });
+
+
+
+      return dartz.Right(response.data);
+    } on DioException catch (err) {
+      print(err.response);
+      throw Exception('Dio error: ${err.message}');
+    }}
+
+  Future<dartz.Either<String, dynamic>> subscriptionPlanDoctor({
 
     required int schemePlanId,
   }) async {
@@ -54,7 +91,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
           Api.subscriptionPlan,
           data: {
             "id": 0,
-            "userid": '${widget.outputValue['result']['orgId']}',
+            "userid": '${outputValue['result']['docID']}',
             "subscriptionID": schemePlanId,
             "fromDate": "${DateFormat('yyyy-MM-dd').format(DateTime.now()).toString()}",
             "toDate": selectSubscription == 7 || selectSubscription == 8
@@ -77,23 +114,22 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
 
 
 
-  Future<dartz.Either<String, dynamic>> userRegisterOrganization() async {
+  Future<dartz.Either<String, dynamic>> userRegisterDoctor() async {
     try {
-      print('${widget.password}');
       final response = await dio.post(
           Api.userRegister,
           data: {
-            "userID": '${widget.outputValue['result']['orgId']}',
-            "typeID": 2,
+            "userID": '${outputValue['result']['docID']}',
+            "typeID": 3,
             "parentID": "0",
-            "firstName": '${widget.outputValue['result']['organizationName']}',
-            "lastName": "",
-            "password": '${widget.password}',
-            "contactNo": '${widget.outputValue['result']['contact']}',
-            "panNo": widget.outputValue['result']['pan'],
-            "natureID": widget.outputValue['result']['natureId'],
-            "liscenceNo": 0,
-            "email": '${widget.outputValue['result']['email']}',
+            "firstName": '${outputValue['result']['firstName']}',
+            "lastName": '${outputValue['result']['lastName']}',
+            "password": widget.registerDoctorModel.password,
+            "contactNo": widget.registerDoctorModel.contactNo,
+            "panNo": 0,
+            "natureID": 0,
+            "liscenceNo": widget.registerDoctorModel.licenseNo,
+            "email": widget.registerDoctorModel.email,
             "roleID": 2,
             "joinedDate": "${DateFormat('yyyy-MM-dd').format(DateTime.now()).toString()}",
             "isActive": true,
@@ -119,15 +155,14 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
 
   @override
   Widget build(BuildContext context) {
-
-    print('output: ${widget.outputValue}');
+    print(widget.registerDoctorModel);
     final schemeData = ref.watch(schemeList);
     return Scaffold(
       backgroundColor: ColorManager.white,
       body: Stack(
         children: [
           Visibility(
-            visible: selectedDuration == 0,
+              visible: selectedDuration == 0,
               child: _buildMonthBody(schemeData)
           ),
           Visibility(
@@ -143,106 +178,106 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  height: 50.h,
-                  width: 240.w,
-                  decoration:BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    border: Border.all(
-                      color: ColorManager.black.withOpacity(0.5),
-                      width: 0.5
+                    height: 50.h,
+                    width: 240.w,
+                    decoration:BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        border: Border.all(
+                            color: ColorManager.black.withOpacity(0.5),
+                            width: 0.5
+                        )
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        InkWell(
+                          onTap: (){
+                            setState(() {
+                              selectedDuration = 0;
+                            });
+                          },
+                          splashColor: Colors.transparent,
+                          child: Container(
+                            width: 90.w,
+                            child: Center(child: Text('Monthly',style: selectedDuration==0? getRegularStyle(color: ColorManager.black,fontSize: 24):getRegularStyle(color: ColorManager.black.withOpacity(0.5)),)),
+                          ),
+                        ),
+                        VerticalDivider(
+                          endIndent: 8.h,
+                          indent: 8.h,
+                          thickness: 0.5,
+                          color: ColorManager.black,
+                        ),
+                        InkWell(
+                          onTap: (){
+                            setState(() {
+                              selectedDuration = 1;
+                            });
+                          },
+                          splashColor: Colors.transparent,
+                          child: Container(
+                            width: 90.w,
+                            child: Center(child: Text('Yearly',style: selectedDuration==1? getRegularStyle(color: ColorManager.black,fontSize: 24):getRegularStyle(color: ColorManager.black.withOpacity(0.5)),)),
+                          ),
+                        ),
+                      ],
                     )
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      InkWell(
-                        onTap: (){
-                          setState(() {
-                            selectedDuration = 0;
-                          });
-                        },
-                        splashColor: Colors.transparent,
-                        child: Container(
-                          width: 90.w,
-                          child: Center(child: Text('Monthly',style: selectedDuration==0? getRegularStyle(color: ColorManager.black,fontSize: 24):getRegularStyle(color: ColorManager.black.withOpacity(0.5)),)),
-                        ),
-                      ),
-                      VerticalDivider(
-                        endIndent: 8.h,
-                        indent: 8.h,
-                        thickness: 0.5,
-                        color: ColorManager.black,
-                      ),
-                      InkWell(
-                        onTap: (){
-                          setState(() {
-                            selectedDuration = 1;
-                          });
-                        },
-                        splashColor: Colors.transparent,
-                        child: Container(
-                          width: 90.w,
-                          child: Center(child: Text('Yearly',style: selectedDuration==1? getRegularStyle(color: ColorManager.black,fontSize: 24):getRegularStyle(color: ColorManager.black.withOpacity(0.5)),)),
-                        ),
-                      ),
-                    ],
-                  )
                 ),
                 h20,
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: Size.fromWidth(300),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                    style: ElevatedButton.styleFrom(
+                        fixedSize: Size.fromWidth(300),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        backgroundColor: ColorManager.primary
                     ),
-                    backgroundColor: ColorManager.primary
-                  ),
                     onPressed: isPostingData
                         ? null // Disable the button while posting data
                         : ()async{
                       final scaffoldMessage = ScaffoldMessenger.of(context);
-                    if(selectedScheme == null){
-                      scaffoldMessage.showSnackBar(
-                        SnackbarUtil.showFailureSnackbar(
-                            message: 'Please Select a scheme first',
-                            duration: const Duration(seconds: 2)
-                        ),
-                      );
-                    } else{
-                      setState(() {
-                        isPostingData = true; // Show loading spinner
-                      });
-                      await subscriptionPlan(
-                          schemePlanId: selectedScheme?.schemePlanID ?? 0
-                      ).then((value) async => await userRegisterOrganization()).then((value) =>Future.delayed(Duration(seconds: 3))).then((value) =>
-                          setState(() {
-                            isPostingData = false; // Show loading spinner
-                          })
-                      ).then((value) {
-                        scaffoldMessage.showSnackBar(
-                          SnackbarUtil.showSuccessSnackbar(
-                              message: 'User Registered! Please Login again.',
-                              duration: const Duration(seconds: 3)
-                          ),
-                        );
-
-                      }).then((value) =>  Get.offAll(()=>LoginPage())).catchError((e){
+                      if(selectedScheme == null){
                         scaffoldMessage.showSnackBar(
                           SnackbarUtil.showFailureSnackbar(
-                              message: '$e',
+                              message: 'Please Select a scheme first',
                               duration: const Duration(seconds: 2)
                           ),
                         );
+                      } else{
                         setState(() {
-                          isPostingData = false; // Show loading spinner
+                          isPostingData = true; // Show loading spinner
                         });
-                      });
-                    }
+                        await docRegister().then((value) async => await subscriptionPlanDoctor(
+                            schemePlanId: selectedScheme?.schemePlanID ?? 0
+                        ).then((value) async => await userRegisterDoctor()).then((value) =>Future.delayed(Duration(seconds: 3))).then((value) =>
+                            setState(() {
+                              isPostingData = false; // Show loading spinner
+                            })
+                        ).then((value) {
+                          scaffoldMessage.showSnackBar(
+                            SnackbarUtil.showSuccessSnackbar(
+                                message: 'User Registered! Please Login again.',
+                                duration: const Duration(seconds: 3)
+                            ),
+                          );
+
+                        }).then((value) =>  Get.offAll(()=>LoginPage())).catchError((e){
+                          scaffoldMessage.showSnackBar(
+                            SnackbarUtil.showFailureSnackbar(
+                                message: '$e',
+                                duration: const Duration(seconds: 2)
+                            ),
+                          );
+                          setState(() {
+                            isPostingData = false; // Show loading spinner
+                          });
+                        }));
+                      }
 
                     },
                     child: isPostingData
-                        ?SpinKitDualRing(color: ColorManager.white,size: 20,) 
-                    :Text('Select',style: getMediumStyle(color: ColorManager.white,fontSize: 24),)
+                        ?SpinKitDualRing(color: ColorManager.white,size: 20,)
+                        :Text('Select',style: getMediumStyle(color: ColorManager.white,fontSize: 24),)
                 ),
                 h20,
               ],
@@ -262,7 +297,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
         data: (data){
 
           final schemeMonth = data.where(
-                (item) => item.storageType==1).toList();
+                  (item) => item.storageType==1).toList();
           // If selectedScheme is null, set a default selected value (the first item in the list)
           selectedScheme ??= schemeMonth.isNotEmpty ? schemeMonth.first : null;
 
@@ -325,12 +360,12 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
               ),
             ),
           );
-        }, 
-        error: (error,stack)=>Center(child: Text('error',style: getRegularStyle(color: ColorManager.black),),), 
+        },
+        error: (error,stack)=>Center(child: Text('error',style: getRegularStyle(color: ColorManager.black),),),
         loading: ()=>buildShimmerEffect()
     );
-      
-      
+
+
   }
 
 
@@ -426,13 +461,13 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
     required int schemePrice,
     required int schemeDuration,
     required int selection,
-}) {
+  }) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5.h),
       child: Card(
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10)
+            borderRadius: BorderRadius.circular(10)
         ),
         elevation: schemePlanId == selection?3:0,
         child: ListTile(
@@ -459,7 +494,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
     required int selectSubscription,
     required Color gradient,
 
-}) {
+  }) {
     return CustomBannerShimmer(
         width: 340,
         height: 200,
@@ -472,7 +507,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
             schemeDuration!=null?Text('$schemeName',style: getBoldStyle(color: ColorManager.white,fontSize: 40),):Text('Trial',style: getBoldStyle(color: ColorManager.white,fontSize: 20),),
             h20,
             schemeDuration != null?
-                schemePrice != 0?
+            schemePrice != 0?
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -483,7 +518,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
                 Text('for a $schemeDuration',style: getMediumStyle(color: ColorManager.white,fontSize: 24),),
               ],
             )
-                    :Text('Free for a 15 days',style: getMediumStyle(color: ColorManager.white,fontSize: 24),)
+                :Text('Free for a 15 days',style: getMediumStyle(color: ColorManager.white,fontSize: 24),)
                 :Text('$schemeName',style: getMediumStyle(color: ColorManager.white,fontSize: 40),),
             h12,
             Row(
