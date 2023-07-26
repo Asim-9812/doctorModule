@@ -1,34 +1,101 @@
-class User {
+import 'package:hive/hive.dart';
+
+part 'user.g.dart';
+
+
+@HiveType(typeId: 0) // Unique identifier for the User model
+class User extends HiveObject {
+  @HiveField(0)
   int? id;
+
+  @HiveField(1)
   String? userID;
+
+  @HiveField(2)
   int? typeID;
+
+  @HiveField(3)
   String? referredID;
+
+  @HiveField(4)
   String? parentID;
+
+  @HiveField(5)
   String? firstName;
+
+  @HiveField(6)
   String? lastName;
+
+  @HiveField(7)
   String? password;
+
+  @HiveField(8)
   int? countryID;
+
+  @HiveField(9)
   int? provinceID;
+
+  @HiveField(10)
   int? districtID;
+
+  @HiveField(11)
   int? municipalityID;
+
+  @HiveField(12)
   int? wardNo;
+
+  @HiveField(13)
   String? localAddress;
+
+  @HiveField(14)
   String? contactNo;
+
+  @HiveField(15)
   String? email;
+
+  @HiveField(16)
   int? roleID;
+
+  @HiveField(17)
   String? designation;
+
+  @HiveField(18)
   String? joinedDate;
+
+  @HiveField(19)
   String? validDate;
+
+  @HiveField(20)
   String? signatureImage;
+
+  @HiveField(21)
   String? profileImage;
+
+  @HiveField(22)
   bool? isActive;
+
+  @HiveField(23)
   int? genderID;
+
+  @HiveField(24)
   String? entryDate;
+
+  @HiveField(25)
   int? prefixSettingID;
+
+  @HiveField(26)
   String? token;
+
+  @HiveField(27)
   int? panNo;
+
+  @HiveField(28)
   int? natureID;
+
+  @HiveField(29)
   int? liscenceNo;
+
+  @HiveField(30)
   String? flag;
 
   User({
@@ -64,6 +131,7 @@ class User {
     this.liscenceNo,
     this.flag,
   });
+
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(

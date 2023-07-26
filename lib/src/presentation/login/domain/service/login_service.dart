@@ -1,47 +1,86 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
+import '../../../../../main.dart';
 import '../../../../core/api.dart';
 import '../model/user.dart';
 
-class AuthService {
-  static final dio = Dio();
+final userLoginProvider = StateProvider((ref) => LoginProvider());
+final userProvider = StateNotifierProvider<UserProvider, List<User>>((ref) => UserProvider(ref.watch(boxA)));
 
-  static Future<Either<String, User>> userLogin(
-      {
-        required String email,
-        required String password,
-      }) async {
-    try {
-      final response = await dio.post(
-        Api.userLogin,
-        data: {
-          'key':'12',
-          'email': email,
-          'password': password,
-          'flag':'Login'
-        },
-      );
-      final box = Hive.box<String>('user');
-      box.put('userData', jsonEncode(response.data));
-      final userData = box.get('userData');
-      if (userData != null) {
-        final decodedData = jsonDecode(userData);
-        print('userdata : $decodedData');
+
+class LoginProvider{
+  final dio = Dio();
+
+
+
+  Future<Either<String,Map<String,dynamic>>> userLogin({required int accountId,required String email, required String password}) async{
+    var connectivityResult = await (Connectivity().checkConnectivity());
+
+    if(connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi){
+      try{
+        final response = await dio.post(Api.userLogin, data: {
+          "key":'12',
+          "email": email,
+          "password": password,
+          "flag":'Login'
+        });
+        if(accountId ==0){
+          return Left('Please select an account type');
+        }
+
+
+        if(response.statusCode == 200 && response.data["result"]["userID"] != null){
+
+          if(response.data["result"]["typeID"] == accountId){
+            final token = response.data["result"]["token"];
+            Box tokenBox = Hive.box<String>('tokenBox');
+            tokenBox.put('accessToken', token);
+            print(response.data);
+            return Right(response.data);
+          }else{
+            return Left('Account Type doesn\'t match');
+          }
+
+        }else{
+          print(response.data);
+          return Left('Invalid Credential');
+        }
+      } on DioException catch(err){
+        print(err);
+        return Left('Something went wrong');
       }
-      print(response.data);
-      return Right(User.fromJson(response.data));
-
-    } on DioError catch (err) {
-      print(err.response);
-      throw Exception(err.response?.data['data']);
+    }else{
+      return Left('No internet connection');
     }
+
+  }
+}
+
+
+class UserProvider extends StateNotifier<List<User>>{
+  UserProvider(super._state);
+
+  Future<String> getUserInfo({required Map<String,dynamic> response}) async{
+    print('User provider: $response');
+    final newUser = User.fromJson(response["result"]);
+
+    if(Hive.box<User>('session').isEmpty){
+      Hive.box<User>('session').add(newUser);
+      state = [newUser];
+    }else{
+      Hive.box<User>('session').putAt(0, newUser);
+      state = [newUser];
+    }
+    return 'success';
   }
 
-
-
-
+  void userLogout() async{
+    Hive.box<String>('tokenBox').clear();
+    Hive.box<User>('session').clear();
+    state = [];
+  }
 }

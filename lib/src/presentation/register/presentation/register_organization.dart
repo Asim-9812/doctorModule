@@ -40,9 +40,9 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
 
   final formKey = GlobalKey<FormState>();
 
-  List<String> natureType = ['Service Provider', 'Payeer', 'Third Party'];
+  List<String> natureType = ['Select Nature Type','Service Provider', 'Payeer', 'Third Party'];
   int natureId = 0;
-  String selectedNatureType = 'Service Provider';
+  String selectedNatureType = 'Select Nature Type';
   bool _obscureText = true ;
   bool _isChecked = false;
 
@@ -115,6 +115,12 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
             height: 18.h,
           ),
           DropdownButtonFormField<String>(
+            validator: (value){
+              if(selectedNatureType == natureType[0]){
+                return 'Please select a nature type';
+              }
+              return null;
+            },
             value: selectedNatureType,
             decoration: InputDecoration(
               labelText: 'Select Nature Type',
@@ -145,7 +151,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
             onChanged: (String? value) {
               setState(() {
                 selectedNatureType = value!;
-                natureId = natureType.indexOf(value)+1;
+                natureId = natureType.indexOf(value);
               });
             },
           ),
@@ -362,7 +368,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
 
                     }
                   }).catchError((e){
-                    print('organization error : $e');
+                    print('Something went wrong');
                     scaffoldMessage.showSnackBar(
                       SnackbarUtil.showFailureSnackbar(
                           message: '$e',

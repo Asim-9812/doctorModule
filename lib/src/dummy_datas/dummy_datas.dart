@@ -134,3 +134,189 @@ List<Map<String, dynamic>> ambulanceInfo = [
     'latitude': 27.68621598967255,
   },
 ];
+
+
+List<Map<String, dynamic>> notificationData = [
+  {
+    'name': 'John Doe',
+    'createdDate': '2023-07-26',
+    'userImg': 'assets/icons/doctor.png',
+    'notificationDescription': 'You have a new message!',
+    'type': 'general',
+  },
+  {
+    'name': 'Alice Smith',
+    'createdDate': '2023-07-25',
+    'userImg': null,
+    'notificationDescription': 'Your order has been shipped.',
+    'type': 'personal',
+  },
+  {
+    'name': 'Bob Johnson',
+    'createdDate': '2023-07-24',
+    'userImg': 'assets/icons/patient.png',
+    'notificationDescription': 'Today is a special event!',
+    'type': 'general',
+  },
+  {
+    'name': 'Jane Doe',
+    'createdDate': '2023-07-23',
+    'userImg': null,
+    'notificationDescription': 'You have a new notification.',
+    'type': 'personal',
+  },
+  {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  },
+  {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  },
+  {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  },
+  {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  },
+  {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  },
+  {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  },
+  {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  },
+  {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  },
+  {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  },
+  {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  },
+  {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  },
+  {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  }, {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  }, {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  },
+  {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  }, {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  }, {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  }, {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  }, {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  }, {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  }, {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  }, {
+    'name': 'Tom Smith',
+    'createdDate': '2023-07-22',
+    'userImg': 'assets/icons/patient_login.png',
+    'notificationDescription': 'Your subscription is ending soon.',
+    'type': 'general',
+  },
+
+
+
+
+
+
+
+
+];
+

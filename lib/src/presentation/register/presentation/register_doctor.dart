@@ -41,11 +41,14 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
 
   final formKey = GlobalKey<FormState>();
   int professionId = 0;
-  List<String> professionType = ['Doctor', 'Admin', 'Account'];
-  List<String> genderType = ['Male', 'Female'];
-  String selectedGender = 'Male';
+  List<String> professionType = ['Select Profession Type','Doctor', 'Admin', 'Account'];
+  List<String> genderType = ['Select Gender','Male', 'Female'];
+
+
+  String selectedProfession = 'Select Profession Type';
+  String selectedGender = 'Select Gender';
   int genderId = 0;
-  String selectedProfession = 'Doctor';
+
 
   bool _obscureText = true ;
   bool _isChecked = false;
@@ -86,6 +89,12 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
             height: 18.h,
           ),
           DropdownButtonFormField<String>(
+            validator: (value){
+              if(selectedProfession == professionType[0]){
+                return 'Please select a Profession';
+              }
+              return null;
+            },
             value: selectedProfession,
             decoration: InputDecoration(
               labelText: 'Select Profession',
@@ -116,6 +125,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
             onChanged: (String? value) {
               setState(() {
                 selectedProfession = value!;
+                professionId = professionType.indexOf(value);
               });
             },
           ),
@@ -217,6 +227,12 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
           ),
 
           DropdownButtonFormField<String>(
+            validator: (value){
+              if(selectedGender == genderType[0]){
+                return 'Please select a Gender';
+              }
+              return null;
+            },
             value: selectedGender,
             decoration: InputDecoration(
               labelText: 'Select Gender',
@@ -247,7 +263,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
             onChanged: (String? value) {
               setState(() {
                 selectedGender = value!;
-                genderId = genderType.indexOf(value)+1;
+                genderId = genderType.indexOf(value);
               });
             },
           ),

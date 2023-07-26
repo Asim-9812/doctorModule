@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,14 +11,12 @@ import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/core/resources/value_manager.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:medical_app/src/presentation/dashboard/presentation/home_page.dart';
-import 'package:medical_app/src/app/main_page.dart';
 import 'package:medical_app/src/presentation/login/presentation/status_page.dart';
 import 'package:medical_app/src/presentation/register/presentation/register.dart';
 
 import '../../../test/test.dart';
 import '../../common/snackbar.dart';
-import '../data/login_provider.dart';
+import '../domain/service/login_service.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -27,8 +26,8 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
-  List<String> accountType = ['Professional', 'Patient', 'Merchant'];
-  String selectedValue = 'Professional';
+  // List<String> accountType = ['Merchant','Organization','Professional', 'Patient'];
+  // String selectedValue = 'Professional';
   bool _obscureText = true ;
   int selectedOption = 0;
 
@@ -149,8 +148,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   Widget _buildBody2() {
 
-    final authNotifier = ref.watch(authProvider.notifier);
-
     return SlideInUp(
       duration: const Duration(milliseconds: 700),
       child: Container(
@@ -185,42 +182,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       child: InkWell(
                         onTap: () {
                           setState(() {
-                            selectedOption = 0;
-                          });
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: selectedOption == 0 ? ColorManager.primaryDark : ColorManager.dotGrey),
-                                shape: BoxShape.circle,
-                                color: selectedOption == 0 ? ColorManager.primary : Colors.transparent,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.asset(
-                                  'assets/icons/org_login.png',
-                                  width: selectedOption == 0 ?50:30,
-                                  height: selectedOption == 0 ?50:30,
-                                ),
-                              ),
-                            ),
-                            h10,
-                            Text(
-                              'Organization',
-                              style: getRegularStyle(color: selectedOption == 0 ? ColorManager.black : ColorManager.textGrey, fontSize: 16),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    w05,
-                    Container(
-                      height: 100,
-                      width: 70,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
                             selectedOption = 1;
                           });
                         },
@@ -235,7 +196,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Image.asset(
-                                  'assets/icons/doctor_login.png',
+                                  'assets/icons/merchant_login.png',
                                   width: selectedOption == 1 ?50:30,
                                   height: selectedOption == 1 ?50:30,
                                 ),
@@ -243,7 +204,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             ),
                             h10,
                             Text(
-                              'Doctor',
+                              'Merchant',
                               style: getRegularStyle(color: selectedOption == 1 ? ColorManager.black : ColorManager.textGrey, fontSize: 16),
                             )
                           ],
@@ -271,7 +232,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Image.asset(
-                                  'assets/icons/patient_login.png',
+                                  'assets/icons/org_login.png',
                                   width: selectedOption == 2 ?50:30,
                                   height: selectedOption == 2 ?50:30,
                                 ),
@@ -279,8 +240,80 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             ),
                             h10,
                             Text(
-                              'Patient',
+                              'Organization',
                               style: getRegularStyle(color: selectedOption == 2 ? ColorManager.black : ColorManager.textGrey, fontSize: 16),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    w05,
+                    Container(
+                      height: 100,
+                      width: 70,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedOption = 3;
+                          });
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: selectedOption == 3 ? ColorManager.primaryDark : ColorManager.dotGrey),
+                                shape: BoxShape.circle,
+                                color: selectedOption ==3 ? ColorManager.primary : Colors.transparent,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                  'assets/icons/doctor_login.png',
+                                  width: selectedOption == 3 ?50:30,
+                                  height: selectedOption == 3 ?50:30,
+                                ),
+                              ),
+                            ),
+                            h10,
+                            Text(
+                              'Doctor',
+                              style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: 16),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    w05,
+                    Container(
+                      height: 100,
+                      width: 80,
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedOption = 4;
+                          });
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: selectedOption == 4 ? ColorManager.primaryDark : ColorManager.dotGrey),
+                                shape: BoxShape.circle,
+                                color: selectedOption == 4 ? ColorManager.primary : Colors.transparent,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                  'assets/icons/patient_login.png',
+                                  width: selectedOption == 4 ?50:30,
+                                  height: selectedOption == 4 ?50:30,
+                                ),
+                              ),
+                            ),
+                            h10,
+                            Text(
+                              'Patient',
+                              style: getRegularStyle(color: selectedOption == 4 ? ColorManager.black : ColorManager.textGrey, fontSize: 16),
                             )
                           ],
                         ),
@@ -395,29 +428,43 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       () async {
                         final scaffoldMessage = ScaffoldMessenger.of(context);
                         if (formKey.currentState!.validate()) {
-                          authNotifier.userLogin(
+                          setState(() {
+                            isLoading = true;
+                          });
+                          login();
+                          final response = await ref.read(userLoginProvider).userLogin(
+                            accountId: selectedOption,
                             email: _emailController.text.trim(),
                             password: _passController.text.trim(),
-                          ).then((value) {
-                            login();
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => StatusPage(),
+                          );
+                          if (response.isLeft()) {
+                            final leftValue = response.fold(
+                                  (left) => left,
+                                  (right) => '', // Empty string here as we are only interested in the left value
+                            );
+
+                            scaffoldMessage.showSnackBar(
+                              SnackbarUtil.showFailureSnackbar(
+                                message: leftValue,
+                                duration: const Duration(milliseconds: 1400),
                               ),
                             );
-                          }).catchError((error){
+                            setState(() {
+                              isLoading = false;
+                            });
+                          } else {
+                            await ref.read(userProvider.notifier).getUserInfo(response:response.getOrElse(() => {}));
                             scaffoldMessage.showSnackBar(
-                                SnackbarUtil.showFailureSnackbar(
-                                    message: error,
-                                    duration: const Duration(milliseconds: 1400)
+                                SnackbarUtil.showSuccessSnackbar(
+                                    message: 'Login Successful',
+                                    duration: const Duration(milliseconds: 1200)
                                 )
                             );
-                            ref.invalidate(authProvider);
-                          });
-
-
-
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Get.offAll(()=>StatusPage(accountId: selectedOption,));
+                          }
                         }
                   },
                   style: TextButton.styleFrom(

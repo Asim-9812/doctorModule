@@ -16,6 +16,10 @@ void callbackDispatcher() {
 
 final box = Provider<String?>((ref) => null);
 
+final boxA = Provider<List<User>>((ref) => []);
+
+late Box userBox2;
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,11 +48,15 @@ void main() async {
 
 
   await Hive.initFlutter();
-
-  final userBox = await Hive.openBox<String>('user');
+  Hive.registerAdapter<User>(UserAdapter());
+  final userBox = await Hive.openBox<String>('user1');
+  await Hive.openBox<String>('tokenBox');
+  final userSession = await Hive.openBox<User>('session');
+  userBox2 = await Hive.openBox('user');
   runApp(ProviderScope(
       overrides: [
         box.overrideWithValue(userBox.get('userData')),
+        boxA.overrideWithValue(userSession.values.toList()),
       ],
 
       child: MyApp()));

@@ -68,7 +68,7 @@ dependencies:
   bookfx: ^0.0.2
 
   #localization
-  intl: ^0.17.0
+  intl: ^0.18.0
 
   animate_do: ^3.0.2
 
@@ -164,6 +164,8 @@ dependencies:
 
   #json_annotation:
   json_annotation: ^4.8.1
+
+  syncfusion_flutter_charts: ^22.1.39
 
 
 
