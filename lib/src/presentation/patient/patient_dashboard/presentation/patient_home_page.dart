@@ -13,20 +13,20 @@ import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../../login/domain/model/user.dart';
-import '../../notification/presentation/notification_page.dart';
+import '../../../notification/presentation/notification_page.dart';
 import '../../profile/presentation/profile_page.dart';
 import '../../search-near-by/presentation/search_for_page.dart';
 
 
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key,});
+class PatientHomePage extends StatefulWidget {
+  const PatientHomePage({super.key,});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<PatientHomePage> createState() => _PatientHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _PatientHomePageState extends State<PatientHomePage> {
 
   bool? _geolocationStatus;
   LocationPermission? _locationPermission;

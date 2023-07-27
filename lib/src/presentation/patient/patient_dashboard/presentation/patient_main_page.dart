@@ -12,11 +12,11 @@ import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../documents/presentation/document_page.dart';
-import '../settings/presentation/settings_page.dart';
-import 'presentation/home_page.dart';
-import '../scan/presentation/qr_scan.dart';
-import '../utilities/presentation/utilities_page.dart';
+import '../../documents/presentation/document_page.dart';
+import '../../settings/presentation/settings_page.dart';
+import 'patient_home_page.dart';
+import '../../scan/presentation/qr_scan.dart';
+import '../../utilities/presentation/patient_utilities.dart';
 
 
 
@@ -109,9 +109,9 @@ class _AnimatedBarExampleState extends State<PatientMainPage> {
       body: PageView(
         controller: controller,
         children: [
-          HomePage(),
-          DocumentPage(),
-          UtilitiesPage(),
+          PatientHomePage(),
+          PatientDocumentPage(),
+          PatientUtilitiesPage(),
           SettingsPage()
         ],
       ),

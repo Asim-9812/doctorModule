@@ -15,7 +15,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../../core/resources/value_manager.dart';
-import '../../patient_dashboard/main_page.dart';
+import '../../patient_dashboard/presentation/patient_main_page.dart';
 
 class SearchNearByPage extends StatefulWidget {
   const SearchNearByPage({Key? key}) : super(key: key);

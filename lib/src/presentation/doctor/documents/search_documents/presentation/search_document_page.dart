@@ -11,14 +11,14 @@ import '../../../../../core/resources/color_manager.dart';
 import '../../../../../core/resources/style_manager.dart';
 import '../../../../../core/resources/value_manager.dart';
 
-class SearchDocPatient extends StatefulWidget {
-  const SearchDocPatient({super.key});
+class SearchDocDoctor extends StatefulWidget {
+  const SearchDocDoctor({super.key});
 
   @override
-  State<SearchDocPatient> createState() => _SearchDocPatientState();
+  State<SearchDocDoctor> createState() => _SearchDocDoctorState();
 }
 
-class _SearchDocPatientState extends State<SearchDocPatient> {
+class _SearchDocDoctorState extends State<SearchDocDoctor> {
 
 
 

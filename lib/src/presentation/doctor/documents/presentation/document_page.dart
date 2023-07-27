@@ -19,14 +19,14 @@ import '../../../../core/resources/value_manager.dart';
 import '../add_documents/presentation/add_document_page.dart';
 import '../search_documents/presentation/search_document_page.dart';
 
-class PatientDocumentPage extends StatefulWidget {
-  const PatientDocumentPage({super.key});
+class DoctorDocumentPage extends StatefulWidget {
+  const DoctorDocumentPage({super.key});
 
   @override
-  State<PatientDocumentPage> createState() => _PatientDocumentPageState();
+  State<DoctorDocumentPage> createState() => _DocumentPageState();
 }
 
-class _PatientDocumentPageState extends State<PatientDocumentPage> {
+class _DocumentPageState extends State<DoctorDocumentPage> {
   bool isFolderLocked = false;
   @override
   Widget build(BuildContext context) {
@@ -42,9 +42,9 @@ class _PatientDocumentPageState extends State<PatientDocumentPage> {
           title: Text('Documents',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
           actions: [
             IconButton(
-              onPressed: ()=>Get.to(()=>AddDocPatient(),transition: Transition.rightToLeftWithFade,duration: Duration(milliseconds: 500))
+              onPressed: ()=>Get.to(()=>AddDocDoctor(),transition: Transition.rightToLeftWithFade,duration: Duration(milliseconds: 500))
               , icon: FaIcon(Icons.add),color: Colors.blue,),
-            IconButton(onPressed: ()=>Get.to(()=>SearchDocPatient(),transition:Transition.rightToLeftWithFade)
+            IconButton(onPressed: ()=>Get.to(()=>SearchDocDoctor(),transition:Transition.rightToLeftWithFade)
               , icon: FaIcon(Icons.search),color: Colors.blue,),
           ],
         ),

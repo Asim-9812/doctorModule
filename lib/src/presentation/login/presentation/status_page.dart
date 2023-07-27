@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:medical_app/src/presentation/doctor/doctor_dashboard/presentation/doctor_main_page.dart';
 import 'package:medical_app/src/presentation/login/presentation/login_page.dart';
-
-import '../../patient/patient_dashboard/main_page.dart';
+import '../../patient/patient_dashboard/presentation/patient_main_page.dart';
 import '../domain/service/login_service.dart';
 
 class StatusPage extends ConsumerWidget {
@@ -24,7 +24,7 @@ class StatusPage extends ConsumerWidget {
       }
       else if(auth[0].typeID == 3 && accountId == 3){
         print('doctor');
-        return const PatientMainPage();
+        return const DoctorMainPage();
       }
       else if(auth[0].typeID == 4 && accountId == 4){
         print('patient');

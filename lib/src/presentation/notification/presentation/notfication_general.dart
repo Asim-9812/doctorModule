@@ -7,7 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 
-import '../../../../core/resources/value_manager.dart';
+import '../../../core/resources/value_manager.dart';
+
 
 
 class General extends StatelessWidget {

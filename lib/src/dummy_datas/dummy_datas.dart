@@ -220,34 +220,6 @@ List<Map<String, dynamic>> notificationData = [
     'userImg': 'assets/icons/patient_login.png',
     'notificationDescription': 'Your subscription is ending soon.',
     'type': 'general',
-  },
-  {
-    'name': 'Tom Smith',
-    'createdDate': '2023-07-22',
-    'userImg': 'assets/icons/patient_login.png',
-    'notificationDescription': 'Your subscription is ending soon.',
-    'type': 'general',
-  },
-  {
-    'name': 'Tom Smith',
-    'createdDate': '2023-07-22',
-    'userImg': 'assets/icons/patient_login.png',
-    'notificationDescription': 'Your subscription is ending soon.',
-    'type': 'general',
-  },
-  {
-    'name': 'Tom Smith',
-    'createdDate': '2023-07-22',
-    'userImg': 'assets/icons/patient_login.png',
-    'notificationDescription': 'Your subscription is ending soon.',
-    'type': 'general',
-  },
-  {
-    'name': 'Tom Smith',
-    'createdDate': '2023-07-22',
-    'userImg': 'assets/icons/patient_login.png',
-    'notificationDescription': 'Your subscription is ending soon.',
-    'type': 'general',
   }, {
     'name': 'Tom Smith',
     'createdDate': '2023-07-22',
@@ -261,62 +233,178 @@ List<Map<String, dynamic>> notificationData = [
     'notificationDescription': 'Your subscription is ending soon.',
     'type': 'general',
   },
-  {
-    'name': 'Tom Smith',
-    'createdDate': '2023-07-22',
-    'userImg': 'assets/icons/patient_login.png',
-    'notificationDescription': 'Your subscription is ending soon.',
-    'type': 'general',
-  }, {
-    'name': 'Tom Smith',
-    'createdDate': '2023-07-22',
-    'userImg': 'assets/icons/patient_login.png',
-    'notificationDescription': 'Your subscription is ending soon.',
-    'type': 'general',
-  }, {
-    'name': 'Tom Smith',
-    'createdDate': '2023-07-22',
-    'userImg': 'assets/icons/patient_login.png',
-    'notificationDescription': 'Your subscription is ending soon.',
-    'type': 'general',
-  }, {
-    'name': 'Tom Smith',
-    'createdDate': '2023-07-22',
-    'userImg': 'assets/icons/patient_login.png',
-    'notificationDescription': 'Your subscription is ending soon.',
-    'type': 'general',
-  }, {
-    'name': 'Tom Smith',
-    'createdDate': '2023-07-22',
-    'userImg': 'assets/icons/patient_login.png',
-    'notificationDescription': 'Your subscription is ending soon.',
-    'type': 'general',
-  }, {
-    'name': 'Tom Smith',
-    'createdDate': '2023-07-22',
-    'userImg': 'assets/icons/patient_login.png',
-    'notificationDescription': 'Your subscription is ending soon.',
-    'type': 'general',
-  }, {
-    'name': 'Tom Smith',
-    'createdDate': '2023-07-22',
-    'userImg': 'assets/icons/patient_login.png',
-    'notificationDescription': 'Your subscription is ending soon.',
-    'type': 'general',
-  }, {
-    'name': 'Tom Smith',
-    'createdDate': '2023-07-22',
-    'userImg': 'assets/icons/patient_login.png',
-    'notificationDescription': 'Your subscription is ending soon.',
-    'type': 'general',
-  },
-
-
-
-
-
-
-
-
 ];
+
+List<Map<String, dynamic>> closeCircle = [
+  {
+    "name": "Dr. John Doe",
+    "picture": "assets/icons/doctor.png",
+    "specializeIn": "Cardiology",
+  },
+  {
+    "name": "Dr. Jane Smith",
+    "picture": "assets/icons/doctor_login.png",
+    "specializeIn": "Pediatrics",
+  },
+  {
+    "name": "Dr. Robert Johnson",
+    "picture": null,
+    "specializeIn": "Orthopedics",
+  },
+  {
+    "name": "Dr. Sarah Williams",
+    "picture": "assets/icons/patient.png",
+    "specializeIn": "Physiology",
+  },
+  {
+    "name": "Dr. Michael Lee",
+    "picture": "assets/icons/patient_login.png",
+    "specializeIn": "Neurology",
+  },
+  {
+    "name": "Dr. Emily Brown",
+    "picture": "assets/icons/org_login.png",
+    "specializeIn": "Ophthalmology",
+  },
+  {
+    "name": "Dr. David Wilson",
+    "picture": null,
+    "specializeIn": "Dermatology",
+  },
+  {
+    "name": "Dr. Olivia Davis",
+    "picture": "assets/icons/hospital.png",
+    "specializeIn": "Endocrinology",
+  },
+];
+
+
+
+List<Map<String, dynamic>> patientList = [
+  {
+    'name': 'John Doe',
+    'address': '123 Main Street',
+    'contact': '+1 (555) 123-4567',
+    'department': 'Cardiology',
+    'picture': 'assets/icons/patient.png',
+  },
+  {
+    'name': 'Jane Smith',
+    'address': '456 Oak Avenue',
+    'contact': '+1 (555) 987-6543',
+    'department': 'Orthopedics',
+    'picture': 'assets/icons/patient.png',
+  },
+  {
+    'name': 'Alice Johnson',
+    'address': '789 Elm Lane',
+    'contact': '+1 (555) 321-7890',
+    'department': 'Pediatrics',
+    'picture': 'assets/icons/patient.png',
+  },
+  {
+    'name': 'Bob Wilson',
+    'address': '101 Pine Street',
+    'contact': '+1 (555) 222-3333',
+    'department': 'Neurology',
+    'picture': 'assets/icons/patient.png',
+  },
+  {
+    'name': 'Emily Brown',
+    'address': '222 Oak Lane',
+    'contact': '+1 (555) 444-5555',
+    'department': 'Dermatology',
+    'picture': 'assets/icons/patient.png',
+  },
+  {
+    'name': 'Michael Lee',
+    'address': '333 Maple Avenue',
+    'contact': '+1 (555) 777-8888',
+    'department': 'Gastroenterology',
+    'picture': 'assets/icons/patient.png',
+  },
+  {
+    'name': 'Sarah Adams',
+    'address': '444 Elm Street',
+    'contact': '+1 (555) 999-0000',
+    'department': 'Oncology',
+    'picture': 'assets/icons/patient.png',
+  },
+  {
+    'name': 'David Johnson',
+    'address': '555 Oak Avenue',
+    'contact': '+1 (555) 111-2222',
+    'department': 'ENT',
+    'picture': 'assets/icons/patient.png',
+  },
+  {
+    'name': 'Jennifer Miller',
+    'address': '666 Maple Lane',
+    'contact': '+1 (555) 333-4444',
+    'department': 'Urology',
+    'picture': 'assets/icons/patient.png',
+  },
+  {
+    'name': 'Robert Brown',
+    'address': '777 Elm Street',
+    'contact': '+1 (555) 666-7777',
+    'department': 'Cardiology',
+    'picture': 'assets/icons/patient.png',
+  },
+];
+
+List<Map<String, dynamic>> appointments = [
+  {
+    "patientName": "John Smith",
+    "appointmentTitle": "Regular Check-up",
+    "appointmentTime": "2023-07-27 09:30 AM",
+  },
+  {
+    "patientName": "Jane Doe",
+    "appointmentTitle": "Follow-up on Medication",
+    "appointmentTime": "2023-07-27 11:15 AM",
+  },
+  {
+    "patientName": "Robert Johnson",
+    "appointmentTitle": "Pre-operation Consultation",
+    "appointmentTime": "2023-07-28 02:00 PM",
+  },
+  {
+    "patientName": "Alice Brown",
+    "appointmentTitle": "Dental Cleaning",
+    "appointmentTime": "2023-07-29 10:45 AM",
+  },
+  {
+    "patientName": "Emily Williams",
+    "appointmentTitle": "Eye Examination",
+    "appointmentTime": "2023-07-29 03:30 PM",
+  },
+  {
+    "patientName": "Michael Lee",
+    "appointmentTitle": "Blood Test",
+    "appointmentTime": "2023-07-30 09:00 AM",
+  },
+  {
+    "patientName": "Laura Adams",
+    "appointmentTitle": "Physical Therapy",
+    "appointmentTime": "2023-07-30 02:30 PM",
+  },
+  {
+    "patientName": "David Wilson",
+    "appointmentTitle": "X-ray Evaluation",
+    "appointmentTime": "2023-07-31 11:00 AM",
+  },
+  {
+    "patientName": "Olivia Davis",
+    "appointmentTitle": "Diabetes Consultation",
+    "appointmentTime": "2023-08-01 04:15 PM",
+  },
+  {
+    "patientName": "Sophia Martin",
+    "appointmentTitle": "Allergy Test",
+    "appointmentTime": "2023-08-01 09:45 AM",
+  },
+  // Add more appointment data here...
+];
+
 

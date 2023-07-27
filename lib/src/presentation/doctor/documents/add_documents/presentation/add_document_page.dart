@@ -14,14 +14,14 @@ import '../../../../../core/resources/color_manager.dart';
 import '../../../../../core/resources/style_manager.dart';
 import '../../../../../core/resources/value_manager.dart';
 
-class AddDocPatient extends StatefulWidget {
-  const AddDocPatient({super.key});
+class AddDocDoctor extends StatefulWidget {
+  const AddDocDoctor({super.key});
 
   @override
-  State<AddDocPatient> createState() => _AddDocPatientState();
+  State<AddDocDoctor> createState() => _AddDocumentPageState();
 }
 
-class _AddDocPatientState extends State<AddDocPatient> {
+class _AddDocumentPageState extends State<AddDocDoctor> {
 
 
   @override

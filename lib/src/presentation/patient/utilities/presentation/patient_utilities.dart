@@ -22,14 +22,14 @@ import '../../../../core/resources/value_manager.dart';
 import '../widgets/bmi.dart';
 import '../widgets/bmr.dart';
 
-class UtilitiesPage extends StatefulWidget {
-  const UtilitiesPage({super.key});
+class PatientUtilitiesPage extends StatefulWidget {
+  const PatientUtilitiesPage({super.key});
 
   @override
-  State<UtilitiesPage> createState() => _UtilitiesPageState();
+  State<PatientUtilitiesPage> createState() => _PatientUtilitiesPageState();
 }
 
-class _UtilitiesPageState extends State<UtilitiesPage> {
+class _PatientUtilitiesPageState extends State<PatientUtilitiesPage> {
 
   WeatherFactory wf = new WeatherFactory("5cd969bec67776d361b65b9fa9ef799b");
 
