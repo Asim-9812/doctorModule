@@ -15,6 +15,7 @@ import 'package:medical_app/src/presentation/login/presentation/login_page.dart'
 import 'package:medical_app/src/presentation/register/data/register_provider.dart';
 import 'package:medical_app/src/presentation/register/presentation/register_doctor.dart';
 import 'package:medical_app/src/presentation/register/presentation/register_organization.dart';
+import 'package:medical_app/src/presentation/register/presentation/register_patient.dart';
 import 'package:medical_app/src/presentation/subscription-plan/presentation/test_output.dart';
 
 import '../../../core/api.dart';
@@ -30,10 +31,9 @@ class RegisterPage extends ConsumerStatefulWidget {
 }
 
 class _RegisterPageState extends ConsumerState<RegisterPage> {
-  List<String> accountType = ['Select Account Type','Merchant','Organization','Professional',];
+  List<String> accountType = ['Select Account Type','Merchant','Organization','Professional','Patient'];
   int accountId =0;
   String selectedAccountType = 'Select Account Type';
-
   final formKey = GlobalKey<FormState>();
   bool _isChecked = false;
   bool isPostingData = false;
@@ -205,6 +205,9 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   if(selectedAccountType == accountType[3])
                     RegisterDoctor(accountId: accountId),
 
+                  if(selectedAccountType == accountType[4])
+                    RegisterPatient(accountId:accountId),
+
 
 
                   SizedBox(height: 50.h,),
@@ -224,6 +227,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       ),
     );
   }
+
+
 
 
 

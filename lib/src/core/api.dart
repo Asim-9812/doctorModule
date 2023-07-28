@@ -22,4 +22,15 @@ class Api{
    ///user Login...
    static const userLogin = '$baseUrl/api/Users/UserLogin';
 
+
+   /// Patient registration...
+   static const getCostCategory = '$baseUrl/api/CostCategory/Getlist';
+
+
+   /// Country details...
+   static const getCountry = '$baseUrl/api/Country/GetList';
+   static const getProvince = '$baseUrl/api/Province/GetListProvinceByCountryId/';
+   static const getDistrict = '$baseUrl/api/District/GetListDistrictByProvinceId/';
+   static const getMunicipality = '$baseUrl/api/Municipality/GetListMunicipalityByDistrictId/';
+
 }

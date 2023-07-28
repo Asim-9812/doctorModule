@@ -15,6 +15,7 @@ import '../../../../core/resources/value_manager.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../profile/presentation/profile_page.dart';
+import '../../quick_services/presentation/e_ticket.dart';
 import '../../search-near-by/presentation/search_for_page.dart';
 
 
@@ -142,150 +143,153 @@ class _PatientHomePageState extends State<PatientHomePage> {
           Text('Quick Services',style: getMediumStyle(color: ColorManager.black,fontSize: 28.sp),),
 
           h10,
-          Container(
-            height: 150.h,
-            width: double.infinity,
-            child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.w),
-              physics: BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              children: [
-                Container(
-                  height: 120,
-                  width: 200,
-                  decoration: BoxDecoration(
-                      borderRadius:BorderRadius.circular(10),
-                      color: ColorManager.brightGreen
-                  ),
-                  child: Stack(
-                    children: [
-                      Center(child: Image.asset('assets/images/eticket.png')),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 20.h),
-                          child: Container(
-                            height: 25,
-                            width: 90,
-                            decoration: BoxDecoration(
-                              color: ColorManager.textGrey.withOpacity(0.7),
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  bottomLeft: Radius.circular(10)
+          InkWell(
+            onTap: ()=>Get.to(()=>ETicket()),
+            child: Container(
+              height: 150.h,
+              width: double.infinity,
+              child: ListView(
+                padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.w),
+                physics: BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                children: [
+                  Container(
+                    height: 120,
+                    width: 200,
+                    decoration: BoxDecoration(
+                        borderRadius:BorderRadius.circular(10),
+                        color: ColorManager.brightGreen
+                    ),
+                    child: Stack(
+                      children: [
+                        Center(child: Image.asset('assets/images/eticket.png')),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 20.h),
+                            child: Container(
+                              height: 25,
+                              width: 90,
+                              decoration: BoxDecoration(
+                                color: ColorManager.textGrey.withOpacity(0.7),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10)
+                                ),
+                              ),
+                              child: Center(
+                                child: Text('E-Ticket',style: getMediumStyle(color: ColorManager.white,fontSize: 16),),
                               ),
                             ),
-                            child: Center(
-                              child: Text('E-Ticket',style: getMediumStyle(color: ColorManager.white,fontSize: 16),),
-                            ),
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                w10,
-                Container(
-                  height: 120,
-                  width: 200,
-                  decoration: BoxDecoration(
-                      borderRadius:BorderRadius.circular(10),
-                      color: ColorManager.yellowFellow
-                  ),
-                  child: Stack(
-                    children: [
-                      Center(child: Image.asset('assets/images/call.png')),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 20.h),
-                          child: Container(
-                            height: 25,
-                            width: 90,
-                            decoration: BoxDecoration(
-                              color: ColorManager.textGrey.withOpacity(0.7),
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  bottomLeft: Radius.circular(10)
+                  w10,
+                  Container(
+                    height: 120,
+                    width: 200,
+                    decoration: BoxDecoration(
+                        borderRadius:BorderRadius.circular(10),
+                        color: ColorManager.yellowFellow
+                    ),
+                    child: Stack(
+                      children: [
+                        Center(child: Image.asset('assets/images/call.png')),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 20.h),
+                            child: Container(
+                              height: 25,
+                              width: 90,
+                              decoration: BoxDecoration(
+                                color: ColorManager.textGrey.withOpacity(0.7),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10)
+                                ),
+                              ),
+                              child: Center(
+                                child: Text('Call for test',style: getMediumStyle(color: ColorManager.white,fontSize: 16),),
                               ),
                             ),
-                            child: Center(
-                              child: Text('Call for test',style: getMediumStyle(color: ColorManager.white,fontSize: 16),),
-                            ),
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                w10,
-                Container(
-                  height: 120,
-                  width: 200,
-                  decoration: BoxDecoration(
-                      borderRadius:BorderRadius.circular(10),
-                      color: ColorManager.blueContainer
-                  ),
-                  child: Stack(
-                    children: [
-                      Center(child: Image.asset('assets/images/tele.png')),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 20.h),
-                          child: Container(
-                            height: 25,
-                            width: 120,
-                            decoration: BoxDecoration(
-                              color: ColorManager.textGrey.withOpacity(0.7),
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  bottomLeft: Radius.circular(10)
+                  w10,
+                  Container(
+                    height: 120,
+                    width: 200,
+                    decoration: BoxDecoration(
+                        borderRadius:BorderRadius.circular(10),
+                        color: ColorManager.blueContainer
+                    ),
+                    child: Stack(
+                      children: [
+                        Center(child: Image.asset('assets/images/tele.png')),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 20.h),
+                            child: Container(
+                              height: 25,
+                              width: 120,
+                              decoration: BoxDecoration(
+                                color: ColorManager.textGrey.withOpacity(0.7),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10)
+                                ),
+                              ),
+                              child: Center(
+                                child: Text('Telecommunication',style: getMediumStyle(color: ColorManager.white,fontSize: 16),),
                               ),
                             ),
-                            child: Center(
-                              child: Text('Telecommunication',style: getMediumStyle(color: ColorManager.white,fontSize: 16),),
-                            ),
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                w10,
-                Container(
-                  height: 120,
-                  width: 200,
-                  decoration: BoxDecoration(
-                      borderRadius:BorderRadius.circular(10),
-                      color: ColorManager.brightPink
-                  ),
-                  child: Stack(
-                    children: [
-                      Center(child: Image.asset('assets/images/pharmacy.png')),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 20.h),
-                          child: Container(
-                            height: 25,
-                            width: 90,
-                            decoration: BoxDecoration(
-                              color: ColorManager.textGrey.withOpacity(0.7),
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10),
-                                  bottomLeft: Radius.circular(10)
+                  w10,
+                  Container(
+                    height: 120,
+                    width: 200,
+                    decoration: BoxDecoration(
+                        borderRadius:BorderRadius.circular(10),
+                        color: ColorManager.brightPink
+                    ),
+                    child: Stack(
+                      children: [
+                        Center(child: Image.asset('assets/images/pharmacy.png')),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 20.h),
+                            child: Container(
+                              height: 25,
+                              width: 90,
+                              decoration: BoxDecoration(
+                                color: ColorManager.textGrey.withOpacity(0.7),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10),
+                                    bottomLeft: Radius.circular(10)
+                                ),
+                              ),
+                              child: Center(
+                                child: Text('Pharmacy',style: getMediumStyle(color: ColorManager.white,fontSize: 16),),
                               ),
                             ),
-                            child: Center(
-                              child: Text('Pharmacy',style: getMediumStyle(color: ColorManager.white,fontSize: 16),),
-                            ),
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

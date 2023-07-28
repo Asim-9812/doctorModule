@@ -96,7 +96,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               InkWell(
-                onTap: ()=>Get.to(()=>SearchNearByPage(),transition: Transition.fadeIn),
+                // onTap: ()=>Get.to(()=>SearchNearByPage(),transition: Transition.fadeIn),
                 splashColor: ColorManager.primary.withOpacity(0.4),
                 child: Center(
                   child: Container(
@@ -277,7 +277,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                         // padding: EdgeInsets.symmetric(horizontal: 2.w),
                         margin: EdgeInsets.symmetric(horizontal: 12.w),
                         decoration: BoxDecoration(
-                          color: ColorManager.lightBlueAccent.withOpacity(0.5),
+                          color:ColorManager.lightBlueAccent.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
                             color: ColorManager.black.withOpacity(0.7),
@@ -297,7 +297,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                                       width: 0.5
                                   )
                               ),
-                              child: CircleAvatar(
+                              child:  CircleAvatar(
                                 backgroundColor: ColorManager.white,
                                 backgroundImage: myPatients[index]['picture']==null
                                     ? AssetImage('assets/icons/user.png')
@@ -320,7 +320,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                              ),
                               child:Padding(
                                 padding: const EdgeInsets.all(5.0),
-                                child: FaIcon(Icons.chevron_right,color: ColorManager.black,),
+                                child:FaIcon(Icons.chevron_right,color: ColorManager.black,),
                               )
                             )
 
