@@ -452,7 +452,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             setState(() {
                               isLoading = false;
                             });
-                          } else {
+                          }
+                          else {
                             await ref.read(userProvider.notifier).getUserInfo(response:response.getOrElse(() => {}));
                             scaffoldMessage.showSnackBar(
                                 SnackbarUtil.showSuccessSnackbar(

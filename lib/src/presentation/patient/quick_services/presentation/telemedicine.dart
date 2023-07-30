@@ -2,7 +2,6 @@
 
 
 import 'dart:io';
-import 'dart:math';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -28,14 +27,14 @@ import '../../../../data/services/user_services.dart';
 import '../../../common/snackbar.dart';
 import '../domain/model/cost_category_model.dart';
 
-class ETicket extends ConsumerStatefulWidget {
-  const ETicket({super.key});
+class Telemedicine extends ConsumerStatefulWidget {
+  const Telemedicine({super.key});
 
   @override
-  ConsumerState<ETicket> createState() => _ETicketState();
+  ConsumerState<Telemedicine> createState() => _TelemedicineState();
 }
 
-class _ETicketState extends ConsumerState<ETicket> {
+class _TelemedicineState extends ConsumerState<Telemedicine> {
   List<String> genderType = ['Select Gender','Male', 'Female', 'Other'];
   String selectedGender = 'Select Gender';
   int genderId = 0;
@@ -226,12 +225,12 @@ class _ETicketState extends ConsumerState<ETicket> {
           padding: EdgeInsets.symmetric(horizontal: 50.w,vertical: 20.h),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              elevation: 10,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)
-              ),
-              backgroundColor: ColorManager.primaryDark,
-              fixedSize: Size.fromHeight(40)
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)
+                ),
+                backgroundColor: ColorManager.primaryDark,
+                fixedSize: Size.fromHeight(40)
             ),
             onPressed: isPostingData ? null :() async {
               final scaffoldMessage = ScaffoldMessenger.of(context);
@@ -303,7 +302,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                       costCategoryID: costId!,
                       departmentID: departmentId!,
                       referedByID: 0,
-                      TPID: 1,
+                      TPID: 2,
                       policyNo:_policyController.text.isEmpty?0:int.parse(_policyController.text),
                       claimCode: 1,
                       serviceCategoryID: 1,
@@ -618,47 +617,47 @@ class _ETicketState extends ConsumerState<ETicket> {
             ),
 
             if(selectedCategory != 'General')
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Policy No.',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
-                h10,
-                Container(
-                  height: 60,
-                  width: 180,
-                  child: TextFormField(
-                    controller: _policyController,
-                    keyboardType: TextInputType.phone,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value){
-                      if(value !=null){
-                        if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                          return 'Please enter a valid Policy no.';
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Policy No.',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                  h10,
+                  Container(
+                    height: 60,
+                    width: 180,
+                    child: TextFormField(
+                      controller: _policyController,
+                      keyboardType: TextInputType.phone,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value){
+                        if(value !=null){
+                          if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                            return 'Please enter a valid Policy no.';
+                          }
+                          else{
+                            return null;
+                          }
                         }
-                        else{
-                          return null;
-                        }
-                      }
 
 
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                        floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                        hintText: 'Policy No.',
-                        hintStyle: getRegularStyle(color: ColorManager.textGrey),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                                color: ColorManager.black
-                            )
-                        )
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                          floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                          hintText: 'Policy No.',
+                          hintStyle: getRegularStyle(color: ColorManager.textGrey),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(
+                                  color: ColorManager.black
+                              )
+                          )
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
           ],
         ),
         h10,
@@ -667,7 +666,7 @@ class _ETicketState extends ConsumerState<ETicket> {
       ],
     );
   }
-  
+
   Column _patientDetails(){
 
     return Column(
@@ -1183,7 +1182,7 @@ class _ETicketState extends ConsumerState<ETicket> {
       ],
     );
   }
-  
+
   Column _register(){
     final selectImage = ref.watch(imageProvider);
     return Column(
@@ -1395,10 +1394,10 @@ class _ETicketState extends ConsumerState<ETicket> {
                   child: InkWell(
                     onTap: ()=>ref.invalidate(imageProvider),
                     child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: ColorManager.textGrey.withOpacity(0.15)
-                      ),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: ColorManager.textGrey.withOpacity(0.15)
+                        ),
                         padding: EdgeInsets.symmetric(horizontal: 2.w,vertical: 2.h),
                         child: FaIcon(Icons.close)),
                   ),
@@ -1413,7 +1412,7 @@ class _ETicketState extends ConsumerState<ETicket> {
             borderType: BorderType.RRect,
             child: InkWell(
               onTap: ()  {
-                 ref.read(imageProvider.notifier).pickAnImage();
+                ref.read(imageProvider.notifier).pickAnImage();
               },
               child: Container(
                 height: 200,

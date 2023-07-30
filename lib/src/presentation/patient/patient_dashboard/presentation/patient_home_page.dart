@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:medical_app/src/presentation/patient/quick_services/presentation/telemedicine.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
@@ -221,37 +222,40 @@ class _PatientHomePageState extends State<PatientHomePage> {
                     ),
                   ),
                   w10,
-                  Container(
-                    height: 120,
-                    width: 200,
-                    decoration: BoxDecoration(
-                        borderRadius:BorderRadius.circular(10),
-                        color: ColorManager.blueContainer
-                    ),
-                    child: Stack(
-                      children: [
-                        Center(child: Image.asset('assets/images/tele.png')),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: Padding(
-                            padding: EdgeInsets.only(bottom: 20.h),
-                            child: Container(
-                              height: 25,
-                              width: 120,
-                              decoration: BoxDecoration(
-                                color: ColorManager.textGrey.withOpacity(0.7),
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10)
+                  InkWell(
+                    onTap: ()=>Get.to(()=>Telemedicine()),
+                    child: Container(
+                      height: 120,
+                      width: 200,
+                      decoration: BoxDecoration(
+                          borderRadius:BorderRadius.circular(10),
+                          color: ColorManager.blueContainer
+                      ),
+                      child: Stack(
+                        children: [
+                          Center(child: Image.asset('assets/images/tele.png')),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 20.h),
+                              child: Container(
+                                height: 25,
+                                width: 120,
+                                decoration: BoxDecoration(
+                                  color: ColorManager.textGrey.withOpacity(0.7),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10)
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text('Telemedicine',style: getMediumStyle(color: ColorManager.white,fontSize: 16),),
                                 ),
                               ),
-                              child: Center(
-                                child: Text('Telecommunication',style: getMediumStyle(color: ColorManager.white,fontSize: 16),),
-                              ),
                             ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   w10,

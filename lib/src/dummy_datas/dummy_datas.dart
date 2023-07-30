@@ -240,45 +240,51 @@ List<Map<String, dynamic>> closeCircle = [
     "name": "Dr. John Doe",
     "picture": "assets/icons/doctor.png",
     "specializeIn": "Cardiology",
+    "gender": "Male",
   },
   {
     "name": "Dr. Jane Smith",
     "picture": "assets/icons/doctor_login.png",
     "specializeIn": "Pediatrics",
+    "gender": "Others",
   },
   {
     "name": "Dr. Robert Johnson",
     "picture": null,
     "specializeIn": "Orthopedics",
+    "gender": "Male",
   },
   {
     "name": "Dr. Sarah Williams",
     "picture": "assets/icons/patient.png",
     "specializeIn": "Physiology",
+    "gender": "Female",
   },
   {
     "name": "Dr. Michael Lee",
     "picture": "assets/icons/patient_login.png",
     "specializeIn": "Neurology",
+    "gender": "Male",
   },
   {
     "name": "Dr. Emily Brown",
     "picture": "assets/icons/org_login.png",
     "specializeIn": "Ophthalmology",
+    "gender": "Others",
   },
   {
     "name": "Dr. David Wilson",
     "picture": null,
     "specializeIn": "Dermatology",
+    "gender": "Male",
   },
   {
     "name": "Dr. Olivia Davis",
     "picture": "assets/icons/hospital.png",
     "specializeIn": "Endocrinology",
+    "gender": "Female",
   },
 ];
-
-
 
 List<Map<String, dynamic>> patientList = [
   {
@@ -287,6 +293,7 @@ List<Map<String, dynamic>> patientList = [
     'contact': '+1 (555) 123-4567',
     'department': 'Cardiology',
     'picture': 'assets/icons/patient.png',
+    'gender': "Male",
   },
   {
     'name': 'Jane Smith',
@@ -294,6 +301,7 @@ List<Map<String, dynamic>> patientList = [
     'contact': '+1 (555) 987-6543',
     'department': 'Orthopedics',
     'picture': 'assets/icons/patient.png',
+    'gender': "Female",
   },
   {
     'name': 'Alice Johnson',
@@ -301,6 +309,7 @@ List<Map<String, dynamic>> patientList = [
     'contact': '+1 (555) 321-7890',
     'department': 'Pediatrics',
     'picture': 'assets/icons/patient.png',
+    'gender': "Female",
   },
   {
     'name': 'Bob Wilson',
@@ -308,6 +317,7 @@ List<Map<String, dynamic>> patientList = [
     'contact': '+1 (555) 222-3333',
     'department': 'Neurology',
     'picture': 'assets/icons/patient.png',
+    'gender': "Male",
   },
   {
     'name': 'Emily Brown',
@@ -315,6 +325,7 @@ List<Map<String, dynamic>> patientList = [
     'contact': '+1 (555) 444-5555',
     'department': 'Dermatology',
     'picture': 'assets/icons/patient.png',
+    'gender': "Others",
   },
   {
     'name': 'Michael Lee',
@@ -322,6 +333,7 @@ List<Map<String, dynamic>> patientList = [
     'contact': '+1 (555) 777-8888',
     'department': 'Gastroenterology',
     'picture': 'assets/icons/patient.png',
+    'gender': "Male",
   },
   {
     'name': 'Sarah Adams',
@@ -329,6 +341,7 @@ List<Map<String, dynamic>> patientList = [
     'contact': '+1 (555) 999-0000',
     'department': 'Oncology',
     'picture': 'assets/icons/patient.png',
+    'gender': "Female",
   },
   {
     'name': 'David Johnson',
@@ -336,6 +349,7 @@ List<Map<String, dynamic>> patientList = [
     'contact': '+1 (555) 111-2222',
     'department': 'ENT',
     'picture': 'assets/icons/patient.png',
+    'gender': "Male",
   },
   {
     'name': 'Jennifer Miller',
@@ -343,6 +357,7 @@ List<Map<String, dynamic>> patientList = [
     'contact': '+1 (555) 333-4444',
     'department': 'Urology',
     'picture': 'assets/icons/patient.png',
+    'gender': "Others",
   },
   {
     'name': 'Robert Brown',
@@ -350,8 +365,10 @@ List<Map<String, dynamic>> patientList = [
     'contact': '+1 (555) 666-7777',
     'department': 'Cardiology',
     'picture': 'assets/icons/patient.png',
+    'gender': "Male",
   },
 ];
+
 
 List<Map<String, dynamic>> appointments = [
   {

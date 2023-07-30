@@ -19,7 +19,7 @@ import '../../../patient/documents/presentation/document_page.dart';
 import '../../../patient/scan/presentation/qr_scan.dart';
 import '../../../patient/settings/presentation/settings_page.dart';
 import '../../../patient/utilities/presentation/patient_utilities.dart';
-import '../../patient_reports/presentation/report_page.dart';
+import '../../patient_reports/presentation/report_page_doctor.dart';
 
 
 
@@ -117,7 +117,7 @@ class _AnimatedBarExampleState extends State<DoctorMainPage> {
         children: [
           DoctorHomePage(),
           DoctorDocumentPage(),
-          PatientReportPage(),
+          PatientReportPageDoctor(),
           DoctorUtilityPage()
         ],
       ),

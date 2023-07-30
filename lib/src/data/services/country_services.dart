@@ -65,7 +65,7 @@ class CountryService{
   Future<List<MunicipalityModel>> getMunicipality({
     required int districtId
   }) async {
-    dio.options.headers['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiZjZhNTdmNC1iN2JmLTQzYmItODgzNy0yY2NiZDE4NDM5ODIiLCJ2YWxpZCI6IjEiLCJ1c2VyaWQiOiJET0MwMDAxIiwiZXhwIjoxNzIxMjc3NDc0LCJpc3MiOiJsb2NhbGhvc3QiLCJhdWQiOiJXZWxjb21lIn0.o7_teFlpwxmG7EOBO9eL46bfOwLySS6Qyc1Yj8ZgcyI';
+    dio.options.headers['Authorization'] = Api.bearerToken;
     try {
       final response = await dio.get('${Api.getMunicipality}$districtId');
 
@@ -79,22 +79,5 @@ class CountryService{
     }
   }
 
-  // Future<List<MunicipalityModel>> getMunicipality({
-  //   required int districtId
-  // }) async {
-  //   try {
-  //     print('${Api.getMunicipality}$districtId');
-  //     final response = await dio.get('${Api.getMunicipality}$districtId');
-  //
-  //     final data = (response.data['result'] as List)
-  //         .map((e) => MunicipalityModel.fromJson(e))
-  //         .toList();
-  //     print(response.data);
-  //     return data;
-  //   } on DioException catch (err) {
-  //     print(err.response);
-  //     throw Exception('Unable to fetch data');
-  //   }
-  // }
 
 }

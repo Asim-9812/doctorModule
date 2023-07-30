@@ -28,7 +28,7 @@ class SnackbarUtil {
       backgroundColor: ColorManager.primary,
       behavior: SnackBarBehavior.floating,
       elevation: 10,
-      margin: const EdgeInsets.fromLTRB(40, 0, 40, 120),
+      margin: const EdgeInsets.fromLTRB(40, 0, 40, 50),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.r),
       ),
@@ -61,7 +61,7 @@ class SnackbarUtil {
       ),
       backgroundColor: ColorManager.red,
       behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.fromLTRB(40, 0, 40, 120),
+      margin: const EdgeInsets.fromLTRB(40, 0, 40, 50),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.r),
       ),
@@ -118,7 +118,7 @@ class SnackbarUtil {
       backgroundColor: ColorManager.yellowFellow,
       behavior: SnackBarBehavior.floating,
       elevation: 10,
-      margin: const EdgeInsets.fromLTRB(40, 0, 40, 120),
+      margin: const EdgeInsets.fromLTRB(40, 0, 40, 50),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.r),
       ),
