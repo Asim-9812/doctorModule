@@ -1,4 +1,4 @@
-import 'dart:convert';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,17 +12,22 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
+import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:medical_app/src/data/model/registered_patient_model.dart';
 import 'package:medical_app/src/data/services/registered_patient_services.dart';
 import 'package:medical_app/src/data/services/user_services.dart';
 import 'package:medical_app/src/presentation/patient/quick_services/presentation/telemedicine.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../../../dummy_datas/dummy_datas.dart';
+import '../../../../test/test.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../notification/presentation/notification_page.dart';
+import '../../../patient/quick_services/presentation/e_ticket.dart';
+import '../../doctor_statistics/presentation/doc_stat_page.dart';
 
 class OrgHomePage extends StatefulWidget {
   const OrgHomePage({super.key,});
@@ -33,6 +38,9 @@ class OrgHomePage extends StatefulWidget {
 
 class _OrgHomePageState extends State<OrgHomePage> {
 
+
+
+
   bool? _geolocationStatus;
   LocationPermission? _locationPermission;
   geo.Position? _userPosition;
@@ -41,16 +49,24 @@ class _OrgHomePageState extends State<OrgHomePage> {
   List<RegisteredPatientModel> patients = [];
 
 
-
   @override
   void initState() {
     super.initState();
     checkGeolocationStatus();
-    _calculateGenderCounts();
     _getDoctorsList();
     _getPatientList();
 
   }
+
+
+
+  Future<void> _refreshData() async {
+    // Implement the logic to refresh the data here
+    _getDoctorsList();
+    _getPatientList();
+    // You can add more functions to update other data if needed
+  }
+
 
   ///geolocator settings...
 
@@ -128,6 +144,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
   }
 
 
+
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -139,43 +156,94 @@ class _OrgHomePageState extends State<OrgHomePage> {
       duration: Duration(milliseconds: 700),
       child: Scaffold(
         key: scaffoldKey,
-        body: CustomScrollView(
-          physics: BouncingScrollPhysics(),
-          slivers: [
-            SliverPersistentHeader(
-              delegate: CustomSliverAppBarDelegate(
-                  expandedHeight: 180.0, scaffoldKey: scaffoldKey),
-              pinned: true,
-            ),
-            buildBody(context)
-          ],
+        body: RefreshIndicator(
+          onRefresh: _refreshData,
+          child: CustomScrollView(
+            physics: BouncingScrollPhysics(),
+            slivers: [
+              SliverPersistentHeader(
+                delegate: CustomSliverAppBarDelegate(
+                    expandedHeight: 180.0, scaffoldKey: scaffoldKey),
+                pinned: true,
+              ),
+              buildBody(context)
+            ],
+          ),
         ),
         extendBody: true,
       ),
     );
   }
 
-  Map<String, int> _calculateGenderCounts() {
-    Map<String, int> genderCounts = {
-      'Male': 0,
-      'Female': 0,
-      'Others': 0,
-    };
 
-    for (var data in doctors) {
-      final gender = data.genderID;
-      if (gender == 1) {
-        genderCounts['Male'] = (genderCounts['Male'] ?? 0) + 1;
-      } else if (gender == 2) {
-        genderCounts['Female'] = (genderCounts['Female'] ?? 0) + 1;
-      } else {
-        genderCounts['Others'] = (genderCounts['Others'] ?? 0) + 1;
-      }
-    }
-
-    return genderCounts;
-  }
   Widget buildBody(BuildContext context) {
+
+
+
+    return SliverToBoxAdapter(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          h20,
+          _overallStat(),
+          h20,
+          _surveyStat(),
+          h20,
+          Container(
+            height: 300,
+            width: 180,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                    color: ColorManager.black.withOpacity(0.5),
+                    width: 0.5
+                )
+            ),
+            margin: EdgeInsets.symmetric(horizontal: 32.w,vertical: 18.h),
+            padding: EdgeInsets.symmetric(vertical: 18.h),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text('Patient Groups',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
+                Divider(
+                  thickness: 0.5,
+                  color: ColorManager.black,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    h10,
+
+                  ],
+                )
+              ],
+            ),
+          ),
+          h20,
+
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: ColorManager.black.withOpacity(0.5),
+                width: 0.5
+              )
+            ),
+            margin: EdgeInsets.symmetric(horizontal: 32.w,vertical: 18.h),
+              child: SfCharts()),
+          h100,
+          h100, h100, h100, h100
+
+        ],
+      ),
+    );
+  }
+
+
+  Widget _overallStat() {
     int todayRegisters = _getTotalPatientsRegisteredToday();
     int yesterdayRegisters = _getPatientsRegisteredYesterday();
 
@@ -183,24 +251,25 @@ class _OrgHomePageState extends State<OrgHomePage> {
     double percentageChange = ((todayRegisters - yesterdayRegisters) / yesterdayRegisters) * 100;
 
     bool isIncrease = percentageChange > 0;
-
-    Map<String, int> genderCounts = _calculateGenderCounts();
-    return SliverToBoxAdapter(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      height: 220,
+      width: double.infinity,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        physics: BouncingScrollPhysics(),
+        shrinkWrap: true,
         children: [
-          h20,
+          w18,
           Container(
             decoration: BoxDecoration(
-              color: ColorManager.primary.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: ColorManager.black.withOpacity(0.5),
-                width: 0.5
-              )
+                color: ColorManager.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                    color: ColorManager.black.withOpacity(0.5),
+                    width: 0.5
+                )
             ),
-            margin: EdgeInsets.symmetric(horizontal: 18.w,vertical: 8.h),
+            margin: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
             height:200,
             width: 280,
             child: Container(
@@ -211,6 +280,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
               ),
               padding: EdgeInsets.symmetric(horizontal: 20.w,vertical: 32.h),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -220,7 +290,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
                     children: [
                       FaIcon(CupertinoIcons.graph_square,color: ColorManager.primaryDark,),
                       w10,
-                      Text('Overall Stat',style: getMediumStyle(color: ColorManager.black,fontSize: 24),)
+                      Text('Overall Patients Stat',style: getMediumStyle(color: ColorManager.black,fontSize: 24),)
                     ],
                   ),
                   h20,
@@ -248,70 +318,271 @@ class _OrgHomePageState extends State<OrgHomePage> {
                         size: 18,
                       ),
                     ],
-                  )
+                  ),
+                  h20,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text('Total patients registered :',style: getRegularStyle(color: ColorManager.black),),
+                      w10,
+                      Text('${patients.length}',style: getRegularStyle(color: ColorManager.black,fontSize: 28),),
+                    ],
+                  ),
                 ],
               ),
             ),
 
           ),
-          h20,
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Doctors Statistics',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
-                Container(
-                  width: 220.w,
-                  child: Divider(
-                    color: ColorManager.black.withOpacity(0.5),
-                    thickness: 0.5,
-                  ),
-                )
-              ],
-            ),
-          ),
-          h10,
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-            margin: EdgeInsets.symmetric(horizontal: 18.w,vertical: 8.h),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border:Border.all(
-                color: ColorManager.black.withOpacity(0.5),
-                width: 0.5
-              )
+                borderRadius: BorderRadius.circular(20),
             ),
-            child: SfCartesianChart(
-              primaryXAxis: CategoryAxis(),
-              series: <ChartSeries>[
-                ColumnSeries<String, String>(
-                  dataSource: genderCounts.keys.toList(),
-                  xValueMapper: (String gender, _) => gender,
-                  yValueMapper: (String gender, _) => genderCounts[gender]!,
-                  dataLabelSettings: DataLabelSettings(isVisible: true),
-                  pointColorMapper: (String gender, _) {
-                    if (gender == 'Male') {
-                      return ColorManager.blue.withOpacity(0.7);
-                    } else if (gender == 'Female') {
-                      return ColorManager.premiumContainer.withOpacity(0.7);
-                    } else {
-                      return ColorManager.red.withOpacity(0.5);
-                    }
-                  },
+            margin: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+            height:200,
+            width: 200,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 90,
+                  width: 200,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: ColorManager.black.withOpacity(0.5),
+                      width: 0.5
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('OPD Patient',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
+                          h16,
+                          Text('12',style: getMediumStyle(color: ColorManager.black),),
+                        ],
+                      ),
+                      FaIcon(CupertinoIcons.person_2_alt,color: ColorManager.primary,size: 32,)
+                    ],
+                  ),
                 ),
+                Container(
+                  height: 90,
+                  width: 200,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: ColorManager.black.withOpacity(0.5),
+                      width: 0.5
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Today\'s Operation',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                          h16,
+                          Text('5',style: getMediumStyle(color: ColorManager.black),),
+                        ],
+                      ),
+                      FaIcon(Icons.emergency,color: ColorManager.yellowFellow,size: 28,)
+                    ],
+                  ),
+                ),
+
               ],
             ),
-          ),
-          h100,
-          h100, h100, h100, h100
 
+          ),
+          w20
         ],
       ),
     );
   }
 
+  Column _surveyStat(){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 18.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Hospital Survey',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
+              Container(
+                width: 220.w,
+                child: Divider(
+                  color: ColorManager.black.withOpacity(0.5),
+                  thickness: 0.5,
+                ),
+              )
+            ],
+          ),
+        ),
+        h20,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Container(
+              height: 200,
+              width: 160,
+              margin: EdgeInsets.only(left: 18),
+              decoration: BoxDecoration(
+                border: Border.all(
+                    color: ColorManager.black.withOpacity(0.5),
+                    width: 0.5
+                ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Available Beds ',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
+                      h10,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('12',style: getMediumStyle(color: ColorManager.black),),
+                          FaIcon(CupertinoIcons.bed_double,color: ColorManager.primary,size: 24,)
+                        ],
+                      ),
+                    ],
+                  ),
+                  h10,
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Total Beds ',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
+                      h10,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('100',style: getMediumStyle(color: ColorManager.black),),
+                          FaIcon(CupertinoIcons.bed_double_fill,color: ColorManager.blue,size: 24,)
+                        ],
+                      ),
+                    ],
+                  ),
+                  h20,
+                  LinearProgressBar(
+                    maxSteps: 100,
+                    currentStep: 88,
+                    progressColor: ColorManager.primaryOpacity80,
+                    backgroundColor: ColorManager.iconGrey.withOpacity(0.2),
+                  )
+
+                ],
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                InkWell(
+                  onTap: ()=>Get.to(()=>DocStatPage()),
+                  child: Container(
+                    height: 90,
+                    width: 160,
+                    margin: EdgeInsets.only(right: 18),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: ColorManager.black.withOpacity(0.5),
+                          width: 0.5
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Available Doctors',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
+                        h10,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text('${doctors.length}',style: getMediumStyle(color: ColorManager.black),),
+                            FaIcon(CupertinoIcons.person,color: ColorManager.primary,size: 24,)
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                h20,
+                Container(
+                  height: 90,
+                  width: 160,
+                  margin: EdgeInsets.only(right: 18),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: ColorManager.black.withOpacity(0.5),
+                        width: 0.5
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Total Ambulance',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
+                      h10,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('12',style: getMediumStyle(color: ColorManager.black),),
+                          FaIcon(FontAwesomeIcons.ambulance,color: ColorManager.red.withOpacity(0.5),size: 20,)
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+
+
 }
+
+
+
+
 
 class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
@@ -418,7 +689,7 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                 ),
                 actions: [
                   IconButton(
-                      onPressed: ()=>Get.to(()=>NotificationPage()),
+                      onPressed: ()=>Get.to(()=>ETicket()),
                       icon: Icon(Icons.notifications_none_outlined,color: ColorManager.black,size: 30,))
                 ],
               ),
@@ -479,7 +750,127 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
 }
 
+class LinearProgressBar extends StatelessWidget {
+  final int maxSteps;
+  final int currentStep;
+  final Color progressColor;
+  final Color backgroundColor;
 
+  LinearProgressBar({
+    required this.maxSteps,
+    required this.currentStep,
+    required this.progressColor,
+    required this.backgroundColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    double progress = currentStep.toDouble() / maxSteps.toDouble();
+    Color targetColor = ColorManager.brightRed; // Change the target color to red
+
+    // Calculate the interpolated color based on progress
+    Color currentColor = Color.lerp(progressColor, targetColor, progress) ??
+        Colors.transparent; // If lerp returns null, fallback to transparent
+
+    return LinearProgressIndicator(
+
+      value: progress,
+      valueColor: AlwaysStoppedAnimation<Color>(currentColor),
+      backgroundColor: backgroundColor,
+    );
+  }
+}
+
+
+
+class UserData {
+  final DateTime date;
+  final int numberOfUsers;
+  final String userType;
+
+  UserData(this.date, this.numberOfUsers, this.userType);
+}
+
+class SfCharts extends StatefulWidget {
+  const SfCharts({super.key});
+
+  @override
+  State<SfCharts> createState() => _SfChartsState();
+}
+
+class _SfChartsState extends State<SfCharts> {
+
+  final List<UserData> dummyData = [
+    UserData(DateTime(2023, 7, 1), 50, 'trial'),
+    UserData(DateTime(2023, 7, 2), 60, 'trial'),
+    UserData(DateTime(2023, 7, 3), 80, 'trial'),
+    UserData(DateTime(2023, 7, 4), 70, 'trial'),
+    UserData(DateTime(2023, 7, 1), 30, 'gold'),
+    UserData(DateTime(2023, 7, 2), 40, 'gold'),
+    UserData(DateTime(2023, 7, 3), 55, 'gold'),
+    UserData(DateTime(2023, 7, 4), 50, 'gold'),
+    UserData(DateTime(2023, 7, 1), 20, 'silver'),
+    UserData(DateTime(2023, 7, 2), 25, 'silver'),
+    UserData(DateTime(2023, 7, 3), 35, 'silver'),
+    UserData(DateTime(2023, 7, 4), 30, 'silver'),
+    UserData(DateTime(2023, 7, 1), 10, 'premium'),
+    UserData(DateTime(2023, 7, 2), 15, 'premium'),
+    UserData(DateTime(2023, 7, 3), 20, 'premium'),
+    UserData(DateTime(2023, 7, 4), 25, 'premium'),
+  ];
+
+
+  List<AreaSeries<UserData, DateTime>> getSeriesData(List<String> userTypes) {
+    List<AreaSeries<UserData, DateTime>> seriesList = [];
+
+    for (String userType in userTypes) {
+      List<UserData> filteredData =
+      dummyData.where((data) => data.userType == userType).toList();
+      seriesList.add(AreaSeries<UserData, DateTime>(
+        dataSource: filteredData,
+        xValueMapper: (UserData data, _) => data.date,
+        yValueMapper: (UserData data, _) => data.numberOfUsers,
+        name: userType,
+        color: _getUserTypeColor(userType),
+      ));
+    }
+
+    return seriesList;
+  }
+
+  Color _getUserTypeColor(String userType) {
+    switch (userType) {
+      case 'trial':
+        return ColorManager.primary.withOpacity(0.5);
+      case 'gold':
+        return ColorManager.brightYellow.withOpacity(0.8);
+      case 'silver':
+        return ColorManager.silver.withOpacity(0.99);
+      case 'premium':
+        return ColorManager.premiumContainer.withOpacity(1);
+      default:
+        return ColorManager.black.withOpacity(0.5);
+    }
+  }
+
+
+
+  final List<String> userTypes = ['trial', 'gold', 'silver', 'premium'];
+
+  @override
+  Widget build(BuildContext context) {
+    return SfCartesianChart(
+      primaryXAxis: DateTimeAxis(),
+      title: ChartTitle(text: 'Number of Users by User Type'),
+      series: getSeriesData(userTypes),
+      legend: Legend(
+        width: '20%',
+        alignment: ChartAlignment.far,
+        isVisible: true,
+      ),
+    );
+  }
+}
 
 
 

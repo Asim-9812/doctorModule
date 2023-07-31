@@ -19,7 +19,7 @@ class Api{
 
 
    ///scheme - subscription plan...
-   static const schemePlan = '$baseUrl/api/SchemePlan/GetList';
+   static const schemePlan = '$baseUrl/api/SchemePlans/GetList';
    static const subscriptionPlan = '$baseUrl/api/SchemeSubscription/Insert';
 
    ///user Login...

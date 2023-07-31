@@ -395,8 +395,8 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent,) {
-    final userBox = Hive.box<User>('session').values.toList();
-    String firstName = userBox[0].firstName!;
+    // final userBox = Hive.box<User>('session').values.toList();
+    // String firstName = userBox[0].firstName!;
     final deviceSize = MediaQuery.of(context).size;
     const size = 60;
 
@@ -404,7 +404,7 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
       clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
-        buildBackground(shrinkOffset, context, scaffoldKey,firstName),
+        buildBackground(shrinkOffset, context, scaffoldKey,'User'),
         if(shrinkOffset == 180.0)buildAppBar(shrinkOffset,context),
 
       ],
@@ -482,7 +482,7 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Good Morning,',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 16),),
-                    Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
+                    Text('User',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
                   ],
                 ),
                 actions: [

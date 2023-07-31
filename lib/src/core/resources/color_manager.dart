@@ -19,7 +19,8 @@ class ColorManager {
   static Color lightBlueAccent = HexColor.fromHex('#E4F3FF');
   static Color blueText = HexColor.fromHex('#0F5080');
   static Color red = HexColor.fromHex('#FF0000');
-  static Color black = HexColor.fromHex('#000000');
+  static Color brightRed = HexColor.fromHex('#FF5733');
+  static Color black = HexColor.fromHex('#36454F');
   static Color blackOpacity15 = HexColor.fromHex('#000000').withOpacity(0.15);
   static Color blackOpacity19 = HexColor.fromHex('#000000').withOpacity(0.19);
   static Color blackOpacity25 = HexColor.fromHex('000000').withOpacity(0.25);
@@ -40,9 +41,11 @@ class ColorManager {
   static Color pendingBadgeBg = HexColor.fromHex('#E9D8FD');
   static Color pendingBadgeText = HexColor.fromHex('#44337A');
   static Color yellowFellow = HexColor.fromHex('#FFD090');
+  static Color brightYellow = HexColor.fromHex('#f5f500');
   static Color brightPink = HexColor.fromHex('#FCCBFF');
   static Color blueContainer = HexColor.fromHex('#A8E1FF');
   static Color goldContainer = HexColor.fromHex('#B8994A').withOpacity(0.8);
+  static Color silver = HexColor.fromHex('#acacac').withOpacity(0.6);
   static Color silverContainer = HexColor.fromHex('#949087').withOpacity(0.6);
   static Color premiumContainer = HexColor.fromHex('#BA7A7A').withOpacity(0.8);
   static Color trialContainer = HexColor.fromHex('#261D1D').withOpacity(0.8);

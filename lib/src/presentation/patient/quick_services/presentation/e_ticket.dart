@@ -12,6 +12,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/value_manager.dart';
 import 'package:medical_app/src/data/model/country_model.dart';
@@ -42,12 +43,13 @@ class _ETicketState extends ConsumerState<ETicket> {
   final formKey = GlobalKey<FormState>();
   bool isPostingData = false;
 
+  DateTime? selectedDOB;
+  DateTime? selectedDate;
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _panController = TextEditingController();
   final TextEditingController _nidController = TextEditingController();
   final TextEditingController _uhidController = TextEditingController();
-  final TextEditingController _dobController = TextEditingController();
-  final TextEditingController _consultController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
@@ -190,6 +192,39 @@ class _ETicketState extends ConsumerState<ETicket> {
 
 
 
+  Future<void> _selectDOB(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDOB ?? DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2025),
+    );
+
+    if (picked != null && picked != selectedDOB) {
+      setState(() {
+        selectedDOB = picked;
+      });
+    }
+  }
+
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2025),
+    );
+
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
+
+
+
 
 
   @override
@@ -234,6 +269,7 @@ class _ETicketState extends ConsumerState<ETicket> {
               fixedSize: Size.fromHeight(40)
             ),
             onPressed: isPostingData ? null :() async {
+              final now = DateTime.now();
               final scaffoldMessage = ScaffoldMessenger.of(context);
               if(image == null){
                 scaffoldMessage.showSnackBar(
@@ -244,118 +280,135 @@ class _ETicketState extends ConsumerState<ETicket> {
                 );
               }
               else{
-                if (formKey.currentState!.validate()){
-                  setState(() {
-                    isPostingData = true;
-                  });
-                  print('id: 1');
-                  print('patientID: 1');
-                  print('firstName: ${_firstNameController.text.trim()}');
-                  print('lastName: ${_lastNameController.text.trim()}');
-                  print('DOB: ${_dobController.text}');
-                  print('imagePhoto: 1');
-                  print('countryID: $countryId');
-                  print('provinceID: $provinceId');
-                  print('districtID: $districtId');
-                  print('municipalityID: $municipalityId');
-                  print('ward: ${int.parse(_wardController.text.trim())}');
-                  print('localAddress: ${_addressController.text.trim()}');
-                  print('genderID: ${genderId == 0 ? 3 : genderId}');
-                  print('NID: ${int.parse(_nidController.text.trim())}');
-                  print('UHID: ${int.parse(_uhidController.text.trim())}');
-                  print('entryDate: ${DateTime.now().toString()}');
-                  print('flag: ""');
-                  print('consultDate: ${_consultController.text}');
-                  print('patientVisitID: 1');
-                  print('costCategoryID: $costId');
-                  print('departmentID: $departmentId');
-                  print('referedByID: 0');
-                  print('TPID: 1');
-                  print('policyNo: ${_policyController.text.isEmpty?0:int.parse(_policyController.text)}');
-                  print('claimCode: 1');
-                  print('serviceCategoryID: 1');
-                  print('ledgerID: 1');
-                  print('imagePhotoUrl: $image');
-                  print('email: ${_emailController.text.trim()}');
-                  print('contact: ${int.parse(_mobileController.text.trim())}');
-                  print('entrydate1: ${DateTime.now().toString()}');
-                  print('doctorID: $doctorId');
-                  final response = await ref.read(patientRegistrationProvider).addRegistration(
-                      id: 1,
-                      patientID: 1,
-                      firstName: _firstNameController.text.trim(),
-                      lastName: _lastNameController.text.trim(),
-                      DOB: _dobController.text,
-                      imagePhoto: 1,
-                      countryID: countryId!,
-                      provinceID: provinceId!,
-                      districtID: districtId!,
-                      municipalityID: municipalityId!,
-                      ward: int.parse(_wardController.text),
-                      localAddress: _addressController.text.trim(),
-                      genderID: genderId == 0?3 :genderId,
-                      NID: int.parse(_nidController.text),
-                      UHID: int.parse(_uhidController.text),
-                      entryDate: DateTime.now().toString(),
-                      flag: '',
-                      consultDate: _consultController.text,
-                      patientVisitID: 1,
-                      costCategoryID: costId!,
-                      departmentID: departmentId!,
-                      referedByID: 0,
-                      TPID: 1,
-                      policyNo:_policyController.text.isEmpty?0:int.parse(_policyController.text),
-                      claimCode: 1,
-                      serviceCategoryID: 1,
-                      ledgerID: 1,
-                      imagePhotoUrl: image,
-                      email: _emailController.text.trim(),
-                      contact: int.parse(_mobileController.text),
-                      entrydate1: DateTime.now().toString(),
-                      doctorID: doctorId!
-                  );
-
-
-                  if (response.isLeft()) {
-                    final leftValue = response.fold(
-                          (left) => left,
-                          (right) => '', // Empty string here as we are only interested in the left value
-                    );
-
-                    scaffoldMessage.showSnackBar(
-                      SnackbarUtil.showFailureSnackbar(
-                        message: leftValue,
-                        duration: const Duration(milliseconds: 1400),
-                      ),
-                    );
-                    setState(() {
-                      isPostingData = false;
-                    });
-                  }
-                  else {
-                    scaffoldMessage.showSnackBar(
-                      SnackbarUtil.showSuccessSnackbar(
-                        message: 'Successfully Registered',
-                        duration: const Duration(milliseconds: 1400),
-                      ),
-                    );
-                    setState(() {
-                      isPostingData = false;
-                    });
-                    Get.back();
-                  }
-                }
-                else{
+                if(selectedDate== null || selectedDOB == null){
                   scaffoldMessage.showSnackBar(
                     SnackbarUtil.showFailureSnackbar(
-                      message: 'Please fill a valid form',
+                      message: 'Please fill in the date',
                       duration: const Duration(milliseconds: 1400),
                     ),
                   );
-                  setState(() {
-                    isPostingData = false;
-                  });
+                }else if(selectedDate!.isBefore(now) || selectedDate!.day == now.day && selectedDate!.month == now.month && selectedDate!.year == now.year){
+                  scaffoldMessage.showSnackBar(
+                    SnackbarUtil.showFailureSnackbar(
+                      message: 'Appointment date is not valid.',
+                      duration: const Duration(milliseconds: 1400),
+                    ),
+                  );
+                }else{
+                  if (formKey.currentState!.validate()){
+                    setState(() {
+                      isPostingData = true;
+                    });
+                    print('id: 1');
+                    print('patientID: 1');
+                    print('firstName: ${_firstNameController.text.trim()}');
+                    print('lastName: ${_lastNameController.text.trim()}');
+                    print('DOB: ${selectedDOB}');
+                    print('imagePhoto: 1');
+                    print('countryID: $countryId');
+                    print('provinceID: $provinceId');
+                    print('districtID: $districtId');
+                    print('municipalityID: $municipalityId');
+                    print('ward: ${int.parse(_wardController.text.trim())}');
+                    print('localAddress: ${_addressController.text.trim()}');
+                    print('genderID: ${genderId == 0 ? 3 : genderId}');
+                    print('NID: ${int.parse(_nidController.text.trim())}');
+                    print('UHID: ${int.parse(_uhidController.text.trim())}');
+                    print('entryDate: ${DateTime.now().toString()}');
+                    print('flag: ""');
+                    print('consultDate: ${selectedDate}');
+                    print('patientVisitID: 1');
+                    print('costCategoryID: $costId');
+                    print('departmentID: $departmentId');
+                    print('referedByID: 0');
+                    print('TPID: 1');
+                    print('policyNo: ${_policyController.text.isEmpty?0:int.parse(_policyController.text)}');
+                    print('claimCode: 1');
+                    print('serviceCategoryID: 1');
+                    print('ledgerID: 1');
+                    print('imagePhotoUrl: $image');
+                    print('email: ${_emailController.text.trim()}');
+                    print('contact: ${int.parse(_mobileController.text.trim())}');
+                    print('entrydate1: ${DateTime.now().toString()}');
+                    print('doctorID: $doctorId');
+                    final response = await ref.read(patientRegistrationProvider).addRegistration(
+                        id: 1,
+                        patientID: 1,
+                        firstName: _firstNameController.text.trim(),
+                        lastName: _lastNameController.text.trim(),
+                        DOB: selectedDOB.toString(),
+                        imagePhoto: 1,
+                        countryID: countryId!,
+                        provinceID: provinceId!,
+                        districtID: districtId!,
+                        municipalityID: municipalityId!,
+                        ward: int.parse(_wardController.text),
+                        localAddress: _addressController.text.trim(),
+                        genderID: genderId == 0?3 :genderId,
+                        NID: int.parse(_nidController.text),
+                        UHID: int.parse(_uhidController.text),
+                        entryDate: DateTime.now().toString(),
+                        flag: '',
+                        consultDate: selectedDate.toString(),
+                        patientVisitID: 1,
+                        costCategoryID: costId!,
+                        departmentID: departmentId!,
+                        referedByID: 0,
+                        TPID: 1,
+                        policyNo:_policyController.text.isEmpty?0:int.parse(_policyController.text),
+                        claimCode: 1,
+                        serviceCategoryID: 1,
+                        ledgerID: 1,
+                        imagePhotoUrl: image,
+                        email: _emailController.text.trim(),
+                        contact: int.parse(_mobileController.text),
+                        entrydate1: DateTime.now().toString(),
+                        doctorID: doctorId!
+                    );
+
+
+                    if (response.isLeft()) {
+                      final leftValue = response.fold(
+                            (left) => left,
+                            (right) => '', // Empty string here as we are only interested in the left value
+                      );
+
+                      scaffoldMessage.showSnackBar(
+                        SnackbarUtil.showFailureSnackbar(
+                          message: leftValue,
+                          duration: const Duration(milliseconds: 1400),
+                        ),
+                      );
+                      setState(() {
+                        isPostingData = false;
+                      });
+                    }
+                    else {
+                      scaffoldMessage.showSnackBar(
+                        SnackbarUtil.showSuccessSnackbar(
+                          message: 'Successfully Registered',
+                          duration: const Duration(milliseconds: 1400),
+                        ),
+                      );
+                      setState(() {
+                        isPostingData = false;
+                      });
+                      Get.back();
+                    }
+                  }
+                  else{
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showFailureSnackbar(
+                        message: 'Please fill a valid form',
+                        duration: const Duration(milliseconds: 1400),
+                      ),
+                    );
+                    setState(() {
+                      isPostingData = false;
+                    });
+                  }
                 }
+
               }
             },
             child: isPostingData? SpinKitDualRing(color: ColorManager.white,size: 12,):Text('Submit'),
@@ -697,44 +750,28 @@ class _ETicketState extends ConsumerState<ETicket> {
               children: [
                 Text('DOB',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
                 h10,
-                Container(
-                  height: 60,
-                  width: 180,
-                  child: TextFormField(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value){
-                      if (value!.isEmpty) {
-                        return 'Dob is required';
-                      }
-                      return null;
-                    },
-                    maxLines: 1,
-                    controller: _dobController,
-                    onTap: () async {
-                      DateTime? date = DateTime(1900);
-                      FocusScope.of(context)
-                          .requestFocus(new FocusNode());
-
-                      date = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1818),
-                          lastDate: DateTime(1830));
-
-                      _dobController.text =
-                      "${date!.year}-${date.month}-${date.day}";
-
-                    },
-                    decoration: InputDecoration(
-                        hintText: 'DOB',
-                        hintStyle: getRegularStyle(color: ColorManager.textGrey),
-                        floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                                color: ColorManager.black
-                            )
-                        )
+                InkWell(
+                  onTap: () => _selectDOB(context),
+                  child: Container(
+                    height: 55,
+                    width: 180,
+                    margin: EdgeInsets.only(bottom: 5),
+                    padding: EdgeInsets.symmetric(horizontal: 12.w),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: ColorManager.black,
+                        width: 0.5,
+                      ),
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        selectedDOB == null
+                            ? 'Pick a date'
+                            : DateFormat('yyyy-MM-dd').format(selectedDOB!),
+                        style: getRegularStyle(color: ColorManager.black),
+                      ),
                     ),
                   ),
                 ),
@@ -1274,41 +1311,29 @@ class _ETicketState extends ConsumerState<ETicket> {
                 Container(
                   height: 60,
                   width: 180,
-                  child: TextFormField(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value){
-                      if (value!.isEmpty) {
-                        return 'ID is required';
-                      }
-                      return null;
-                    },
-                    maxLines: 1,
-                    controller: _consultController,
-                    onTap: () async {
-                      DateTime? date = DateTime(1900);
-                      FocusScope.of(context)
-                          .requestFocus(new FocusNode());
-
-                      date = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1818),
-                          lastDate: DateTime(1830));
-
-                      _dobController.text =
-                      "${date!.year}-${date.month}-${date.day}";
-
-                    },
-                    decoration: InputDecoration(
-                        hintText: 'Date for consultation',
-                        hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: 16),
-                        floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(
-                                color: ColorManager.black
-                            )
-                        )
+                  child: InkWell(
+                    onTap: () => _selectDate(context),
+                    child: Container(
+                      height: 55,
+                      width: 180,
+                      margin: EdgeInsets.only(bottom: 5),
+                      padding: EdgeInsets.symmetric(horizontal: 12.w),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: ColorManager.black,
+                          width: 0.5,
+                        ),
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          selectedDate == null
+                              ? 'Date for consultation'
+                              : DateFormat('yyyy-MM-dd').format(selectedDate!),
+                          style: getRegularStyle(color: ColorManager.black),
+                        ),
+                      ),
                     ),
                   ),
                 ),

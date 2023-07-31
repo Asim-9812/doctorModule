@@ -16,6 +16,7 @@ import 'package:medical_app/src/presentation/register/presentation/register.dart
 
 import '../../../test/test.dart';
 import '../../common/snackbar.dart';
+import '../../patient/patient_dashboard/presentation/patient_main_page.dart';
 import '../domain/service/login_service.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -176,45 +177,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+
                     Container(
                       height: 100,
-                      width: 80,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            selectedOption = 1;
-                          });
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: selectedOption == 1 ? ColorManager.primaryDark : ColorManager.dotGrey),
-                                shape: BoxShape.circle,
-                                color: selectedOption == 1 ? ColorManager.primary : Colors.transparent,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.asset(
-                                  'assets/icons/merchant_login.png',
-                                  width: selectedOption == 1 ?50:30,
-                                  height: selectedOption == 1 ?50:30,
-                                ),
-                              ),
-                            ),
-                            h10,
-                            Text(
-                              'Merchant',
-                              style: getRegularStyle(color: selectedOption == 1 ? ColorManager.black : ColorManager.textGrey, fontSize: 16),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    w05,
-                    Container(
-                      height: 100,
-                      width: 80,
+                      width: 90.w,
                       child: InkWell(
                         onTap: () {
                           setState(() {
@@ -241,7 +207,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             h10,
                             Text(
                               'Organization',
-                              style: getRegularStyle(color: selectedOption == 2 ? ColorManager.black : ColorManager.textGrey, fontSize: 16),
+                              style: getRegularStyle(color: selectedOption == 2 ? ColorManager.black : ColorManager.textGrey, fontSize: 16.sp),
                             )
                           ],
                         ),
@@ -250,7 +216,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     w05,
                     Container(
                       height: 100,
-                      width: 70,
+                      width: 90.w,
                       child: InkWell(
                         onTap: () {
                           setState(() {
@@ -277,7 +243,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             h10,
                             Text(
                               'Doctor',
-                              style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: 16),
+                              style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: 16.sp),
                             )
                           ],
                         ),
@@ -286,7 +252,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     w05,
                     Container(
                       height: 100,
-                      width: 80,
+                      width: 90.w,
                       child: InkWell(
                         onTap: () {
                           setState(() {
@@ -313,7 +279,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             h10,
                             Text(
                               'Patient',
-                              style: getRegularStyle(color: selectedOption == 4 ? ColorManager.black : ColorManager.textGrey, fontSize: 16),
+                              style: getRegularStyle(color: selectedOption == 4 ? ColorManager.black : ColorManager.textGrey, fontSize: 16.sp),
                             )
                           ],
                         ),
@@ -334,9 +300,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     return null;
                   },
                   decoration: InputDecoration(
-                      floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                      floatingLabelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 18.sp),
                       labelText: 'E-mail',
-                      labelStyle: getRegularStyle(color: ColorManager.black),
+                      labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
@@ -359,9 +325,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     return null;
                   },
                   decoration: InputDecoration(
-                      floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                      floatingLabelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 18.sp),
                       labelText: 'Password',
-                      labelStyle: getRegularStyle(color: ColorManager.black),
+                      labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
@@ -406,7 +372,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           'Remember me',
                           style: getRegularStyle(
                               color: ColorManager.textGrey,
-                              fontSize: 16),
+                              fontSize: 16.sp),
                         )
                       ],
                     ),
@@ -483,6 +449,30 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     style: getMediumStyle(
                         color: ColorManager.white,
                         fontSize: 24),
+                  ),
+                ),
+                SizedBox(
+                  height: 18.h,
+                ),
+                ElevatedButton(
+                  onPressed: ()=>Get.to(()=>PatientMainPage()),
+                  style: TextButton.styleFrom(
+                    elevation: 0,
+                      backgroundColor: ColorManager.white,
+                      foregroundColor: Colors.black,
+                      fixedSize: Size(380.w, 50.h),
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: ColorManager.black
+                        ),
+                        borderRadius:
+                        BorderRadius.circular(10),
+                      )),
+                  child:Text(
+                    'Patient Dashboard',
+                    style: getRegularStyle(
+                        color: ColorManager.black,
+                        fontSize: 18),
                   ),
                 ),
                 SizedBox(height: 50.h,),

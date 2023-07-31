@@ -21,7 +21,6 @@ import 'package:medical_app/src/data/services/department_services.dart';
 import 'package:medical_app/src/presentation/login/domain/model/user.dart';
 import 'package:medical_app/src/presentation/patient/quick_services/domain/services/cost_category_services.dart';
 import 'package:medical_app/src/presentation/patient/quick_services/domain/services/patient_registration_service.dart';
-
 import '../../../../core/resources/style_manager.dart';
 import '../../../../data/services/user_services.dart';
 import '../../../common/snackbar.dart';
