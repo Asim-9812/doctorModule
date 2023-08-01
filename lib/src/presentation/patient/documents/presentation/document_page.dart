@@ -15,7 +15,9 @@ import '../add_documents/presentation/add_document_page.dart';
 import '../search_documents/presentation/search_document_page.dart';
 
 class PatientDocumentPage extends StatefulWidget {
-  const PatientDocumentPage({super.key});
+  final bool isWideScreen;
+  final bool isNarrowScreen;
+  PatientDocumentPage(this.isWideScreen,this.isNarrowScreen);
 
   @override
   State<PatientDocumentPage> createState() => _PatientDocumentPageState();
@@ -83,10 +85,10 @@ class _PatientDocumentPageState extends State<PatientDocumentPage> {
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8.w,
-                mainAxisSpacing: 8.h,
-                childAspectRatio: 14/10
+                crossAxisCount: widget.isWideScreen? 3: widget.isNarrowScreen?1: 2,
+                crossAxisSpacing: widget.isWideScreen?8:8.w,
+                mainAxisSpacing: widget.isWideScreen?8: 8.h,
+                childAspectRatio: widget.isWideScreen? 14/11:14/10
             ),
             children: [
               buildFolderBody(context,folderName: 'Academics', fileNumbers: 5, onTap: (){},isLocked:isFolderLocked),

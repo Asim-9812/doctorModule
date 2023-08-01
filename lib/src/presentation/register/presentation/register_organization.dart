@@ -401,7 +401,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
               'Register',
               style: getMediumStyle(
                   color: ColorManager.white,
-                  fontSize: 24.sp),
+                  fontSize: 18),
             ),
           ),
         ],

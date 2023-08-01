@@ -83,15 +83,23 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    // Get the screen size
+    final screenSize = MediaQuery.of(context).size;
+
+    // Check if width is greater than height
+    bool isWideScreen = screenSize.width > screenSize.height;
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: ColorManager.primaryDark,
         body: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _buildBody(),
-              _buildBody2()
+              _buildBody(isWideScreen),
+              _buildBody2(isWideScreen)
 
             ],
           ),
@@ -100,7 +108,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(bool isWideScreen) {
     return Container(
       height: MediaQuery.of(context).size.height * 1.5 / 5,
       color: Colors.transparent,
@@ -137,7 +145,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 padding: EdgeInsets.only(left: 32.w, bottom: 50.h),
                 child: Text(
                   'Sign into your Account',
-                  style: getSemiBoldHeadStyle(color: Colors.white,fontSize: 40),
+                  style: getSemiBoldHeadStyle(color: Colors.white,fontSize:isWideScreen==true?30: 30.sp),
                 ),
               ),
             ),
@@ -147,7 +155,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  Widget _buildBody2() {
+  Widget _buildBody2(bool isWideScreen) {
+    final fontSize = isWideScreen ? 14.0 : 14.sp;
+    final iconSize = isWideScreen ? 20.0 : 20.sp;
 
     return SlideInUp(
       duration: const Duration(milliseconds: 700),
@@ -167,325 +177,327 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           delay:const Duration(milliseconds: 500),
           child: Form(
             key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                h10,
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  h10,
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
 
-                    Container(
-                      height: 100,
-                      width: 90.w,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            selectedOption = 2;
-                          });
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: selectedOption == 2 ? ColorManager.primaryDark : ColorManager.dotGrey),
-                                shape: BoxShape.circle,
-                                color: selectedOption == 2 ? ColorManager.primary : Colors.transparent,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.asset(
-                                  'assets/icons/org_login.png',
-                                  width: selectedOption == 2 ?50:30,
-                                  height: selectedOption == 2 ?50:30,
+                      Container(
+                        height: 100,
+                        width: 90.w,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              selectedOption = 2;
+                            });
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: selectedOption == 2 ? ColorManager.primaryDark : ColorManager.dotGrey),
+                                  shape: BoxShape.circle,
+                                  color: selectedOption == 2 ? ColorManager.primary : Colors.transparent,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.asset(
+                                    'assets/icons/org_login.png',
+                                    width: selectedOption == 2 ?50:30,
+                                    height: selectedOption == 2 ?50:30,
+                                  ),
                                 ),
                               ),
-                            ),
-                            h10,
-                            Text(
-                              'Organization',
-                              style: getRegularStyle(color: selectedOption == 2 ? ColorManager.black : ColorManager.textGrey, fontSize: 16.sp),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    w05,
-                    Container(
-                      height: 100,
-                      width: 90.w,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            selectedOption = 3;
-                          });
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: selectedOption == 3 ? ColorManager.primaryDark : ColorManager.dotGrey),
-                                shape: BoxShape.circle,
-                                color: selectedOption ==3 ? ColorManager.primary : Colors.transparent,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.asset(
-                                  'assets/icons/doctor_login.png',
-                                  width: selectedOption == 3 ?50:30,
-                                  height: selectedOption == 3 ?50:30,
-                                ),
-                              ),
-                            ),
-                            h10,
-                            Text(
-                              'Doctor',
-                              style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: 16.sp),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    w05,
-                    Container(
-                      height: 100,
-                      width: 90.w,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            selectedOption = 4;
-                          });
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: selectedOption == 4 ? ColorManager.primaryDark : ColorManager.dotGrey),
-                                shape: BoxShape.circle,
-                                color: selectedOption == 4 ? ColorManager.primary : Colors.transparent,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.asset(
-                                  'assets/icons/patient_login.png',
-                                  width: selectedOption == 4 ?50:30,
-                                  height: selectedOption == 4 ?50:30,
-                                ),
-                              ),
-                            ),
-                            h10,
-                            Text(
-                              'Patient',
-                              style: getRegularStyle(color: selectedOption == 4 ? ColorManager.black : ColorManager.textGrey, fontSize: 16.sp),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-
-                  ],
-                ),
-                h20,
-                TextFormField(
-                  controller: _emailController,
-                  autovalidateMode:
-                  AutovalidateMode.onUserInteraction,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Email is required';
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                      floatingLabelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 18.sp),
-                      labelText: 'E-mail',
-                      labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ColorManager.black
-                          )
-                      )
-                  ),
-                ),
-                SizedBox(
-                  height: 18.h,
-                ),
-                TextFormField(
-                  controller: _passController,
-                  obscureText: _obscureText,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Password is required';
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                      floatingLabelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 18.sp),
-                      labelText: 'Password',
-                      labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
-                              color: ColorManager.black
-                          )
-                      ),
-                      suffixIcon: IconButton(
-                        onPressed: (){
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
-                        icon: _obscureText? FaIcon(CupertinoIcons.eye,color: ColorManager.black,):FaIcon(CupertinoIcons.eye_slash,color: ColorManager.black,),
-                      )
-                  ),
-                ),
-                SizedBox(
-                  height: 18.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Transform.scale(
-                          scale: 1,
-                          child: Checkbox(
-                            value: _isChecked,
-                            onChanged: (value) {
-                              _isChecked = !_isChecked;
-                              setState(() {});
-                            },
-                            checkColor: Colors.white,
-                            fillColor: MaterialStateProperty.resolveWith(
-                                    (states) => getColor(states)),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(3),
-                            ),
+                              h10,
+                              Text(
+                                'Organization',
+                                style: getRegularStyle(color: selectedOption == 2 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
+                              )
+                            ],
                           ),
                         ),
-                        Text(
-                          'Remember me',
-                          style: getRegularStyle(
-                              color: ColorManager.textGrey,
-                              fontSize: 16.sp),
-                        )
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: () { },
-                      child: Text(
-                        'Forgot Password?',
-                        style: getMediumStyle(
-                            color: ColorManager.blue, fontSize: 15),
                       ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 18.h,
-                ),
-                ElevatedButton(
-                  onPressed: isLoading? null :
-                      () async {
-                        final scaffoldMessage = ScaffoldMessenger.of(context);
-                        if (formKey.currentState!.validate()) {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          login();
-                          final response = await ref.read(userLoginProvider).userLogin(
-                            accountId: selectedOption,
-                            email: _emailController.text.trim(),
-                            password: _passController.text.trim(),
-                          );
-                          if (response.isLeft()) {
-                            final leftValue = response.fold(
-                                  (left) => left,
-                                  (right) => '', // Empty string here as we are only interested in the left value
-                            );
-
-                            scaffoldMessage.showSnackBar(
-                              SnackbarUtil.showFailureSnackbar(
-                                message: leftValue,
-                                duration: const Duration(milliseconds: 1400),
+                      w05,
+                      Container(
+                        height: 100,
+                        width: 90.w,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              selectedOption = 3;
+                            });
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: selectedOption == 3 ? ColorManager.primaryDark : ColorManager.dotGrey),
+                                  shape: BoxShape.circle,
+                                  color: selectedOption ==3 ? ColorManager.primary : Colors.transparent,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.asset(
+                                    'assets/icons/doctor_login.png',
+                                    width: selectedOption == 3 ?50:30,
+                                    height: selectedOption == 3 ?50:30,
+                                  ),
+                                ),
                               ),
-                            );
-                            setState(() {
-                              isLoading = false;
-                            });
-                          }
-                          else {
-                            await ref.read(userProvider.notifier).getUserInfo(response:response.getOrElse(() => {}));
-                            scaffoldMessage.showSnackBar(
-                                SnackbarUtil.showSuccessSnackbar(
-                                    message: 'Login Successful',
-                                    duration: const Duration(milliseconds: 1200)
-                                )
-                            );
-                            setState(() {
-                              isLoading = false;
-                            });
-                            Get.offAll(()=>StatusPage(accountId: selectedOption,));
-                          }
-                        }
-                  },
-                  style: TextButton.styleFrom(
-                      backgroundColor: ColorManager.primary,
-                      foregroundColor: Colors.white,
-                      fixedSize: Size(380.w, 50.h),
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                        BorderRadius.circular(10),
-                      )),
-                  child:isLoading ?
-                      SpinKitDualRing(color: ColorManager.white,size: 20,)
-                      :Text(
-                    'Sign In',
-                    style: getMediumStyle(
-                        color: ColorManager.white,
-                        fontSize: 24),
-                  ),
-                ),
-                SizedBox(
-                  height: 18.h,
-                ),
-                ElevatedButton(
-                  onPressed: ()=>Get.to(()=>PatientMainPage()),
-                  style: TextButton.styleFrom(
-                    elevation: 0,
-                      backgroundColor: ColorManager.white,
-                      foregroundColor: Colors.black,
-                      fixedSize: Size(380.w, 50.h),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: ColorManager.black
+                              h10,
+                              Text(
+                                'Doctor',
+                                style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
+                              )
+                            ],
+                          ),
                         ),
-                        borderRadius:
-                        BorderRadius.circular(10),
-                      )),
-                  child:Text(
-                    'Patient Dashboard',
-                    style: getRegularStyle(
-                        color: ColorManager.black,
-                        fontSize: 18),
+                      ),
+                      w05,
+                      Container(
+                        height: 100,
+                        width: 90.w,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              selectedOption = 4;
+                            });
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: selectedOption == 4 ? ColorManager.primaryDark : ColorManager.dotGrey),
+                                  shape: BoxShape.circle,
+                                  color: selectedOption == 4 ? ColorManager.primary : Colors.transparent,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.asset(
+                                    'assets/icons/patient_login.png',
+                                    width: selectedOption == 4 ?50:30,
+                                    height: selectedOption == 4 ?50:30,
+                                  ),
+                                ),
+                              ),
+                              h10,
+                              Text(
+                                'Patient',
+                                style: getRegularStyle(color: selectedOption == 4 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+
+                    ],
                   ),
-                ),
-                SizedBox(height: 50.h,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Don\'t have an account yet?',style: getRegularStyle(color: ColorManager.black,fontSize: 18),),
-                    TextButton(
-                        onPressed: ()=>Get.to(()=>RegisterPage(),transition: Transition.fadeIn),
-                        child: Text('Register.',style: getRegularStyle(color: ColorManager.blue,fontSize: 18),))
-                  ],
-                )
-              ],
+                  h20,
+                  TextFormField(
+                    controller: _emailController,
+                    autovalidateMode:
+                    AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Email is required';
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                        floatingLabelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 14),
+                        labelText: 'E-mail',
+                        labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 14),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                                color: ColorManager.black
+                            )
+                        )
+                    ),
+                  ),
+                  SizedBox(
+                    height: 18.h,
+                  ),
+                  TextFormField(
+                    controller: _passController,
+                    obscureText: _obscureText,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Password is required';
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                        floatingLabelStyle: getRegularStyle(color: ColorManager.primary,fontSize: 14),
+                        labelText: 'Password',
+                        labelStyle: getRegularStyle(color: ColorManager.black,fontSize: 14),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(
+                                color: ColorManager.black
+                            )
+                        ),
+                        suffixIcon: IconButton(
+                          onPressed: (){
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                          icon: _obscureText? FaIcon(CupertinoIcons.eye,color: ColorManager.black,):FaIcon(CupertinoIcons.eye_slash,color: ColorManager.black,),
+                        )
+                    ),
+                  ),
+                  SizedBox(
+                    height: 18.h,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Transform.scale(
+                            scale: 1,
+                            child: Checkbox(
+                              value: _isChecked,
+                              onChanged: (value) {
+                                _isChecked = !_isChecked;
+                                setState(() {});
+                              },
+                              checkColor: Colors.white,
+                              fillColor: MaterialStateProperty.resolveWith(
+                                      (states) => getColor(states)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(3),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'Remember me',
+                            style: getRegularStyle(
+                                color: ColorManager.textGrey,
+                                fontSize: 14),
+                          )
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: () { },
+                        child: Text(
+                          'Forgot Password?',
+                          style: getMediumStyle(
+                              color: ColorManager.blue, fontSize: 14),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 18.h,
+                  ),
+                  ElevatedButton(
+                    onPressed: isLoading? null :
+                        () async {
+                          final scaffoldMessage = ScaffoldMessenger.of(context);
+                          if (formKey.currentState!.validate()) {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            login();
+                            final response = await ref.read(userLoginProvider).userLogin(
+                              accountId: selectedOption,
+                              email: _emailController.text.trim(),
+                              password: _passController.text.trim(),
+                            );
+                            if (response.isLeft()) {
+                              final leftValue = response.fold(
+                                    (left) => left,
+                                    (right) => '', // Empty string here as we are only interested in the left value
+                              );
+
+                              scaffoldMessage.showSnackBar(
+                                SnackbarUtil.showFailureSnackbar(
+                                  message: leftValue,
+                                  duration: const Duration(milliseconds: 1400),
+                                ),
+                              );
+                              setState(() {
+                                isLoading = false;
+                              });
+                            }
+                            else {
+                              await ref.read(userProvider.notifier).getUserInfo(response:response.getOrElse(() => {}));
+                              scaffoldMessage.showSnackBar(
+                                  SnackbarUtil.showSuccessSnackbar(
+                                      message: 'Login Successful',
+                                      duration: const Duration(milliseconds: 1200)
+                                  )
+                              );
+                              setState(() {
+                                isLoading = false;
+                              });
+                              Get.offAll(()=>StatusPage(accountId: selectedOption,));
+                            }
+                          }
+                    },
+                    style: TextButton.styleFrom(
+                        backgroundColor: ColorManager.primary,
+                        foregroundColor: Colors.white,
+                        fixedSize: Size(380.w, 50.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                          BorderRadius.circular(10),
+                        )),
+                    child:isLoading ?
+                        SpinKitDualRing(color: ColorManager.white,size: iconSize,)
+                        :Text(
+                      'Sign In',
+                      style: getMediumStyle(
+                          color: ColorManager.white,
+                          fontSize: 14),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 18.h,
+                  ),
+                  ElevatedButton(
+                    onPressed: ()=>Get.to(()=>PatientMainPage()),
+                    style: TextButton.styleFrom(
+                      elevation: 0,
+                        backgroundColor: ColorManager.white,
+                        foregroundColor: Colors.black,
+                        fixedSize: Size(380.w, 50.h),
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: ColorManager.black
+                          ),
+                          borderRadius:
+                          BorderRadius.circular(10),
+                        )),
+                    child:Text(
+                      'Patient Dashboard',
+                      style: getRegularStyle(
+                          color: ColorManager.black,
+                          fontSize: 14),
+                    ),
+                  ),
+                  SizedBox(height: 50.h,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Don\'t have an account yet?',style: getRegularStyle(color: ColorManager.black,fontSize: fontSize),),
+                      TextButton(
+                          onPressed: ()=>Get.to(()=>RegisterPage(),transition: Transition.fadeIn),
+                          child: Text('Register.',style: getRegularStyle(color: ColorManager.blue,fontSize: fontSize),))
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),

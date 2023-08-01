@@ -23,7 +23,9 @@ import '../widgets/bmi.dart';
 import '../widgets/bmr.dart';
 
 class PatientUtilitiesPage extends StatefulWidget {
-  const PatientUtilitiesPage({super.key});
+  final bool isWideScreen;
+  final bool isNarrowScreen;
+  PatientUtilitiesPage(this.isWideScreen,this.isNarrowScreen);
 
   @override
   State<PatientUtilitiesPage> createState() => _PatientUtilitiesPageState();
@@ -173,19 +175,22 @@ class _PatientUtilitiesPageState extends State<PatientUtilitiesPage> {
           title: Text('Utilities',style: getRegularStyle(color: ColorManager.black),),
           centerTitle: true,
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            h20,
-            _buildGridview(),
-            h20,
-            h20,
-            FadeInUp(
-                duration: Duration(milliseconds: 700),
-                child: _buildCalculatorBody())
+        body: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              h20,
+              _buildGridview(),
+              h20,
+              h20,
+              FadeInUp(
+                  duration: Duration(milliseconds: 700),
+                  child: _buildCalculatorBody())
 
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -250,13 +255,13 @@ class _PatientUtilitiesPageState extends State<PatientUtilitiesPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    FaIcon(FontAwesomeIcons.personWalking,color: ColorManager.primary,size: 20,),
+                    FaIcon(FontAwesomeIcons.personWalking,color: ColorManager.primary,size:widget.isWideScreen? 20 :20.sp,),
                     w10,
-                    Text('Walking',style: getMediumStyle(color: ColorManager.black,fontSize: 20),)
+                    Text('Walking',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 20 :20.sp),)
                   ],
                 ),
                 Container(
-                  height: 120.h,
+                  height: 100.h,
                   child: Stack(
                     children: [
                       Center(
@@ -271,8 +276,8 @@ class _PatientUtilitiesPageState extends State<PatientUtilitiesPage> {
                           ),
                           legendOptions:
                           LegendOptions(showLegends: false),
-                          chartRadius: 100.sp,
-                          ringStrokeWidth: 7.w,
+                          chartRadius: widget.isWideScreen? 100 :100.sp,
+                          ringStrokeWidth: widget.isWideScreen? 7:7.w,
                           chartType: ChartType.ring,
                           dataMap: dataMap,
                         ),
@@ -283,8 +288,8 @@ class _PatientUtilitiesPageState extends State<PatientUtilitiesPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(stepCount.round().toString(),style: getRegularStyle(color: ColorManager.black,fontSize: 24),),
-                            Text('Steps Taken',style: getRegularStyle(color: ColorManager.black.withOpacity(0.5),fontSize: 16),)
+                            Text(stepCount.round().toString(),style: getRegularStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 20 :20.sp),),
+                            Text('Steps Taken',style: getRegularStyle(color: ColorManager.black.withOpacity(0.5),fontSize: widget.isWideScreen? 20 :16.sp),)
                           ],
                         ),
                       )
@@ -306,13 +311,13 @@ class _PatientUtilitiesPageState extends State<PatientUtilitiesPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    FaIcon(FontAwesomeIcons.fire,color: ColorManager.red.withOpacity(0.6),size: 20,),
+                    FaIcon(FontAwesomeIcons.fire,color: ColorManager.red.withOpacity(0.6),size: widget.isWideScreen? 20 :20.sp,),
                     w10,
-                    Text('Calories',style: getMediumStyle(color: ColorManager.black,fontSize: 20),)
+                    Text('Calories',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 20 :20.sp),)
                   ],
                 ),
                 Container(
-                  height: 120.h,
+                  height: 100.h,
                   child: Stack(
                     children: [
                       Center(
@@ -327,8 +332,8 @@ class _PatientUtilitiesPageState extends State<PatientUtilitiesPage> {
                           ),
                           legendOptions:
                           LegendOptions(showLegends: false),
-                          chartRadius: 100.sp,
-                          ringStrokeWidth: 7.w,
+                          chartRadius: widget.isWideScreen? 100 :100.sp,
+                          ringStrokeWidth: widget.isWideScreen? 7:7.w,
                           chartType: ChartType.ring,
                           dataMap: dataCalories,
                         ),
@@ -339,8 +344,8 @@ class _PatientUtilitiesPageState extends State<PatientUtilitiesPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(caloriesBurned.toString(),style: getRegularStyle(color: ColorManager.black,fontSize: 24),),
-                            Text('Calories\n burned',style: getRegularStyle(color: ColorManager.black.withOpacity(0.5),fontSize: 12),)
+                            Text(caloriesBurned.toString(),style: getRegularStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 20 :20.sp),),
+                            Text('Calories\n burned',style: getRegularStyle(color: ColorManager.black.withOpacity(0.5),fontSize: widget.isWideScreen? 12 :12.sp),)
                           ],
                         ),
                       )
@@ -409,7 +414,7 @@ class _PatientUtilitiesPageState extends State<PatientUtilitiesPage> {
   }) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-      height: 100.h,
+      height: widget.isWideScreen? 150.h:100.h,
       decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(12),
@@ -425,13 +430,13 @@ class _PatientUtilitiesPageState extends State<PatientUtilitiesPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              FaIcon(icon,color: iconColor,),
+              FaIcon(icon,color: iconColor,size: widget.isWideScreen? 20:20.sp,),
               w10,
-              Text('$name',style: getRegularStyle(color: ColorManager.black.withOpacity(0.5)),)
+              Text('$name',style: getRegularStyle(color: ColorManager.black.withOpacity(0.5),fontSize: widget.isWideScreen?20:16.sp),)
             ],
           ),
           h10,
-          weather!=null? Text('$result',style: getMediumStyle(color: ColorManager.black,fontSize: 20),maxLines: 1,)
+          weather!=null? Text('$result',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen?20:16.sp),maxLines: 1,)
               : SpinKitThreeBounce(
             color: ColorManager.iconGrey,
             size: 20,
@@ -460,11 +465,11 @@ class _PatientUtilitiesPageState extends State<PatientUtilitiesPage> {
         child: ListTile(
           onTap: onTap,
           contentPadding: EdgeInsets.symmetric(horizontal: 8.w),
-          leading: Image.asset('assets/icons/$icon.png',width: 40,height: 40,) ,
+          leading: Image.asset('assets/icons/$icon.png',width: widget.isWideScreen? 40:40.w,height: widget.isWideScreen? 40:40.h,) ,
 
 
-          title: Text('$name',style: getMediumStyle(color: ColorManager.black,fontSize: name.length <= 6? 24: 18),),
-          subtitle: Text('Calculator',style: getRegularStyle(color: ColorManager.black,fontSize: 14),),
+          title: Text('$name',style: getMediumStyle(color: ColorManager.black,fontSize: name.length <= 6? widget.isWideScreen? 24:20.sp:widget.isWideScreen? 18:16.sp),),
+          subtitle: Text('Calculator',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 14:10.sp),),
           trailing: FaIcon(Icons.chevron_right,color: ColorManager.black.withOpacity(0.5),),
         ),
       ),
@@ -474,7 +479,6 @@ class _PatientUtilitiesPageState extends State<PatientUtilitiesPage> {
 
   Widget _buildCalculatorBody(){
     return Container(
-      height: 240.h,
       // color: Colors.red,
       padding: EdgeInsets.symmetric(horizontal: 18.w),
       child: Column(
@@ -485,12 +489,12 @@ class _PatientUtilitiesPageState extends State<PatientUtilitiesPage> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Calculators',style: getMediumStyle(color: ColorManager.black),),
+              Text('Calculators',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen?28:24.sp),),
               w10,
               Container(
                 width: 260.w,
                 child: Divider(
-                  thickness: 0.5,
+                  thickness: 0.5.w,
                   color: ColorManager.black.withOpacity(0.5),
                 ),
               )
@@ -525,7 +529,8 @@ class _PatientUtilitiesPageState extends State<PatientUtilitiesPage> {
               ),
               _buildCalculators(icon: 'due-date', name: 'Due Date', onTap: (){})
             ],
-          )
+          ),
+          h100,
         ],
       ),
     );

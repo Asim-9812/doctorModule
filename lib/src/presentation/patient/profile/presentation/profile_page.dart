@@ -16,13 +16,19 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final screenSize = MediaQuery.of(context).size;
+
+    // Check if width is greater than height
+    bool isWideScreen = screenSize.width > 500;
+    bool isNarrowScreen = screenSize.width < 420;
     return Scaffold(
       backgroundColor: ColorManager.white.withOpacity(0.99),
       appBar: AppBar(
         elevation: 1,
         backgroundColor: ColorManager.white,
         leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
-        title: Text('Profile',style: getMediumStyle(color: ColorManager.black),),
+        title: Text('Profile',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 24.sp:28),),
         actions: [
           IconButton(onPressed: (){}, icon: Icon(Icons.edit_note_outlined,color: ColorManager.primary,size: 30,))
         ],
@@ -56,10 +62,10 @@ class ProfilePage extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Text('Details',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
+                              Text('Details',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen?24.sp: 24),),
                               w10,
                               Container(
-                                width: 320.w,
+                                width: isNarrowScreen? 220.w: 320.w,
                                 child: Divider(
                                   thickness: 0.5,
                                   color: ColorManager.black,
@@ -69,9 +75,9 @@ class ProfilePage extends StatelessWidget {
                             ],
                           ),
                           h10,
-                          _profileItems(title: 'Phone Number', icon: FontAwesomeIcons.phone, onTap: (){},subtitle: '98XXXXXXXX'),
-                          _profileItems(title: 'E-Mail', icon: Icons.email_outlined, onTap: (){},subtitle: 'user@gmail.com'),
-                          _profileItems(title: 'Other Details', icon: FontAwesomeIcons.idCard, onTap: (){},trailing: true),
+                          _profileItems(screenSize: screenSize,title: 'Phone Number', icon: FontAwesomeIcons.phone, onTap: (){},subtitle: '98XXXXXXXX'),
+                          _profileItems(screenSize: screenSize,title: 'E-Mail', icon: Icons.email_outlined, onTap: (){},subtitle: 'user@gmail.com'),
+                          _profileItems(screenSize: screenSize,title: 'Other Details', icon: FontAwesomeIcons.idCard, onTap: (){},trailing: true),
                         ],
                       ),
                     ),
@@ -85,10 +91,10 @@ class ProfilePage extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Text('Reminders',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
+                              Text('Reminders',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen?24.sp: 24),),
                               w10,
                               Container(
-                                width: 280.w,
+                                width: isNarrowScreen? 220.w: 280.w,
                                 child: Divider(
                                   thickness: 0.5,
                                   color: ColorManager.black,
@@ -98,8 +104,8 @@ class ProfilePage extends StatelessWidget {
                             ],
                           ),
                           h10,
-                          _profileItems(title: 'Medicine', icon: FontAwesomeIcons.pills, onTap: (){},trailing: true),
-                          _profileItems(title: 'Appointments', icon: Icons.assignment_turned_in_outlined, onTap: (){},trailing: true),
+                          _profileItems(screenSize: screenSize,title: 'Medicine', icon: FontAwesomeIcons.pills, onTap: (){},trailing: true),
+                          _profileItems(screenSize: screenSize,title: 'Appointments', icon: Icons.assignment_turned_in_outlined, onTap: (){},trailing: true),
                         ],
                       ),
                     ),
@@ -113,10 +119,10 @@ class ProfilePage extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Text('Medical Records',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
+                              Text('Medical Records',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen?24.sp: 24),),
                               w10,
                               Container(
-                                width: 240.w,
+                                width: isNarrowScreen? 130.w: 240.w,
                                 child: Divider(
                                   thickness: 0.5,
                                   color: ColorManager.black,
@@ -126,8 +132,8 @@ class ProfilePage extends StatelessWidget {
                             ],
                           ),
                           h10,
-                          _profileItems(title: 'Medical History', icon: FontAwesomeIcons.history, onTap: (){},trailing: true),
-                          _profileItems(title: 'Transaction History', icon: Icons.receipt_long, onTap: (){},trailing: true),
+                          _profileItems(screenSize: screenSize,title: 'Medical History', icon: FontAwesomeIcons.history, onTap: (){},trailing: true),
+                          _profileItems(screenSize: screenSize,title: 'Transaction History', icon: Icons.receipt_long, onTap: (){},trailing: true),
                           ],
                       ),
                     ),
@@ -152,6 +158,11 @@ class ProfilePage extends StatelessWidget {
   /// Profile...
   
   Widget profileBanner(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+
+    // Check if width is greater than height
+    bool isWideScreen = screenSize.width > 500;
+    bool isNarrowScreen = screenSize.width < 420;
     return Card(
       elevation: 3,
       shadowColor: ColorManager.textGrey.withOpacity(0.4),
@@ -184,10 +195,10 @@ class ProfilePage extends StatelessWidget {
                     elevation: 5,
                     child: CircleAvatar(
                       backgroundColor: ColorManager.white,
-                      radius: 50,
+                      radius: isNarrowScreen? 50.r:50,
                       child: CircleAvatar(
                         backgroundColor: ColorManager.black,
-                        radius: 45,
+                        radius: isNarrowScreen? 45.r:45,
                         child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
                       ),
                     ),
@@ -197,19 +208,19 @@ class ProfilePage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('User',style: getMediumStyle(color: ColorManager.black,fontSize: 32),),
+                      Text('User',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 32.sp:32),),
                       h10,
                       Row(
                         children: [
-                          Text('Gender',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 16),),
+                          Text('Gender',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?16.sp:16),),
                           w10,
-                          Text('|',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 12),),
+                          Text('|',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?12.sp:12),),
                           w10,
-                          Text('23 yrs',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 16),),
+                          Text('23 yrs',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?16.sp:16),),
                           w10,
-                          Text('|',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 12),),
+                          Text('|',style: getRegularStyle(color: ColorManager.textGrey,fontSize:isNarrowScreen?12.sp: 12),),
                           w10,
-                          Text('Address',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 16),),
+                          Text('Address',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?16.sp:16),),
                         ],
                       )
                     ],
@@ -231,17 +242,22 @@ class ProfilePage extends StatelessWidget {
     required IconData icon,
     String? subtitle,
     bool? trailing,
-    
+    required Size screenSize
+
 }) {
+
+    // Check if width is greater than height
+    bool isWideScreen = screenSize.width > 500;
+    bool isNarrowScreen = screenSize.width < 420;
     if(trailing == null){
      trailing = false;
     }
     return ListTile(
       onTap: onTap,
       splashColor: ColorManager.textGrey.withOpacity(0.2),
-      leading: FaIcon(icon,size: 24,),
-      title: Text('$title',style:getRegularStyle(color: ColorManager.black,fontSize:20 ),),
-      subtitle: subtitle != null? Text('$subtitle',style:getRegularStyle(color: ColorManager.subtitleGrey,fontSize:16 ),):null,
+      leading: FaIcon(icon,size: isNarrowScreen?24.sp:24,),
+      title: Text('$title',style:getRegularStyle(color: ColorManager.black,fontSize:isNarrowScreen?20.sp:20 ),),
+      subtitle: subtitle != null? Text('$subtitle',style:getRegularStyle(color: ColorManager.subtitleGrey,fontSize:isNarrowScreen?16.sp:16 ),):null,
       trailing: trailing == true? Icon(Icons.chevron_right,color: ColorManager.iconGrey,):null ,
     );
   }

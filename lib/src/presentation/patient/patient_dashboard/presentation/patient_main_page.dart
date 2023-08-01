@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:medical_app/src/app/app.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
+import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/test/test1.dart';
 import 'package:medical_app/src/test/testpage.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
@@ -42,6 +43,13 @@ class _AnimatedBarExampleState extends State<PatientMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Get the screen size
+    final screenSize = MediaQuery.of(context).size;
+
+    // Check if width is greater than height
+    bool isWideScreen = screenSize.width > 500;
+    bool isNarrowScreen = screenSize.width < 420;
+
     return Scaffold(
       extendBody: true, //to make floating action button notch transparent
 
@@ -58,36 +66,37 @@ class _AnimatedBarExampleState extends State<PatientMainPage> {
         ),
         items: [
           BottomBarItem(
-            icon: const FaIcon(CupertinoIcons.home,size: 24,),
-            // selectedIcon: const Icon(CupertinoIcons.home,size: 24,),
+
+            icon:  FaIcon(CupertinoIcons.home,size: isWideScreen?24:24.sp,),
+            // selectedIcon: const Icon(CupertinoIcons.home,size: isWideScreen?24:24.sp,),
             selectedColor: ColorManager.primary,
             // unSelectedColor: Colors.purple,
             // backgroundColor: Colors.orange,
-            title: const Text('Home'),
+            title:  Text('Home'),
           ),
           BottomBarItem(
-            icon: const FaIcon(Icons.file_copy,size: 24,),
+            icon:  FaIcon(Icons.file_copy,size: isWideScreen?24:24.sp,),
             // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
             selectedColor: ColorManager.primary,
             // unSelectedColor: Colors.purple,
             // backgroundColor: Colors.orange,
-            title: const Text('Documents'),
+            title:  Text('Documents'),
           ),
           BottomBarItem(
-            icon: const FaIcon(Icons.grid_view_outlined,size: 24,),
+            icon:  FaIcon(Icons.grid_view_outlined,size: isWideScreen?24:24.sp,),
             // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
             selectedColor: ColorManager.primary,
             // unSelectedColor: Colors.purple,
             // backgroundColor: Colors.orange,
-            title: const Text('Utilities'),
+            title:  Text('Utilities'),
           ),
           BottomBarItem(
-            icon: const FaIcon(Icons.menu,size: 24,),
+            icon:  FaIcon(Icons.menu,size: isWideScreen?24:24.sp,),
             // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
             selectedColor: ColorManager.primary,
             // unSelectedColor: Colors.purple,
             // backgroundColor: Colors.orange,
-            title: const Text('Menu'),
+            title:  Text('Menu'),
           ),
         ],
         hasNotch: true,
@@ -103,16 +112,16 @@ class _AnimatedBarExampleState extends State<PatientMainPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () =>Get.to(()=>QRViewExample()),
         backgroundColor: ColorManager.primaryOpacity80,
-        child: FaIcon(Icons.qr_code_2_outlined,size: 40.sp,)
+        child: FaIcon(Icons.qr_code_2_outlined,size: isWideScreen?40: 40.sp,)
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: PageView(
         controller: controller,
         children: [
-          PatientHomePage(),
-          PatientDocumentPage(),
-          PatientUtilitiesPage(),
-          SettingsPage()
+          PatientHomePage(isWideScreen,isNarrowScreen),
+          PatientDocumentPage(isWideScreen,isNarrowScreen),
+          PatientUtilitiesPage(isWideScreen,isNarrowScreen),
+          SettingsPage(isWideScreen,isNarrowScreen)
         ],
       ),
     );

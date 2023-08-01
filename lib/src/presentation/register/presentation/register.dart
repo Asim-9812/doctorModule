@@ -113,11 +113,11 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   children: [
                     Text(
                       'REGISTER',
-                      style: getSemiBoldHeadStyle(color: Colors.white,fontSize: 40.sp),
+                      style: getSemiBoldHeadStyle(color: Colors.white,fontSize: 30),
                     ),
                     Text(
                       'Create your account',
-                      style: getRegularStyle(color: Colors.white,fontSize: 24.sp),
+                      style: getRegularStyle(color: Colors.white,fontSize: 20),
                     ),
                   ],
                 ),
@@ -130,6 +130,12 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   }
 
   Widget _buildBody2() {
+    // Get the screen size
+    final screenSize = MediaQuery.of(context).size;
+
+    // Check if width is greater than height
+    bool isWideScreen = screenSize.width > 500;
+    bool isNarrowScreen = screenSize.width < 420;
 
     return SlideInUp(
       duration: const Duration(milliseconds: 700),
@@ -214,8 +220,8 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Already have an account?',style: getRegularStyle(color: ColorManager.black,fontSize: 18.sp),),
-                      TextButton(onPressed: ()=>Get.to(()=>LoginPage(),transition: Transition.fade), child: Text('Login.',style: getRegularStyle(color: ColorManager.blue,fontSize: 18.sp),))
+                      Text('Already have an account?',style: getRegularStyle(color: ColorManager.black,fontSize:isNarrowScreen?14: 18),),
+                      TextButton(onPressed: ()=>Get.to(()=>LoginPage(),transition: Transition.fade), child: Text('Login.',style: getRegularStyle(color: ColorManager.blue,fontSize:isNarrowScreen?14: 18),))
                     ],
                   ),
                   h100,

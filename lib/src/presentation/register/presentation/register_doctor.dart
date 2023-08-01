@@ -422,7 +422,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
               'Register',
               style: getMediumStyle(
                   color: ColorManager.white,
-                  fontSize: 24.sp),
+                  fontSize: 18),
             ),
           ),
         ],

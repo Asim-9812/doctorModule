@@ -18,7 +18,10 @@ import '../../../../core/resources/value_manager.dart';
 import '../../patient_dashboard/presentation/patient_main_page.dart';
 
 class SearchNearByPage extends StatefulWidget {
-  const SearchNearByPage({Key? key}) : super(key: key);
+  final bool isNarrowScreen;
+  final bool isWideScreen;
+  SearchNearByPage(this.isNarrowScreen,this.isWideScreen);
+
 
   @override
   State<SearchNearByPage> createState() => _SearchNearByPageState();
@@ -139,7 +142,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
             centerTitle: true,
             title: Text(
               'Search',
-              style: getMediumStyle(color: ColorManager.black),
+              style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?24.sp:24),
             ),
           ),
           body: SingleChildScrollView(
@@ -170,7 +173,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
       padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.w),
       child: TextFormField(
         // autofocus: true,
-        style: getRegularStyle(color: ColorManager.black, fontSize: 20),
+        style: getRegularStyle(color: ColorManager.black, fontSize: widget.isNarrowScreen? 20.sp:20 ),
         onChanged: (value) {
           setState(() {
             searchQuery = value;
@@ -184,7 +187,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
               : selectedOption == 2
               ? 'Search for Ambulance nearby'
               : 'Search for Clinic nearby',
-          hintStyle: getRegularStyle(color: ColorManager.textGrey, fontSize: 20),
+          hintStyle: getRegularStyle(color: ColorManager.textGrey, fontSize: widget.isNarrowScreen? 20.sp:20),
           contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 18.h),
           filled: true,
           fillColor: ColorManager.lightBlueAccent,
@@ -196,8 +199,8 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
             padding: EdgeInsets.only(left: 12.w),
             child: FaIcon(Icons.search, color: ColorManager.blueText),
           ),
-          prefixIconConstraints: BoxConstraints.tight(Size(48, 24)),
-          suffixIconConstraints: BoxConstraints.tight(Size(32, 24)),
+          prefixIconConstraints: BoxConstraints.tight(Size(widget.isWideScreen? 48.w:48, widget.isWideScreen? 24.h:24)),
+          suffixIconConstraints: BoxConstraints.tight(Size(widget.isWideScreen? 32.w:32, widget.isWideScreen? 24.h:24)),
           suffixIcon: InkWell(
             onTap: () => _showAlertDialog(),
             child: FaIcon(Icons.filter_list, color: ColorManager.blueText),
@@ -210,6 +213,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
   /// select search category...
 
   Future<void> _showAlertDialog() async {
+
     final result = await showDialog(
       context: context,
       builder: (context) => ZoomIn(
@@ -219,17 +223,180 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
           ),
           title: Text(
             'Search for nearby',
-            style: getMediumStyle(color: ColorManager.textGrey, fontSize: 24),
+            style: getMediumStyle(color: ColorManager.textGrey, fontSize: widget.isNarrowScreen?24.sp:24),
           ),
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-              return Row(
+              return  widget.isNarrowScreen
+                  ? Column(
+                mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                      Container(
+                        height: 130.h,
+                        width: 80.w,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              selectedOption = 0;
+                            });
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: selectedOption == 0 ? ColorManager.primaryDark : ColorManager.dotGrey),
+                                  shape: BoxShape.circle,
+                                  color: selectedOption == 0 ? ColorManager.primary : Colors.transparent,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.asset(
+                                    'assets/icons/hospital.png',
+                                    width: 30,
+                                    height: 30,
+                                  ),
+                                ),
+                              ),
+                              h10,
+                              Text(
+                                'Hospital',
+                                style: getRegularStyle(color: selectedOption == 0 ? ColorManager.black : ColorManager.textGrey, fontSize: 16.sp),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      w05,
+                      Container(
+                        height: 130.h,
+                        width: 80.w,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              selectedOption = 1;
+                            });
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: selectedOption == 1 ? ColorManager.primaryDark : ColorManager.dotGrey),
+                                  shape: BoxShape.circle,
+                                  color: selectedOption == 1 ? ColorManager.primary : Colors.transparent,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.asset(
+                                    'assets/icons/doctor.png',
+                                    width: 30,
+                                    height: 30,
+                                  ),
+                                ),
+                              ),
+                              h10,
+                              Text(
+                                'Doctor',
+                                style: getRegularStyle(color: selectedOption == 1 ? ColorManager.black : ColorManager.textGrey, fontSize: 16.sp),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+
+                ],
+              ),
+                      Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                      Container(
+                        height: 130.h,
+                        width: 80.w,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              selectedOption = 2;
+                            });
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: selectedOption == 2 ? ColorManager.primaryDark : ColorManager.dotGrey),
+                                  shape: BoxShape.circle,
+                                  color: selectedOption == 2 ? ColorManager.primary : Colors.transparent,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.asset(
+                                    'assets/icons/ambulance.png',
+                                    width: 30,
+                                    height: 30,
+                                  ),
+                                ),
+                              ),
+                              h10,
+                              Text(
+                                'Ambulance',
+                                style: getRegularStyle(color: selectedOption == 2 ? ColorManager.black : ColorManager.textGrey, fontSize: 16.sp),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      w05,
+                      Container(
+                        height: 130.h,
+                        width: 80.w,
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              selectedOption = 3;
+                            });
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: selectedOption == 3 ? ColorManager.primaryDark : ColorManager.dotGrey),
+                                  shape: BoxShape.circle,
+                                  color: selectedOption == 3 ? ColorManager.primary : Colors.transparent,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Image.asset(
+                                    'assets/icons/clinic.png',
+                                    width: 30,
+                                    height: 30,
+                                  ),
+                                ),
+                              ),
+                              h10,
+                              Text(
+                                'Clinic',
+                                style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: 16.sp),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                ],
+              ),
+                    ],
+                  )
+                  :Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    height: 80,
-                    width: 60,
+                    height: widget.isWideScreen? 100.h :90,
+                    width: widget.isWideScreen? 50.w:50,
                     child: InkWell(
                       onTap: () {
                         setState(() {
@@ -256,7 +423,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
                           h10,
                           Text(
                             'Hospital',
-                            style: getRegularStyle(color: selectedOption == 0 ? ColorManager.black : ColorManager.textGrey, fontSize: 16),
+                            style: getRegularStyle(color: selectedOption == 0 ? ColorManager.black : ColorManager.textGrey, fontSize: widget.isWideScreen?16:16.sp),
                           )
                         ],
                       ),
@@ -264,8 +431,8 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
                   ),
                   w05,
                   Container(
-                    height: 80,
-                    width: 60,
+                    height: widget.isWideScreen? 100.h :90,
+                    width: widget.isWideScreen? 50.w:50,
                     child: InkWell(
                       onTap: () {
                         setState(() {
@@ -292,7 +459,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
                           h10,
                           Text(
                             'Doctor',
-                            style: getRegularStyle(color: selectedOption == 1 ? ColorManager.black : ColorManager.textGrey, fontSize: 16),
+                            style: getRegularStyle(color: selectedOption == 1 ? ColorManager.black : ColorManager.textGrey, fontSize: widget.isWideScreen?16:16.sp),
                           )
                         ],
                       ),
@@ -300,8 +467,8 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
                   ),
                   w05,
                   Container(
-                    height: 80,
-                    width: 60,
+                    height: widget.isWideScreen? 100.h :90,
+                    width: widget.isWideScreen? 50.w:50,
                     child: InkWell(
                       onTap: () {
                         setState(() {
@@ -328,7 +495,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
                           h10,
                           Text(
                             'Ambulance',
-                            style: getRegularStyle(color: selectedOption == 2 ? ColorManager.black : ColorManager.textGrey, fontSize: 16),
+                            style: getRegularStyle(color: selectedOption == 2 ? ColorManager.black : ColorManager.textGrey, fontSize: widget.isWideScreen?16:16.sp),
                           )
                         ],
                       ),
@@ -336,8 +503,8 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
                   ),
                   w05,
                   Container(
-                    height: 80,
-                    width: 60,
+                    height: widget.isWideScreen? 100.h :90,
+                    width: widget.isWideScreen? 50.w:50,
                     child: InkWell(
                       onTap: () {
                         setState(() {
@@ -364,7 +531,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
                           h10,
                           Text(
                             'Clinic',
-                            style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: 16),
+                            style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: widget.isWideScreen?16:16.sp),
                           )
                         ],
                       ),
@@ -548,22 +715,22 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
         onTap: onTap,
         leading: Image.asset(
           'assets/icons/$icon.png',
-          width: 50.w,
-          height: 50.h,
+          width: widget.isNarrowScreen? 40.w:50.w,
+          height: widget.isNarrowScreen? 40.h:50.h,
         ),
         title: Text(
           '$name',
-          style: getRegularStyle(color: ColorManager.black, fontSize: 18),
+          style: getRegularStyle(color: ColorManager.black, fontSize: widget.isNarrowScreen? 18.sp:18),
         ),
         subtitle: distance != null
             ? Text(
           '$distance km away',
-          style: getRegularStyle(color: ColorManager.textGrey, fontSize: 14),
+          style: getRegularStyle(color: ColorManager.textGrey, fontSize: widget.isNarrowScreen?14.sp:14),
         )
             : email != null
             ? Text(
           '$email',
-          style: getRegularStyle(color: ColorManager.textGrey, fontSize: 14),
+          style: getRegularStyle(color: ColorManager.textGrey, fontSize:widget.isNarrowScreen?14.sp: 14),
         )
             : null,
         trailing: Row(
@@ -575,6 +742,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
               icon: FaIcon(
                 Icons.phone,
                 color: ColorManager.primaryOpacity80,
+                size: widget.isNarrowScreen? 18.sp:18,
               ),
             ),
             if (distance != null)
@@ -583,6 +751,7 @@ class _SearchNearByPageState extends State<SearchNearByPage> {
                 icon: FaIcon(
                   Icons.pin_drop_outlined,
                   color: ColorManager.primaryOpacity80,
+                  size: widget.isNarrowScreen?18.sp:18,
                 ),
               ),
           ],

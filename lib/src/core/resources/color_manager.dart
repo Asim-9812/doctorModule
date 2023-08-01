@@ -50,6 +50,15 @@ class ColorManager {
   static Color premiumContainer = HexColor.fromHex('#BA7A7A').withOpacity(0.8);
   static Color trialContainer = HexColor.fromHex('#261D1D').withOpacity(0.8);
   static Color blackContainer = HexColor.fromHex('#1A1717');
+  static Color accentRed = HexColor.fromHex('#eb6060');
+  static Color accentYellow = HexColor.fromHex('#f7e463');
+  static Color accentGreen = HexColor.fromHex('#7cd992');
+  static Color accentPurple = HexColor.fromHex('#b8586a');
+  static Color accentCream = HexColor.fromHex('#f4bccc');
+  static Color accentBlue = HexColor.fromHex('#6194eb');
+  static Color accentPink = HexColor.fromHex('#be60eb');
+  static Color accentLightGreen = HexColor.fromHex('#00c781');
+  static Color accentOrange = HexColor.fromHex('#f96856');
 }
 
 extension HexColor on Color {
