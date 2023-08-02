@@ -25,7 +25,7 @@ class StatusPage extends ConsumerWidget {
       }
       else if(auth[0].typeID == 3 && accountId == 3){
         print('doctor');
-        return const DoctorMainPage();
+        return DoctorMainPage();
       }
       else if(auth[0].typeID == 4 && accountId == 4){
         print('patient');

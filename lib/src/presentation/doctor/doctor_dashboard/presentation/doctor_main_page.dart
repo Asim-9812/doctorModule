@@ -20,12 +20,13 @@ import '../../../patient/scan/presentation/qr_scan.dart';
 import '../../../patient/settings/presentation/settings_page.dart';
 import '../../../patient/utilities/presentation/patient_utilities.dart';
 import '../../patient_reports/presentation/report_page_doctor.dart';
+import 'drawer/drawer_items.dart';
 
 
 
 
 class DoctorMainPage extends StatefulWidget {
-  const DoctorMainPage({
+   DoctorMainPage({
     Key? key,
   }) : super(key: key);
 
@@ -36,6 +37,7 @@ class DoctorMainPage extends StatefulWidget {
 class _AnimatedBarExampleState extends State<DoctorMainPage> {
   dynamic selected;
   PageController controller = PageController();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
 
   @override
@@ -53,6 +55,7 @@ class _AnimatedBarExampleState extends State<DoctorMainPage> {
     bool isWideScreen = screenSize.width > 500;
     bool isNarrowScreen = screenSize.width < 420;
     return Scaffold(
+      key: _scaffoldKey,
       extendBody: true, //to make floating action button notch transparent
 
       //to avoid the floating action button overlapping behavior,
@@ -69,47 +72,63 @@ class _AnimatedBarExampleState extends State<DoctorMainPage> {
         ),
         items: [
           BottomBarItem(
-            icon: const FaIcon(CupertinoIcons.home,size: 24,),
-            // selectedIcon: const Icon(CupertinoIcons.home,size: 24,),
+            icon:  FaIcon(CupertinoIcons.home,size: isWideScreen?24:24.sp,),
+            // selectedIcon:  Icon(CupertinoIcons.home,size: isWideScreen?24:24.sp,),
             selectedColor: ColorManager.primary,
             // unSelectedColor: Colors.purple,
             // backgroundColor: Colors.orange,
-            title: const Text('Home'),
+            title:  Text('Home'),
           ),
           BottomBarItem(
-            icon: const FaIcon(Icons.file_copy,size: 24,),
-            // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
+            icon:  FaIcon(Icons.file_copy,size: isWideScreen?24:24.sp,),
+            // selectedIcon:  FaIcon(FontAwesomeIcons.folder),
             selectedColor: ColorManager.primary,
             // unSelectedColor: Colors.purple,
             // backgroundColor: Colors.orange,
-            title: const Text('Documents'),
+            title:  Text('Documents'),
           ),
           BottomBarItem(
-            icon: const FaIcon(CupertinoIcons.doc_chart,size: 24,),
-            // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
+            icon:  FaIcon(CupertinoIcons.doc_chart,size: isWideScreen?24:24.sp,),
+            // selectedIcon:  FaIcon(FontAwesomeIcons.folder),
             selectedColor: ColorManager.primary,
             // unSelectedColor: Colors.purple,
             // backgroundColor: Colors.orange,
-            title: const Text('Reports'),
+            title:  Text('Reports'),
           ),
           BottomBarItem(
-            icon: const FaIcon(Icons.grid_view_outlined,size: 24,),
-            // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
+            icon:  FaIcon(Icons.grid_view_outlined,size: isWideScreen?24:24.sp,),
+            // selectedIcon:  FaIcon(FontAwesomeIcons.folder),
             selectedColor: ColorManager.primary,
             // unSelectedColor: Colors.purple,
             // backgroundColor: Colors.orange,
-            title: const Text('Utilities'),
+            title:  Text('Utilities'),
+          ),
+          BottomBarItem(
+            icon:  FaIcon(Icons.settings,size: isWideScreen?24:24.sp,),
+            // selectedIcon:  FaIcon(FontAwesomeIcons.folder),
+            selectedColor: ColorManager.primary,
+            // unSelectedColor: Colors.purple,
+            // backgroundColor: Colors.orange,
+            title:  Text('Settings'),
           ),
 
         ],
         hasNotch: false,
-        fabLocation: StylishBarFabLocation.center,
         currentIndex: selected ?? 0,
         onTap: (index) {
-          controller.jumpToPage(index);
-          setState(() {
-            selected = index;
-          });
+          if(index == 4){
+            _scaffoldKey.currentState!.openEndDrawer();
+            setState(() {
+              selected = index;
+            });
+          }
+          else{
+            controller.jumpToPage(index);
+            setState(() {
+              selected = index;
+            });
+          }
+
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -117,15 +136,21 @@ class _AnimatedBarExampleState extends State<DoctorMainPage> {
           backgroundColor: ColorManager.primaryDark,
           child: FaIcon(CupertinoIcons.chat_bubble_2_fill,size: isWideScreen?40:40.sp,)
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: PageView(
         controller: controller,
         children: [
           DoctorHomePage(isWideScreen,isNarrowScreen),
           DoctorDocumentPage(isWideScreen,isNarrowScreen),
           PatientReportPageDoctor(),
-          DoctorUtilityPage()
+          DoctorUtilityPage(),
         ],
+      ),
+      endDrawer: SafeArea(
+        child: Drawer(
+          backgroundColor: ColorManager.white,
+          child: DrawerItems(isWideScreen,isNarrowScreen),
+        ),
       ),
     );
   }

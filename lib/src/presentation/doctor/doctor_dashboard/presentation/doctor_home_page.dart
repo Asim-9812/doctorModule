@@ -11,6 +11,7 @@ import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
 import 'package:medical_app/src/presentation/doctor/doctor_dashboard/presentation/drawer/drawer_items.dart';
+import 'package:medical_app/src/presentation/doctor/profile/presentation/profile_page.dart';
 
 import '../../../../core/resources/value_manager.dart';
 import '../../../login/domain/model/user.dart';
@@ -45,7 +46,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
   @override
   Widget build(BuildContext context) {
     final userBox = Hive.box<User>('session').values.toList();
-    String firstName = 'User';//userBox[0].firstName!;
+    String firstName = userBox[0].firstName!;
     return FadeIn(
       delay: Duration(milliseconds: 200),
       duration: Duration(milliseconds: 500),
@@ -53,12 +54,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
         key: _scaffoldKey,
         backgroundColor: ColorManager.white,
         endDrawerEnableOpenDragGesture: false,
-        endDrawer: SafeArea(
-          child: Drawer(
-            backgroundColor: ColorManager.white,
-            child: DrawerItems(widget.isWideScreen,widget.isNarrowScreen),
-          ),
-        ),
+
         appBar: AppBar(
           elevation: 0,
           iconTheme: IconThemeData(color: ColorManager.black),
@@ -67,10 +63,13 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
           leadingWidth: 70,
           leading: Padding(
             padding: EdgeInsets.only(left: 18),
-            child: CircleAvatar(
-              backgroundColor: ColorManager.black,
-              radius: widget.isNarrowScreen? 40 : 40.r,
-              child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
+            child: InkWell(
+              onTap: ()=>Get.to(()=>DocProfilePage()),
+              child: CircleAvatar(
+                backgroundColor: ColorManager.black,
+                radius: widget.isNarrowScreen? 40 : 40.r,
+                child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
+              ),
             ),
           ),
           title: Column(
@@ -85,12 +84,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
             IconButton(
                 onPressed: ()=>Get.to(()=>NotificationPage()),
                 icon: Icon(Icons.notifications_none_outlined,color: ColorManager.black,)),
-            IconButton(
-              icon: new Icon(Icons.menu,color: Colors.black),
-              onPressed: () {
-                _scaffoldKey.currentState!.openEndDrawer();
-              },
-            ),
+
           ],
         ),
         body: SingleChildScrollView(

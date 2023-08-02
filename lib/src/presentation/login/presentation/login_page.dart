@@ -12,12 +12,14 @@ import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/core/resources/value_manager.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:medical_app/src/presentation/doctor/doctor_dashboard/presentation/doctor_main_page.dart';
+import 'package:medical_app/src/presentation/login/domain/model/user.dart';
 import 'package:medical_app/src/presentation/login/presentation/status_page.dart';
 import 'package:medical_app/src/presentation/organization/organization_dashboard/presentation/org_mainpage.dart';
 import 'package:medical_app/src/presentation/register/presentation/register.dart';
 
 import '../../../test/test.dart';
 import '../../common/snackbar.dart';
+import '../../doctor/profile/presentation/widgets/update_profile.dart';
 import '../../patient/patient_dashboard/presentation/patient_main_page.dart';
 import '../domain/service/login_service.dart';
 
@@ -90,7 +92,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final screenSize = MediaQuery.of(context).size;
 
     // Check if width is greater than height
-    bool isWideScreen = screenSize.width > screenSize.height;
+    bool isWideScreen = screenSize.width > 500;
+    bool isNarrowScreen = screenSize.width < 420;
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -101,7 +104,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               _buildBody(isWideScreen),
-              _buildBody2(isWideScreen)
+              _buildBody2(isWideScreen,isNarrowScreen)
 
             ],
           ),
@@ -157,7 +160,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
-  Widget _buildBody2(bool isWideScreen) {
+  Widget _buildBody2(bool isWideScreen,bool isNarrowScreen) {
     final fontSize = isWideScreen ? 14.0 : 14.sp;
     final iconSize = isWideScreen ? 20.0 : 20.sp;
 

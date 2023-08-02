@@ -33,7 +33,7 @@ class OrgMainPage extends StatefulWidget {
 }
 
 class _AnimatedBarExampleState extends State<OrgMainPage> {
-  int selected =0;
+  dynamic selected;
   PageController controller = PageController();
 
 
@@ -60,97 +60,48 @@ class _AnimatedBarExampleState extends State<OrgMainPage> {
       // when a soft keyboard is displayed
       // resizeToAvoidBottomInset: false,
 
-      bottomNavigationBar: Container(
-
-        margin: EdgeInsets.only(left: 50.w,right: 50.w,bottom: 40.h),
-        height: 60.h,
-        child: Card(
-          elevation: 5,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(40),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              InkWell(
-                splashColor: Colors.transparent,
-                onTap: (){
-                  setState(() {
-                    selected =0;
-                  });
-                  controller.jumpToPage(selected);
-                },
-                child: Container(
-                  width: isWideScreen? 80 :80.w,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                     selected==0? FaIcon(CupertinoIcons.home,color: ColorManager.primary,size: isWideScreen?24:24.sp,):FaIcon(CupertinoIcons.home,color: ColorManager.textGrey,size: 18.sp,),
-                      w10,
-                      if(selected==0)Text('Home',style: getRegularStyle(color: ColorManager.primary,fontSize: isWideScreen? 12 :12.sp),)
-                    ],
-                  ),
-                ),
-              ),
-              VerticalDivider(
-                thickness: 0.5,
-                color: ColorManager.textGrey.withOpacity(0.5),
-                indent: 8,
-                endIndent: 8,
-              ),
-              InkWell(
-                splashColor: Colors.transparent,
-                onTap: (){
-                  setState(() {
-                    selected =1;
-                  });
-                  controller.jumpToPage(selected);
-                },
-                child: Container(
-                  width: isWideScreen? 80 :80.w,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      selected==1? FaIcon(CupertinoIcons.doc_chart,color: ColorManager.primary,size: isWideScreen?24:24.sp,):FaIcon(CupertinoIcons.doc_chart,color: ColorManager.textGrey,size: isWideScreen?20:20.sp,),
-                      w10,
-                      if(selected==1)Text('Reports',style: getRegularStyle(color: ColorManager.primary,fontSize: isWideScreen? 12 :12.sp),)
-                    ],
-                  ),
-                ),
-              ),
-              VerticalDivider(
-                thickness: 0.5,
-                color: ColorManager.textGrey.withOpacity(0.5),
-                indent: 8,
-                endIndent: 8,
-              ),
-              InkWell(
-                splashColor: Colors.transparent,
-                onTap: (){
-                  setState(() {
-                    selected =2;
-                  });
-                  controller.jumpToPage(selected);
-                },
-                child: Container(
-                  width: isWideScreen? 80 :80.w,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      selected==2? FaIcon(Icons.settings,color: ColorManager.primary,size: isWideScreen?24:24.sp,):FaIcon(Icons.settings,color: ColorManager.textGrey,size: isWideScreen?20:20.sp,),
-                      w10,
-                      if(selected==2)Text('Settings',style: getRegularStyle(color: ColorManager.primary,fontSize: isWideScreen? 12 :12.sp),)
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+      bottomNavigationBar: StylishBottomBar(
+        option: AnimatedBarOptions(
+          // iconSize: 32,
+          barAnimation: BarAnimation.fade,
+          iconStyle: IconStyle.animated,
+          // opacity: 0.3,
         ),
+        items: [
+          BottomBarItem(
+
+            icon:  FaIcon(CupertinoIcons.home,size: isWideScreen?24:24.sp,),
+            // selectedIcon: const Icon(CupertinoIcons.home,size: isWideScreen?24:24.sp,),
+            selectedColor: ColorManager.primary,
+            // unSelectedColor: Colors.purple,
+            // backgroundColor: Colors.orange,
+            title:  Text('Home'),
+          ),
+          BottomBarItem(
+            icon:  FaIcon(CupertinoIcons.doc_chart,size: isWideScreen?24:24.sp,),
+            // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
+            selectedColor: ColorManager.primary,
+            // unSelectedColor: Colors.purple,
+            // backgroundColor: Colors.orange,
+            title:  Text('Reports'),
+          ),
+          BottomBarItem(
+            icon:  FaIcon(Icons.settings,size: isWideScreen?24:24.sp,),
+            // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
+            selectedColor: ColorManager.primary,
+            // unSelectedColor: Colors.purple,
+            // backgroundColor: Colors.orange,
+            title:  Text('Settings'),
+          ),
+        ],
+        hasNotch: false,
+        currentIndex: selected ?? 0,
+        onTap: (index) {
+          controller.jumpToPage(index);
+          setState(() {
+            selected = index;
+          });
+        },
       ),
       body: PageView(
         physics: NeverScrollableScrollPhysics(),

@@ -15,6 +15,7 @@ class Api{
    /// User...
    static const userRegister = '$baseUrl/api/Users/UserRegister';
    static const getUsers = '$baseUrl/api/Users/GetUser';
+   static const userUpdate = '$baseUrl/api/Users/UpdateUser/profileImageUrl/signaturImageUrl';
 
 
 
