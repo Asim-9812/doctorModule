@@ -11,7 +11,9 @@ import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/core/resources/value_manager.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:medical_app/src/presentation/doctor/doctor_dashboard/presentation/doctor_main_page.dart';
 import 'package:medical_app/src/presentation/login/presentation/status_page.dart';
+import 'package:medical_app/src/presentation/organization/organization_dashboard/presentation/org_mainpage.dart';
 import 'package:medical_app/src/presentation/register/presentation/register.dart';
 
 import '../../../test/test.dart';

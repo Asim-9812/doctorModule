@@ -368,7 +368,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
 
                     }
                   }).catchError((e){
-                    print('Something went wrong');
+                    print('$e');
                     scaffoldMessage.showSnackBar(
                       SnackbarUtil.showFailureSnackbar(
                           message: '$e',

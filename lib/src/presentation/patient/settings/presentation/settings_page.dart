@@ -51,7 +51,7 @@ class _UtilitiesPageState extends ConsumerState<SettingsPage> {
           elevation: 1,
           backgroundColor: ColorManager.white,
           automaticallyImplyLeading: false,
-          title: Text('Settings',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen? 20.sp:28.sp),),
+          title: Text('Settings',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen? 20.sp:widget.isWideScreen?24:24.sp),),
         ),
         body: SingleChildScrollView(
 

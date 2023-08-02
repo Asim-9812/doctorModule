@@ -1,41 +1,49 @@
-
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'scheme_model.freezed.dart';
 part 'scheme_model.g.dart';
 
 @freezed
-abstract class SchemeModel with _$SchemeModel {
-  factory SchemeModel({
-    @JsonKey(name: 'schemeplanID') int? schemePlanID,
+abstract class SchemePlaneModel with _$SchemePlaneModel {
+  factory SchemePlaneModel({
+    int? schemeplanID,
+    int? schemeId,
+    int? schemeAdsId,
     double? price,
-    String? schemeAdd1,
-    String? schemeAdd2,
     int? trailDay,
-    @JsonKey(name: 'scheme_Names') String? schemeNames,
-    @JsonKey(name: 'storageType') int? storageType,
-    String? storage,
-    @JsonKey(name: 'user_Capacity') int? userCapacity,
-    int? flag,
-  }) = _SchemeModel;
+    int? storageType,
+    int? storage,
+    int? userCapacity,
+    bool? isActive,
+    DateTime? startDate,
+    DateTime? endDate,
+    DateTime? entryDate,
+    String? remarks,
+    String? schemeName,
+    String? adsTitle,
+    String? flag,
+  }) = _SchemePlaneModel;
 
-  factory SchemeModel.fromJson(Map<String, dynamic> json) =>
-      _$SchemeModelFromJson(json);
+  factory SchemePlaneModel.empty() => SchemePlaneModel(
+    schemeplanID: null,
+    schemeId: null,
+    schemeAdsId: null,
+    price: null,
+    trailDay: null,
+    storageType: null,
+    storage: null,
+    userCapacity: null,
+    isActive: null,
+    startDate: null,
+    endDate: null,
+    entryDate: null,
+    remarks: null,
+    schemeName: null,
+    adsTitle: null,
+    flag: null,
+  );
+
+  factory SchemePlaneModel.fromJson(Map<String, dynamic> json) =>
+      _$SchemePlaneModelFromJson(json);
 }
-
-
-SchemeModel emptySchemeModel = SchemeModel(
-  schemePlanID: null,
-  price: null,
-  schemeAdd1: null,
-  schemeAdd2: null,
-  trailDay: null,
-  schemeNames: null,
-  storageType: null,
-  storage: null,
-  userCapacity: null,
-  flag: null,
-);
-
-// Now, you have an empty SchemeModel instance that you can use.
-

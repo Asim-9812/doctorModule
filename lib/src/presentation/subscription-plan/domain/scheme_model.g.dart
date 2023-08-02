@@ -6,30 +6,48 @@ part of 'scheme_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_SchemeModel _$$_SchemeModelFromJson(Map<String, dynamic> json) =>
-    _$_SchemeModel(
-      schemePlanID: json['schemeplanID'] as int?,
+_$_SchemePlaneModel _$$_SchemePlaneModelFromJson(Map<String, dynamic> json) =>
+    _$_SchemePlaneModel(
+      schemeplanID: json['schemeplanID'] as int?,
+      schemeId: json['schemeId'] as int?,
+      schemeAdsId: json['schemeAdsId'] as int?,
       price: (json['price'] as num?)?.toDouble(),
-      schemeAdd1: json['schemeAdd1'] as String?,
-      schemeAdd2: json['schemeAdd2'] as String?,
       trailDay: json['trailDay'] as int?,
-      schemeNames: json['scheme_Names'] as String?,
       storageType: json['storageType'] as int?,
-      storage: json['storage'] as String?,
-      userCapacity: json['user_Capacity'] as int?,
-      flag: json['flag'] as int?,
+      storage: json['storage'] as int?,
+      userCapacity: json['userCapacity'] as int?,
+      isActive: json['isActive'] as bool?,
+      startDate: json['startDate'] == null
+          ? null
+          : DateTime.parse(json['startDate'] as String),
+      endDate: json['endDate'] == null
+          ? null
+          : DateTime.parse(json['endDate'] as String),
+      entryDate: json['entryDate'] == null
+          ? null
+          : DateTime.parse(json['entryDate'] as String),
+      remarks: json['remarks'] as String?,
+      schemeName: json['schemeName'] as String?,
+      adsTitle: json['adsTitle'] as String?,
+      flag: json['flag'] as String?,
     );
 
-Map<String, dynamic> _$$_SchemeModelToJson(_$_SchemeModel instance) =>
+Map<String, dynamic> _$$_SchemePlaneModelToJson(_$_SchemePlaneModel instance) =>
     <String, dynamic>{
-      'schemeplanID': instance.schemePlanID,
+      'schemeplanID': instance.schemeplanID,
+      'schemeId': instance.schemeId,
+      'schemeAdsId': instance.schemeAdsId,
       'price': instance.price,
-      'schemeAdd1': instance.schemeAdd1,
-      'schemeAdd2': instance.schemeAdd2,
       'trailDay': instance.trailDay,
-      'scheme_Names': instance.schemeNames,
       'storageType': instance.storageType,
       'storage': instance.storage,
-      'user_Capacity': instance.userCapacity,
+      'userCapacity': instance.userCapacity,
+      'isActive': instance.isActive,
+      'startDate': instance.startDate?.toIso8601String(),
+      'endDate': instance.endDate?.toIso8601String(),
+      'entryDate': instance.entryDate?.toIso8601String(),
+      'remarks': instance.remarks,
+      'schemeName': instance.schemeName,
+      'adsTitle': instance.adsTitle,
       'flag': instance.flag,
     };

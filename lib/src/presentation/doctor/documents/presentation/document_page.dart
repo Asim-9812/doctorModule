@@ -1,4 +1,5 @@
 
+
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,13 +15,15 @@ import '../add_documents/presentation/add_document_page.dart';
 import '../search_documents/presentation/search_document_page.dart';
 
 class DoctorDocumentPage extends StatefulWidget {
-  const DoctorDocumentPage({super.key});
+  final bool isWideScreen;
+  final bool isNarrowScreen;
+  DoctorDocumentPage(this.isWideScreen,this.isNarrowScreen);
 
   @override
-  State<DoctorDocumentPage> createState() => _DocumentPageState();
+  State<DoctorDocumentPage> createState() => _PatientDocumentPageState();
 }
 
-class _DocumentPageState extends State<DoctorDocumentPage> {
+class _PatientDocumentPageState extends State<DoctorDocumentPage> {
   bool isFolderLocked = false;
   @override
   Widget build(BuildContext context) {
@@ -82,10 +85,10 @@ class _DocumentPageState extends State<DoctorDocumentPage> {
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8.w,
-                mainAxisSpacing: 8.h,
-                childAspectRatio: 14/10
+                crossAxisCount: widget.isWideScreen? 3: widget.isNarrowScreen?1: 2,
+                crossAxisSpacing: widget.isWideScreen?8:8.w,
+                mainAxisSpacing: widget.isWideScreen?8: 8.h,
+                childAspectRatio: widget.isWideScreen? 14/11:14/10
             ),
             children: [
               buildFolderBody(context,folderName: 'Academics', fileNumbers: 5, onTap: (){},isLocked:isFolderLocked),
@@ -106,7 +109,7 @@ class _DocumentPageState extends State<DoctorDocumentPage> {
     required int fileNumbers,
     required VoidCallback onTap,
     bool? isLocked,
-}) {
+  }) {
     if(isLocked == null){
       isLocked = false;
     }
@@ -178,7 +181,7 @@ class _DocumentPageState extends State<DoctorDocumentPage> {
     required IconData icon,
     required String name,
     required VoidCallback onTap
-}) {
+  }) {
     return ListTile(
       onTap: onTap,
       leading: FaIcon(icon,color: ColorManager.blue.withOpacity(0.5),),

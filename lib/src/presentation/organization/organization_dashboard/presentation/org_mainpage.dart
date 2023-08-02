@@ -45,6 +45,14 @@ class _AnimatedBarExampleState extends State<OrgMainPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    // Get the screen size
+    final screenSize = MediaQuery.of(context).size;
+
+    // Check if width is greater than height
+    bool isWideScreen = screenSize.width > 500;
+    bool isNarrowScreen = screenSize.width < 420;
+
     return Scaffold(
       extendBody: true, //to make floating action button notch transparent
 
@@ -54,8 +62,8 @@ class _AnimatedBarExampleState extends State<OrgMainPage> {
 
       bottomNavigationBar: Container(
 
-        margin: EdgeInsets.only(left: 50,right: 50,bottom: 40),
-        height: 60,
+        margin: EdgeInsets.only(left: 50.w,right: 50.w,bottom: 40.h),
+        height: 60.h,
         child: Card(
           elevation: 5,
           shape: RoundedRectangleBorder(
@@ -74,14 +82,14 @@ class _AnimatedBarExampleState extends State<OrgMainPage> {
                   controller.jumpToPage(selected);
                 },
                 child: Container(
-                  width: 80,
+                  width: isWideScreen? 80 :80.w,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                     selected==0? FaIcon(CupertinoIcons.home,color: ColorManager.primary,size: 24,):FaIcon(CupertinoIcons.home,color: ColorManager.textGrey,size: 18,),
+                     selected==0? FaIcon(CupertinoIcons.home,color: ColorManager.primary,size: isWideScreen?24:24.sp,):FaIcon(CupertinoIcons.home,color: ColorManager.textGrey,size: 18.sp,),
                       w10,
-                      if(selected==0)Text('Home',style: getRegularStyle(color: ColorManager.primary,fontSize: 12),)
+                      if(selected==0)Text('Home',style: getRegularStyle(color: ColorManager.primary,fontSize: isWideScreen? 12 :12.sp),)
                     ],
                   ),
                 ),
@@ -101,14 +109,14 @@ class _AnimatedBarExampleState extends State<OrgMainPage> {
                   controller.jumpToPage(selected);
                 },
                 child: Container(
-                  width: 80,
+                  width: isWideScreen? 80 :80.w,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      selected==1? FaIcon(CupertinoIcons.doc_chart,color: ColorManager.primary,size: 24,):FaIcon(CupertinoIcons.doc_chart,color: ColorManager.textGrey,size: 20,),
+                      selected==1? FaIcon(CupertinoIcons.doc_chart,color: ColorManager.primary,size: isWideScreen?24:24.sp,):FaIcon(CupertinoIcons.doc_chart,color: ColorManager.textGrey,size: isWideScreen?20:20.sp,),
                       w10,
-                      if(selected==1)Text('Reports',style: getRegularStyle(color: ColorManager.primary,fontSize: 12),)
+                      if(selected==1)Text('Reports',style: getRegularStyle(color: ColorManager.primary,fontSize: isWideScreen? 12 :12.sp),)
                     ],
                   ),
                 ),
@@ -128,14 +136,14 @@ class _AnimatedBarExampleState extends State<OrgMainPage> {
                   controller.jumpToPage(selected);
                 },
                 child: Container(
-                  width: 80,
+                  width: isWideScreen? 80 :80.w,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      selected==2? FaIcon(Icons.settings,color: ColorManager.primary,size: 24,):FaIcon(Icons.settings,color: ColorManager.textGrey,size: 20,),
+                      selected==2? FaIcon(Icons.settings,color: ColorManager.primary,size: isWideScreen?24:24.sp,):FaIcon(Icons.settings,color: ColorManager.textGrey,size: isWideScreen?20:20.sp,),
                       w10,
-                      if(selected==2)Text('Settings',style: getRegularStyle(color: ColorManager.primary,fontSize: 12),)
+                      if(selected==2)Text('Settings',style: getRegularStyle(color: ColorManager.primary,fontSize: isWideScreen? 12 :12.sp),)
                     ],
                   ),
                 ),
@@ -148,9 +156,9 @@ class _AnimatedBarExampleState extends State<OrgMainPage> {
         physics: NeverScrollableScrollPhysics(),
         controller: controller,
         children: [
-          OrgHomePage(),
+          OrgHomePage(isWideScreen,isNarrowScreen),
           OrgPatientReports(),
-          OrgSettings(),
+          OrgSettings(isWideScreen,isNarrowScreen),
         ],
       ),
     );

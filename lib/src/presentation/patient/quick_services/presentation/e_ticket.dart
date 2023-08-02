@@ -30,7 +30,9 @@ import '../../../common/snackbar.dart';
 import '../domain/model/cost_category_model.dart';
 
 class ETicket extends ConsumerStatefulWidget {
-  const ETicket({super.key});
+  final bool isWideScreen;
+  final bool isNarrowScreen;
+  ETicket(this.isWideScreen,this.isNarrowScreen);
 
   @override
   ConsumerState<ETicket> createState() => _ETicketState();
@@ -266,7 +268,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                 borderRadius: BorderRadius.circular(10)
               ),
               backgroundColor: ColorManager.primaryDark,
-              fixedSize: Size.fromHeight(40)
+              fixedSize: Size.fromHeight(widget.isNarrowScreen?40.h:40)
             ),
             onPressed: isPostingData ? null :() async {
               final now = DateTime.now();
@@ -411,7 +413,7 @@ class _ETicketState extends ConsumerState<ETicket> {
 
               }
             },
-            child: isPostingData? SpinKitDualRing(color: ColorManager.white,size: 12,):Text('Submit'),
+            child: isPostingData? SpinKitDualRing(color: ColorManager.white,size: widget.isNarrowScreen?12.sp: 12,):Text('Submit'),
           ),
         ),
       ),
@@ -454,14 +456,14 @@ class _ETicketState extends ConsumerState<ETicket> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Name',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+        Text('Name',style: getMediumStyle(color: ColorManager.black,fontSize:widget.isNarrowScreen?16.sp: 18),),
         h10,
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              height: 60,
-              width: 180,
+              height: widget.isNarrowScreen?60.h:60,
+              width: 180.w,
               child: TextFormField(
                 controller: _firstNameController,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -477,7 +479,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                 decoration: InputDecoration(
                     floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
                     hintText: 'First Name',
-                    hintStyle: getRegularStyle(color: ColorManager.textGrey),
+                    hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide(
@@ -505,7 +507,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                 decoration: InputDecoration(
                     floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
                     hintText: 'Last Name',
-                    hintStyle: getRegularStyle(color: ColorManager.textGrey),
+                    hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide(
@@ -525,11 +527,11 @@ class _ETicketState extends ConsumerState<ETicket> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('National ID',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                Text('National ID',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                 h10,
                 Container(
                   height: 60,
-                  width: 180,
+                  width: 180.w,
                   child: TextFormField(
                     controller: _nidController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -545,7 +547,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                     decoration: InputDecoration(
                         floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
                         hintText: 'National ID',
-                        hintStyle: getRegularStyle(color: ColorManager.textGrey),
+                        hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
@@ -561,11 +563,11 @@ class _ETicketState extends ConsumerState<ETicket> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Unviersal Health ID',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                Text('Unviersal Health ID',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                 h10,
                 Container(
                   height: 60,
-                  width: 180,
+                  width: 180.w,
                   child: TextFormField(
                     controller: _uhidController,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -578,7 +580,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                     decoration: InputDecoration(
                         floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
                         hintText: 'Universal Health Id',
-                        hintStyle: getRegularStyle(color: ColorManager.textGrey),
+                        hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
@@ -596,9 +598,9 @@ class _ETicketState extends ConsumerState<ETicket> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Registration Details',style: getMediumStyle(color: ColorManager.black,fontSize: 22),),
+            Text('Registration Details',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?20.sp:20),),
             Container(
-              width: 210,
+              width:widget.isNarrowScreen?160.sp:210,
               child: Divider(
                 thickness: 0.5,
                 color: ColorManager.black.withOpacity(0.5),
@@ -615,13 +617,13 @@ class _ETicketState extends ConsumerState<ETicket> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Cost Category',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                Text('Cost Category',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                 h10,
                 Container(
                   height: 60,
-                  width: 180,
+                  width: 180.w,
                   child: DropdownButtonFormField<String>(
-                    menuMaxHeight: 400,
+                    menuMaxHeight: widget.isWideScreen?200:400.h,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     padding: EdgeInsets.zero,
                     value: selectedCategory,
@@ -649,7 +651,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                         value: item.costCategoryType,
                         child: Text(
                           item.costCategoryType,
-                          style: getRegularStyle(color: Colors.black),
+                          style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -675,11 +677,11 @@ class _ETicketState extends ConsumerState<ETicket> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Policy No.',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                Text('Policy No.',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                 h10,
                 Container(
                   height: 60,
-                  width: 180,
+                  width: 180.w,
                   child: TextFormField(
                     controller: _policyController,
                     keyboardType: TextInputType.phone,
@@ -700,7 +702,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                     decoration: InputDecoration(
                         floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
                         hintText: 'Policy No.',
-                        hintStyle: getRegularStyle(color: ColorManager.textGrey),
+                        hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
@@ -730,9 +732,9 @@ class _ETicketState extends ConsumerState<ETicket> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Patient Details',style: getMediumStyle(color: ColorManager.black,fontSize: 22),),
+            Text('Patient Details',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?20.sp:20),),
             Container(
-              width: 250,
+              width: widget.isNarrowScreen?180.w: 250,
               child: Divider(
                 thickness: 0.5,
                 color: ColorManager.black.withOpacity(0.5),
@@ -748,13 +750,13 @@ class _ETicketState extends ConsumerState<ETicket> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('DOB',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                Text('DOB',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18 ),),
                 h10,
                 InkWell(
                   onTap: () => _selectDOB(context),
                   child: Container(
                     height: 55,
-                    width: 180,
+                    width: 180.w,
                     margin: EdgeInsets.only(bottom: 5),
                     padding: EdgeInsets.symmetric(horizontal: 12.w),
                     decoration: BoxDecoration(
@@ -770,7 +772,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                         selectedDOB == null
                             ? 'Pick a date'
                             : DateFormat('yyyy-MM-dd').format(selectedDOB!),
-                        style: getRegularStyle(color: ColorManager.black),
+                        style: getRegularStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?20.sp:20),
                       ),
                     ),
                   ),
@@ -781,11 +783,11 @@ class _ETicketState extends ConsumerState<ETicket> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Moblie No.',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                Text('Moblie No.',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                 h10,
                 Container(
                   height: 60,
-                  width: 180,
+                  width: 180.w,
                   child: TextFormField(
                     controller: _mobileController,
                     keyboardType: TextInputType.phone,
@@ -806,7 +808,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                     decoration: InputDecoration(
                       floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
                       hintText: 'Mobile Number',
-                      hintStyle: getRegularStyle(color: ColorManager.textGrey),
+                      hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
@@ -821,11 +823,11 @@ class _ETicketState extends ConsumerState<ETicket> {
           ],
         ),
         h20,
-        Text('Gender',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+        Text('Gender',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
         h10,
         Container(
           height: 60,
-          width: 180,
+          width: 180.w,
           child: DropdownButtonFormField<String>(
 
             padding: EdgeInsets.zero,
@@ -854,7 +856,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                 value: item,
                 child: Text(
                   item,
-                  style: getRegularStyle(color: Colors.black),
+                  style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -869,11 +871,11 @@ class _ETicketState extends ConsumerState<ETicket> {
           ),
         ),
         h20,
-        Text('Email',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+        Text('Email',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
         h10,
         Container(
           height: 60,
-          width: 380,
+          width: 380.w,
           child: TextFormField(
             controller: _emailController,
             keyboardType: TextInputType.emailAddress,
@@ -891,7 +893,7 @@ class _ETicketState extends ConsumerState<ETicket> {
             decoration: InputDecoration(
                 floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
                 hintText: 'E-mail',
-                hintStyle: getRegularStyle(color: ColorManager.textGrey),
+                hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(
@@ -910,13 +912,13 @@ class _ETicketState extends ConsumerState<ETicket> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Country',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                Text('Country',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                 h10,
                 Container(
                   height: 60,
-                  width: 180,
+                  width: 180.w,
                   child: DropdownButtonFormField<String>(
-                    menuMaxHeight: 400,
+                    menuMaxHeight: widget.isWideScreen?200:400.h,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     padding: EdgeInsets.zero,
                     value: selectedCountry,
@@ -944,7 +946,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                         value: item.countryName,
                         child: Text(
                           item.countryName,
-                          style: getRegularStyle(color: Colors.black),
+                          style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -971,13 +973,13 @@ class _ETicketState extends ConsumerState<ETicket> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Province',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                Text('Province',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                 h10,
                 Container(
                   height: 60,
-                  width: 180,
+                  width: 180.w,
                   child: DropdownButtonFormField<String>(
-                    menuMaxHeight: 400,
+                    menuMaxHeight: widget.isWideScreen?200:400.h,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     padding: EdgeInsets.zero,
                     value: selectedProvince,
@@ -1029,13 +1031,13 @@ class _ETicketState extends ConsumerState<ETicket> {
           ],
         ),
         h20,
-        Text('District',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+        Text('District',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
         h10,
         Container(
           height: 60,
-          width: 380,
+          width: 380.w,
           child: DropdownButtonFormField<String>(
-            menuMaxHeight: 400,
+            menuMaxHeight: widget.isWideScreen?200:400.h,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             padding: EdgeInsets.zero,
             value: selectedDistrict,
@@ -1063,7 +1065,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                 value: item.districtName,
                 child: Text(
                   item.districtName,
-                  style: getRegularStyle(color: Colors.black),
+                  style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -1082,13 +1084,13 @@ class _ETicketState extends ConsumerState<ETicket> {
           ),
         ),
         h20,
-        Text('Municipality',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+        Text('Municipality',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
         h10,
         Container(
           height: 60,
           width: 380,
           child: DropdownButtonFormField<String>(
-            menuMaxHeight: 400,
+            menuMaxHeight: widget.isWideScreen?200:400.h,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             padding: EdgeInsets.zero,
             value: selectedMunicipality,
@@ -1116,7 +1118,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                 value: item.municipalityName,
                 child: Text(
                   item.municipalityName,
-                  style: getRegularStyle(color: Colors.black),
+                  style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -1142,7 +1144,7 @@ class _ETicketState extends ConsumerState<ETicket> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Ward No.',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                Text('Ward No.',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                 h10,
                 Container(
                   height: 60,
@@ -1164,7 +1166,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                     decoration: InputDecoration(
                         floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
                         hintText: 'Ward No.',
-                        hintStyle: getRegularStyle(color: ColorManager.textGrey),
+                        hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
@@ -1180,7 +1182,7 @@ class _ETicketState extends ConsumerState<ETicket> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Local Address',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                Text('Local Address',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                 h10,
                 Container(
                   height: 60,
@@ -1202,7 +1204,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                     decoration: InputDecoration(
                         floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
                         hintText: 'Local Address',
-                        hintStyle: getRegularStyle(color: ColorManager.textGrey),
+                        hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
@@ -1249,13 +1251,13 @@ class _ETicketState extends ConsumerState<ETicket> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Choose a department',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                Text('Choose a department',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                 h10,
                 Container(
                   height: 60,
                   width: 180,
                   child: DropdownButtonFormField<String>(
-                    menuMaxHeight: 400,
+                    menuMaxHeight: widget.isWideScreen?200:400.h,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     padding: EdgeInsets.zero,
                     value: selectedDepartment,
@@ -1283,7 +1285,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                         value: item.departmentName,
                         child: Text(
                           item.departmentName,
-                          style: getRegularStyle(color: Colors.black),
+                          style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -1306,7 +1308,7 @@ class _ETicketState extends ConsumerState<ETicket> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Appointment Date',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                Text('Appointment Date',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
                 h10,
                 Container(
                   height: 60,
@@ -1331,7 +1333,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                           selectedDate == null
                               ? 'Date for consultation'
                               : DateFormat('yyyy-MM-dd').format(selectedDate!),
-                          style: getRegularStyle(color: ColorManager.black),
+                          style: getRegularStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?20.sp:20),
                         ),
                       ),
                     ),
@@ -1342,13 +1344,13 @@ class _ETicketState extends ConsumerState<ETicket> {
           ],
         ),
         h20,
-        Text('Choose a doctor',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+        Text('Choose a doctor',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
         h10,
         Container(
           height: 60,
           width: 380,
           child: DropdownButtonFormField<String>(
-            menuMaxHeight: 400,
+            menuMaxHeight: widget.isWideScreen?200:400.h,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             padding: EdgeInsets.zero,
             value: selectedDoctor,
@@ -1376,7 +1378,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                 value: 'Dr. ${item.firstName} ${item.lastName}',
                 child: Text(
                   'Dr. ${item.firstName} ${item.lastName}',
-                  style: getRegularStyle(color: Colors.black),
+                  style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -1411,7 +1413,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                     children: [
                       Image.file(File(selectImage.path),width: 250,height: 150,),
                       h10,
-                      Text('${selectImage.path}',style: getRegularStyle(color: ColorManager.black,fontSize: 14),overflow: TextOverflow.fade,maxLines: 1,)
+                      Text('${selectImage.path}',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?14.sp:14),overflow: TextOverflow.fade,maxLines: 1,)
                     ],
                   ),
                 ),
@@ -1454,7 +1456,7 @@ class _ETicketState extends ConsumerState<ETicket> {
                     children: [
                       FaIcon(FontAwesomeIcons.image,color: ColorManager.textGrey,),
                       h10,
-                      Text('Please provide a image',style: getRegularStyle(color: ColorManager.textGrey),)
+                      Text('Please provide a image',style: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),)
                     ],
                   ),
                 ),

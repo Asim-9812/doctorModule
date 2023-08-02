@@ -7,7 +7,7 @@ import 'package:medical_app/src/presentation/subscription-plan/domain/scheme_mod
 import '../../../core/api.dart';
 
 
-final schemeList = FutureProvider<List<SchemeModel>>(
+final schemeList = FutureProvider<List<SchemePlaneModel>>(
         (ref) => SchemeService().getSchemeList());
 
 
@@ -15,11 +15,11 @@ class SchemeService {
 
   final dio = Dio();
 
-  Future<List<SchemeModel>> getSchemeList() async {
+  Future<List<SchemePlaneModel>> getSchemeList() async {
     try {
       final response = await dio.get(Api.schemePlan);
       final data = (response.data['result'] as List)
-          .map((e) => SchemeModel.fromJson(e))
+          .map((e) => SchemePlaneModel.fromJson(e))
           .toList();
       return data;
     } on DioException catch (err) {

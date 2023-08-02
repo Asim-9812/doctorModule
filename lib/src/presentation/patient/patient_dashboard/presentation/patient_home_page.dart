@@ -200,7 +200,7 @@ class _PatientHomePageState extends State<PatientHomePage> {
               children: [
 
                 InkWell(
-                  onTap: ()=>Get.to(()=>ETicket()),
+                  onTap: ()=>Get.to(()=>ETicket(widget.isWideScreen,widget.isNarrowScreen)),
                   child: Container(
                     height: height,
                     width: width,
@@ -271,7 +271,7 @@ class _PatientHomePageState extends State<PatientHomePage> {
                 ),
                 w10,
                 InkWell(
-                  onTap: ()=>Get.to(()=>Telemedicine()),
+                  onTap: ()=>Get.to(()=>TeleMedicine(widget.isWideScreen,widget.isNarrowScreen)),
                   child: Container(
                     height: height,
                     width: width,
@@ -467,7 +467,7 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     return Stack(
       fit: StackFit.expand,
       children: [
-        if(shrinkOffset<50)buildBackground(shrinkOffset, context, scaffoldKey,'User'),
+        if(shrinkOffset<15)buildBackground(shrinkOffset, context, scaffoldKey,'User'),
         if(shrinkOffset >= 160.0)buildAppBar(shrinkOffset,context),
 
       ],

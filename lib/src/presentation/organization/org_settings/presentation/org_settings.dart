@@ -26,7 +26,9 @@ import '../../../login/presentation/status_page.dart';
 
 
 class OrgSettings extends ConsumerStatefulWidget {
-  const OrgSettings({super.key});
+  final bool isWideScreen;
+  final bool isNarrowScreen;
+  OrgSettings(this.isWideScreen,this.isNarrowScreen);
 
   @override
   ConsumerState<OrgSettings> createState() => _UtilitiesPageState();
@@ -48,7 +50,8 @@ class _UtilitiesPageState extends ConsumerState<OrgSettings> {
         appBar: AppBar(
           elevation: 1,
           backgroundColor: ColorManager.white,
-          title: Text('Settings',style: getMediumStyle(color: ColorManager.black),),
+          automaticallyImplyLeading: false,
+          title: Text('Settings',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen? 20.sp:28.sp),),
         ),
         body: SingleChildScrollView(
 
@@ -68,10 +71,10 @@ class _UtilitiesPageState extends ConsumerState<OrgSettings> {
                     children: [
                       Row(
                         children: [
-                          Text('Account & Settings',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
+                          Text('Account & Settings',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?24.sp: 24),),
                           w10,
                           Container(
-                            width: 220.w,
+                            width:widget.isNarrowScreen?160.w: 220.w,
                             child: Divider(
                               thickness: 0.5,
                               color: ColorManager.black,
@@ -100,10 +103,10 @@ class _UtilitiesPageState extends ConsumerState<OrgSettings> {
                     children: [
                       Row(
                         children: [
-                          Text('Help & Support',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
+                          Text('Help & Support',style: getMediumStyle(color: ColorManager.black,fontSize:widget.isNarrowScreen?24.sp: 24),),
                           w10,
                           Container(
-                            width: 250.w,
+                            width: widget.isNarrowScreen?200.w:250.w,
                             child: Divider(
                               thickness: 0.5,
                               color: ColorManager.black,
@@ -183,10 +186,10 @@ class _UtilitiesPageState extends ConsumerState<OrgSettings> {
     return ListTile(
       onTap: onTap, // Pass the onTap callback here
       splashColor: ColorManager.textGrey.withOpacity(0.2),
-      leading: FaIcon(icon, size: 24,),
-      title: Text('$title', style: getRegularStyle(color: ColorManager.black, fontSize: 20),),
-      subtitle: subtitle != null ? Text('$subtitle', style: getRegularStyle(color: ColorManager.subtitleGrey, fontSize: 16),) : null,
-      trailing: trailing == true ? Icon(Icons.chevron_right, color: ColorManager.iconGrey,) : null,
+      leading: FaIcon(icon, size: widget.isNarrowScreen?24.sp :24,),
+      title: Text('$title', style: getRegularStyle(color: ColorManager.black, fontSize: widget.isNarrowScreen? 20.sp:20),),
+      subtitle: subtitle != null ? Text('$subtitle', style: getRegularStyle(color: ColorManager.subtitleGrey, fontSize: widget.isNarrowScreen?16.sp:16),) : null,
+      trailing: trailing == true ? Icon(Icons.chevron_right, color: ColorManager.iconGrey,size: widget.isNarrowScreen?20.sp:20,) : null,
     );
   }
 

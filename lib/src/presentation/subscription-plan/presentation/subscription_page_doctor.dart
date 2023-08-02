@@ -42,7 +42,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
   int selectSubscription = 0;
   int schemePlanId = 1;
   final dio = Dio();
-  SchemeModel? selectedScheme;
+  SchemePlaneModel? selectedScheme;
   bool isPostingData = false;
 
 
@@ -248,7 +248,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
                           isPostingData = true; // Show loading spinner
                         });
                         await docRegister().then((value) async => await subscriptionPlanDoctor(
-                            schemePlanId: selectedScheme?.schemePlanID ?? 0
+                            schemePlanId: selectedScheme?.schemeplanID ?? 0
                         ).then((value) async => await userRegisterDoctor()).then((value) =>Future.delayed(Duration(seconds: 3))).then((value) =>
                             setState(() {
                               isPostingData = false; // Show loading spinner
@@ -290,7 +290,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
   }
 
 
-  Widget _buildMonthBody(AsyncValue<List<SchemeModel>> schemeData) {
+  Widget _buildMonthBody(AsyncValue<List<SchemePlaneModel>> schemeData) {
 
 
     return schemeData.when(
@@ -318,15 +318,15 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
                     h10,
                     Center(
                       child: _buildSubBanner(
-                        schemeName: '${selectedScheme?.schemeNames}',
+                        schemeName: '${selectedScheme?.schemeName}',
                         schemeDuration: selectedScheme?.storageType == 1 ? 'month' : 'year',
                         schemePrice: int.parse(selectedScheme?.price!.round().toString() ?? '0'),
                         selectSubscription: schemePlanId,
-                        gradient: selectedScheme?.schemeNames == 'GOLD'
+                        gradient: selectedScheme?.schemeName == 'GOLD'
                             ?ColorManager.goldContainer
-                            :selectedScheme?.schemeNames == 'SILVER'
+                            :selectedScheme?.schemeName == 'SILVER'
                             ?ColorManager.silverContainer
-                            :selectedScheme?.schemeNames == 'PLATINUM'
+                            :selectedScheme?.schemeName == 'PLATINUM'
                             ?ColorManager.blackContainer
                             :ColorManager.primary ,
                       ),
@@ -342,15 +342,15 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
                         return _buildSubscriptionTile(
                           onTap: () {
                             setState(() {
-                              schemePlanId = schemeMonth[index].schemePlanID!;
+                              schemePlanId = schemeMonth[index].schemeplanID!;
                               selectedScheme = schemeMonth[index]; // Set the selectedScheme
                             });
                             print(schemePlanId);
                           },
-                          schemeName: '${schemeMonth[index].schemeNames}',
+                          schemeName: '${schemeMonth[index].schemeName}',
                           schemePrice: int.parse(schemeMonth[index].price!.round().toString()),
                           schemeDuration: schemeMonth[index].storageType!,
-                          selection: schemeMonth[index].schemePlanID!,
+                          selection: schemeMonth[index].schemeplanID!,
                         );
                       },
                     )
@@ -369,7 +369,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
   }
 
 
-  Widget _buildYearBody(AsyncValue<List<SchemeModel>> schemeData) {
+  Widget _buildYearBody(AsyncValue<List<SchemePlaneModel>> schemeData) {
 
 
     return schemeData.when(
@@ -397,18 +397,18 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
                     Text('Subscription\nPlan',style: getBoldStyle(color: ColorManager.textGrey,fontSize: 60),textAlign: TextAlign.start,),
                     h10,
                     Visibility(
-                      visible: selectedScheme != null && schemePlanId == selectedScheme!.schemePlanID,
+                      visible: selectedScheme != null && schemePlanId == selectedScheme!.schemeplanID,
                       child: Center(
                         child: _buildSubBanner(
-                          schemeName: '${selectedScheme?.schemeNames}',
+                          schemeName: '${selectedScheme?.schemeName}',
                           schemeDuration: selectedScheme?.storageType == 1 ? 'month' : 'year',
                           schemePrice: int.parse(selectedScheme?.price!.round().toString() ?? '0'),
                           selectSubscription: schemePlanId,
-                          gradient: selectedScheme?.schemeNames == 'GOLD'
+                          gradient: selectedScheme?.schemeName == 'GOLD'
                               ?ColorManager.goldContainer
-                              :selectedScheme?.schemeNames == 'SILVER'
+                              :selectedScheme?.schemeName == 'SILVER'
                               ?ColorManager.silverContainer
-                              :selectedScheme?.schemeNames == 'PLATINUM'
+                              :selectedScheme?.schemeName == 'PLATINUM'
                               ?ColorManager.blackContainer
                               :ColorManager.primary ,
                         ),
@@ -425,15 +425,15 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
                         return _buildSubscriptionTile(
                           onTap: () {
                             setState(() {
-                              schemePlanId = schemeYear[index].schemePlanID!;
+                              schemePlanId = schemeYear[index].schemeplanID!;
                               selectedScheme = schemeYear[index]; // Set the selectedScheme
                             });
                             print(schemePlanId);
                           },
-                          schemeName: '${schemeYear[index].schemeNames}',
+                          schemeName: '${schemeYear[index].schemeName}',
                           schemePrice: int.parse(schemeYear[index].price!.round().toString()),
                           schemeDuration: schemeYear[index].storageType!,
-                          selection: schemeYear[index].schemePlanID!,
+                          selection: schemeYear[index].schemeplanID!,
                         );
                       },
                     )

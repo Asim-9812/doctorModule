@@ -30,7 +30,9 @@ import '../../../patient/quick_services/presentation/e_ticket.dart';
 import '../../doctor_statistics/presentation/doc_stat_page.dart';
 
 class OrgHomePage extends StatefulWidget {
-  const OrgHomePage({super.key,});
+  final bool isWideScreen;
+  final bool isNarrowScreen;
+  OrgHomePage(this.isWideScreen,this.isNarrowScreen);
 
   @override
   State<OrgHomePage> createState() => _OrgHomePageState();
@@ -150,6 +152,31 @@ class _OrgHomePageState extends State<OrgHomePage> {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
 
+    double getExpandedHeight(Size screenSize) {
+      final double width = screenSize.width;
+      final double height = screenSize.height;
+      final double ratio = (width / height).toPrecision(2);
+
+      print(width);
+
+      if(width< 400){
+        return 210.h;
+      } else if(width > 500 && width <600){
+        return 250.h;
+      }else if(width > 700 && width <1000){
+        return 200.h;
+      } else if(width >= 1000){
+        return 300.h;
+      } else {
+        return 200.h;
+      }
+
+    }
+
+
+
+
+
 
 
     return FadeIn(
@@ -163,7 +190,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
             slivers: [
               SliverPersistentHeader(
                 delegate: CustomSliverAppBarDelegate(
-                    expandedHeight: 180.0, scaffoldKey: scaffoldKey),
+                    expandedHeight:getExpandedHeight(MediaQuery.of(context).size), scaffoldKey: scaffoldKey,widget.isWideScreen,widget.isNarrowScreen),
                 pinned: true,
               ),
               buildBody(context)
@@ -189,39 +216,6 @@ class _OrgHomePageState extends State<OrgHomePage> {
           _overallStat(),
           h20,
           _surveyStat(),
-          h20,
-          Container(
-            height: 300,
-            width: 180,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                    color: ColorManager.black.withOpacity(0.5),
-                    width: 0.5
-                )
-            ),
-            margin: EdgeInsets.symmetric(horizontal: 32.w,vertical: 18.h),
-            padding: EdgeInsets.symmetric(vertical: 18.h),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text('Patient Groups',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
-                Divider(
-                  thickness: 0.5,
-                  color: ColorManager.black,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    h10,
-
-                  ],
-                )
-              ],
-            ),
-          ),
           h20,
 
           Container(
@@ -259,7 +253,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
         physics: BouncingScrollPhysics(),
         shrinkWrap: true,
         children: [
-          w18,
+          widget.isNarrowScreen?w10:w18,
           Container(
             decoration: BoxDecoration(
                 color: ColorManager.primary.withOpacity(0.1),
@@ -270,66 +264,59 @@ class _OrgHomePageState extends State<OrgHomePage> {
                 )
             ),
             margin: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
-            height:200,
-            width: 280,
-            child: Container(
-              height: double.infinity,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 20.w,vertical: 32.h),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      FaIcon(CupertinoIcons.graph_square,color: ColorManager.primaryDark,),
-                      w10,
-                      Text('Overall Patients Stat',style: getMediumStyle(color: ColorManager.black,fontSize: 24),)
-                    ],
-                  ),
-                  h20,
-                  Text('Total Patients Registered Today :',style: getRegularStyle(color: ColorManager.black,fontSize: 18),),
-                  h10,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        '$todayRegisters',
-                        style: getSemiBoldHeadStyle(color: isIncrease ? ColorManager.primary : ColorManager.red.withOpacity(0.8),),
+            padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
+            height:200.h,
+            width: 280.w,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    FaIcon(CupertinoIcons.graph_square,color: ColorManager.primaryDark,),
+                    w10,
+                    Text('Overall Patients Stat',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen?18 :18.sp),)
+                  ],
+                ),
+                h20,
+                Text('Total Patients Registered Today :',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isWideScreen?14:14.sp),),
+                h10,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      '$todayRegisters',
+                      style: getSemiBoldHeadStyle(color: isIncrease ? ColorManager.primary : ColorManager.red.withOpacity(0.8),),
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      '${percentageChange.abs().toStringAsFixed(1)}% ',
+                      style: getRegularStyle(
+                        color: isIncrease ? ColorManager.primaryDark : ColorManager.red.withOpacity(0.8),
+                        fontSize: widget.isWideScreen?14:14.sp,
                       ),
-                      SizedBox(width: 10),
-                      Text(
-                        '${percentageChange.abs().toStringAsFixed(1)}% ',
-                        style: getRegularStyle(
-                          color: isIncrease ? ColorManager.primaryDark : ColorManager.red.withOpacity(0.8),
-                          fontSize: 18,
-                        ),
-                      ),
-                      FaIcon(
-                        isIncrease ? CupertinoIcons.arrowtriangle_up_fill : CupertinoIcons.arrowtriangle_down_fill,
-                        color: isIncrease ? ColorManager.primaryDark : ColorManager.red.withOpacity(0.7),
-                        size: 18,
-                      ),
-                    ],
-                  ),
-                  h20,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('Total patients registered :',style: getRegularStyle(color: ColorManager.black),),
-                      w10,
-                      Text('${patients.length}',style: getRegularStyle(color: ColorManager.black,fontSize: 28),),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                    FaIcon(
+                      isIncrease ? CupertinoIcons.arrowtriangle_up_fill : CupertinoIcons.arrowtriangle_down_fill,
+                      color: isIncrease ? ColorManager.primaryDark : ColorManager.red.withOpacity(0.7),
+                      size:widget.isWideScreen?16:16.sp,
+                    ),
+                  ],
+                ),
+                h20,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('Total patients registered :',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isWideScreen?14:14.sp),),
+                    w10,
+                    Text('${patients.length}',style: getRegularStyle(color: ColorManager.black,fontSize:widget.isWideScreen?28: 28.sp),),
+                  ],
+                ),
+              ],
             ),
 
           ),
@@ -338,15 +325,15 @@ class _OrgHomePageState extends State<OrgHomePage> {
                 borderRadius: BorderRadius.circular(20),
             ),
             margin: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
-            height:200,
-            width: 200,
+            height:200.h,
+            width: 200.w,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: 90,
-                  width: 200,
+                  height: widget.isWideScreen? 90:90.h,
+                  width: widget.isWideScreen? 200: 200.w,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: ColorManager.black.withOpacity(0.5),
@@ -354,7 +341,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
                     ),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                  padding: EdgeInsets.symmetric(horizontal: widget.isWideScreen? 18:18.w,vertical:widget.isWideScreen? 12: 12.h),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -364,18 +351,18 @@ class _OrgHomePageState extends State<OrgHomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('OPD Patient',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
+                          Text('OPD Patient',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 16: 20.sp),),
                           h16,
-                          Text('12',style: getMediumStyle(color: ColorManager.black),),
+                          Text('12',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 12: 20.sp),),
                         ],
                       ),
-                      FaIcon(CupertinoIcons.person_2_alt,color: ColorManager.primary,size: 32,)
+                      FaIcon(CupertinoIcons.person_2_alt,color: ColorManager.primary,size: widget.isWideScreen? 28: 32.sp,)
                     ],
                   ),
                 ),
                 Container(
-                  height: 90,
-                  width: 200,
+                  height: widget.isWideScreen? 90: 90.h,
+                  width: widget.isWideScreen? 200: 200.w,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: ColorManager.black.withOpacity(0.5),
@@ -383,7 +370,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
                     ),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                  padding: EdgeInsets.symmetric(horizontal: widget.isWideScreen? 18:18.w,vertical:widget.isWideScreen? 12: 12.h),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -393,12 +380,12 @@ class _OrgHomePageState extends State<OrgHomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Today\'s Operation',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                          Text('Today\'s Operation',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 16: 18.sp),),
                           h16,
-                          Text('5',style: getMediumStyle(color: ColorManager.black),),
+                          Text('5',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 12: 20.sp),),
                         ],
                       ),
-                      FaIcon(Icons.emergency,color: ColorManager.yellowFellow,size: 28,)
+                      FaIcon(Icons.emergency,color: ColorManager.yellowFellow,size: widget.isWideScreen? 24: 24.sp,)
                     ],
                   ),
                 ),
@@ -423,9 +410,9 @@ class _OrgHomePageState extends State<OrgHomePage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Hospital Survey',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
+              Text('Hospital Survey',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 24:24.sp),),
               Container(
-                width: 220.w,
+                width: widget.isWideScreen?200:200.w,
                 child: Divider(
                   color: ColorManager.black.withOpacity(0.5),
                   thickness: 0.5,
@@ -439,8 +426,8 @@ class _OrgHomePageState extends State<OrgHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Container(
-              height: 200,
-              width: 160,
+              height: 200.h,
+              width: 160.w,
               margin: EdgeInsets.only(left: 18),
               decoration: BoxDecoration(
                 border: Border.all(
@@ -459,14 +446,14 @@ class _OrgHomePageState extends State<OrgHomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Available Beds ',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
+                      Text('Available Beds ',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 16:16.sp),),
                       h10,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text('12',style: getMediumStyle(color: ColorManager.black),),
-                          FaIcon(CupertinoIcons.bed_double,color: ColorManager.primary,size: 24,)
+                          Text('12',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen?18:18.sp),),
+                          FaIcon(CupertinoIcons.bed_double,color: ColorManager.primary,size:widget.isWideScreen? 24:24.sp,)
                         ],
                       ),
                     ],
@@ -477,14 +464,14 @@ class _OrgHomePageState extends State<OrgHomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Total Beds ',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
+                      Text('Total Beds ',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen?16:16.sp),),
                       h10,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text('100',style: getMediumStyle(color: ColorManager.black),),
-                          FaIcon(CupertinoIcons.bed_double_fill,color: ColorManager.blue,size: 24,)
+                          Text('100',style: getMediumStyle(color: ColorManager.black,fontSize:widget.isWideScreen?18:18.sp),),
+                          FaIcon(CupertinoIcons.bed_double_fill,color: ColorManager.blue,size:widget.isWideScreen? 24:24.sp,)
                         ],
                       ),
                     ],
@@ -507,8 +494,8 @@ class _OrgHomePageState extends State<OrgHomePage> {
                 InkWell(
                   onTap: ()=>Get.to(()=>DocStatPage()),
                   child: Container(
-                    height: 90,
-                    width: 160,
+                    height: 90.h,
+                    width: 160.w,
                     margin: EdgeInsets.only(right: 18),
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -523,14 +510,14 @@ class _OrgHomePageState extends State<OrgHomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Available Doctors',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
+                        Text('Available Doctors',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen?16:16.sp),),
                         h10,
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text('${doctors.length}',style: getMediumStyle(color: ColorManager.black),),
-                            FaIcon(CupertinoIcons.person,color: ColorManager.primary,size: 24,)
+                            Text('${doctors.length}',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen?18:18.sp),),
+                            FaIcon(CupertinoIcons.person,color: ColorManager.primary,size:widget.isWideScreen?24: 24.sp,)
                           ],
                         ),
                       ],
@@ -539,8 +526,8 @@ class _OrgHomePageState extends State<OrgHomePage> {
                 ),
                 h20,
                 Container(
-                  height: 90,
-                  width: 160,
+                  height: 90.h,
+                  width: 160.w,
                   margin: EdgeInsets.only(right: 18),
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -555,14 +542,14 @@ class _OrgHomePageState extends State<OrgHomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Total Ambulance',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
+                      Text('Total Ambulance',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen?16:16.sp),),
                       h10,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text('12',style: getMediumStyle(color: ColorManager.black),),
-                          FaIcon(FontAwesomeIcons.ambulance,color: ColorManager.red.withOpacity(0.5),size: 20,)
+                          Text('12',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen?16:16.sp),),
+                          FaIcon(FontAwesomeIcons.ambulance,color: ColorManager.red.withOpacity(0.5),size:widget.isWideScreen? 20:20.sp,)
                         ],
                       ),
                     ],
@@ -587,9 +574,11 @@ class _OrgHomePageState extends State<OrgHomePage> {
 class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
   final GlobalKey<ScaffoldState> scaffoldKey;
+  final bool isWideScreen;
+  final bool isNarrowScreen;
 
 
-  const CustomSliverAppBarDelegate( {
+  const CustomSliverAppBarDelegate( this.isWideScreen, this.isNarrowScreen,{
     required this.expandedHeight,
     required this.scaffoldKey
   });
@@ -597,17 +586,17 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent,) {
-    final userBox = Hive.box<User>('session').values.toList();
-    String firstName = userBox[0].firstName!;
+    // final userBox = Hive.box<User>('session').values.toList();
+    // String firstName = userBox[0].firstName!;
     final deviceSize = MediaQuery.of(context).size;
     const size = 60;
+    print('Shrink Offset: $shrinkOffset');
 
     return Stack(
-      clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
-        buildBackground(shrinkOffset, context, scaffoldKey,firstName),
-        if(shrinkOffset == 180.0)buildAppBar(shrinkOffset,context),
+        if(shrinkOffset<15)buildBackground(shrinkOffset, context, scaffoldKey,'User'),
+        if(shrinkOffset >= 160.0)buildAppBar(shrinkOffset,context),
 
       ],
     );
@@ -639,7 +628,7 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
             mainAxisSize: MainAxisSize.min,
             children: [
               InkWell(
-                  // onTap: ()=>Get.to(()=>SearchNearByPage(),transition: Transition.fadeIn),
+                  // onTap: ()=>Get.to(()=>SearchNearByPage(isNarrowScreen,isWideScreen),transition: Transition.fadeIn),
                   child: Icon(Icons.search,color: ColorManager.black,size: 20,)),
               w20,
               InkWell(
@@ -655,80 +644,79 @@ class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   Widget buildBackground(double shrinkOffset, BuildContext context, GlobalKey<ScaffoldState> scaffoldKey, String firstName) => Opacity(
     opacity: disappear(shrinkOffset),
     child: Container(
+      height: isWideScreen == true? MediaQuery.of(context).size.height*0.5/5:100.h,
       decoration: BoxDecoration(
         color: Colors.transparent,
       ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.05),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height*0.5/5,
-              child: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                leading: InkWell(
-                  // onTap: ()=>Get.to(()=>ProfilePage(),transition: Transition.fade),
-                  child: CircleAvatar(
-                    backgroundColor: ColorManager.black,
-                    child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
-                  ),
+      padding: EdgeInsets.symmetric(horizontal: isWideScreen?18: 18.w,vertical: 12.h),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          h20,
+          Container(
+
+            child: AppBar(
+              toolbarHeight: isWideScreen? 100:70.h,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: InkWell(
+                // onTap: ()=>Get.to(()=>ProfilePage(),transition: Transition.fade),
+                child: CircleAvatar(
+                  backgroundColor: ColorManager.black,
+                  radius: isWideScreen? 30:20.sp,
+                  child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
                 ),
-                leadingWidth: 40,
-                title: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Good Morning,',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 16),),
-                    Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
-                  ],
-                ),
-                actions: [
-                  IconButton(
-                      onPressed: ()=>Get.to(()=>ETicket()),
-                      icon: Icon(Icons.notifications_none_outlined,color: ColorManager.black,size: 30,))
+              ),
+              title: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  h20,
+                  Text('Good Morning,',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isWideScreen? 16:16.sp),),
+                  Text('User',style: getMediumStyle(color: ColorManager.black,fontSize: isWideScreen?24:28.sp),),
                 ],
               ),
+              actions: [
+                InkWell(
+                    onTap:()=>Get.to(()=>NotificationPage()),
+                    child: Icon(Icons.notifications_none_outlined,color: ColorManager.black,size: isWideScreen? 30:28.sp,))
+              ],
             ),
-            SizedBox(
-              height: 10,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          InkWell(
+            // onTap: ()=>Get.to(()=>SearchNearByPage(isNarrowScreen,isWideScreen),transition: Transition.fadeIn),
+            splashColor: ColorManager.primary.withOpacity(0.4),
+            child: Container(
+                height: 50.h,
+                padding: EdgeInsets.symmetric(horizontal: 18.w),
+                decoration: BoxDecoration(
+                    color: ColorManager.searchColor.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color:ColorManager.searchColor,
+                        width: 1
+                    )
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.search,color: ColorManager.iconGrey,),
+                        w10,
+                        Text('Search for nearby...',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isWideScreen?15:15.sp),),
+                      ],
+                    ),
+                    SizedBox()
+                  ],
+                )
             ),
-            InkWell(
-              // onTap: ()=>Get.to(()=>SearchNearByPage(),transition: Transition.fadeIn),
-              splashColor: ColorManager.primary.withOpacity(0.4),
-              child: Container(
-                  height: 50.h,
-                  padding: EdgeInsets.symmetric(horizontal: 18.w),
-                  decoration: BoxDecoration(
-                      color: ColorManager.searchColor.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                          color:ColorManager.searchColor,
-                          width: 1
-                      )
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.search,color: ColorManager.iconGrey,),
-                          w10,
-                          Text('Search...',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 15),),
-                        ],
-                      ),
-                      SizedBox()
-                    ],
-                  )
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     ),
   );

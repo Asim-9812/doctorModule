@@ -46,6 +46,12 @@ class _AnimatedBarExampleState extends State<DoctorMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Get the screen size
+    final screenSize = MediaQuery.of(context).size;
+
+    // Check if width is greater than height
+    bool isWideScreen = screenSize.width > 500;
+    bool isNarrowScreen = screenSize.width < 420;
     return Scaffold(
       extendBody: true, //to make floating action button notch transparent
 
@@ -109,14 +115,14 @@ class _AnimatedBarExampleState extends State<DoctorMainPage> {
       floatingActionButton: FloatingActionButton(
           onPressed: () {},
           backgroundColor: ColorManager.primaryDark,
-          child: FaIcon(CupertinoIcons.chat_bubble_2_fill,size: 40.sp,)
+          child: FaIcon(CupertinoIcons.chat_bubble_2_fill,size: isWideScreen?40:40.sp,)
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: PageView(
         controller: controller,
         children: [
-          DoctorHomePage(),
-          DoctorDocumentPage(),
+          DoctorHomePage(isWideScreen,isNarrowScreen),
+          DoctorDocumentPage(isWideScreen,isNarrowScreen),
           PatientReportPageDoctor(),
           DoctorUtilityPage()
         ],
