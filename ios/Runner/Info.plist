@@ -47,5 +47,18 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+    <!-- Permissions for iOS -->
+    <key>NSMotionUsageDescription</key>
+    <string>We need access to activity recognition for fitness tracking.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>We need access to your location for location-based services.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>We need access to your location for location-based services even when the app is in the background.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>We need access to your location for location-based services even when the app is in the background.</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>We need access to your photo library to save photos.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>We need access to your photo library to access photos.</string>
 </dict>
 </plist>

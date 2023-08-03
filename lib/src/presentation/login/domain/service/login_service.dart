@@ -67,6 +67,7 @@ class UserProvider extends StateNotifier<List<User>>{
   Future<String> getUserInfo({required Map<String,dynamic> response}) async{
     print('User provider: $response');
     final newUser = User.fromJson(response["result"]);
+    print(newUser);
 
     if(Hive.box<User>('session').isEmpty){
       Hive.box<User>('session').add(newUser);

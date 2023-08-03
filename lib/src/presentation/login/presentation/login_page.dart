@@ -200,7 +200,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         child: InkWell(
                           onTap: () {
                             setState(() {
-                              selectedOption = 2;
+                              selectedOption = 1;
                             });
                           },
                           child: Column(
@@ -209,21 +209,21 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 decoration: BoxDecoration(
                                   border: Border.all(color: selectedOption == 2 ? ColorManager.primaryDark : ColorManager.dotGrey),
                                   shape: BoxShape.circle,
-                                  color: selectedOption == 2 ? ColorManager.primary : Colors.transparent,
+                                  color: selectedOption == 1 ? ColorManager.primary : Colors.transparent,
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Image.asset(
                                     'assets/icons/org_login.png',
-                                    width: selectedOption == 2 ?50:30,
-                                    height: selectedOption == 2 ?50:30,
+                                    width: selectedOption == 1 ?50:30,
+                                    height: selectedOption == 1 ?50:30,
                                   ),
                                 ),
                               ),
                               h10,
                               Text(
                                 'Organization',
-                                style: getRegularStyle(color: selectedOption == 2 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
+                                style: getRegularStyle(color: selectedOption == 1 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
                               )
                             ],
                           ),

@@ -12,12 +12,13 @@ import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/data/services/user_services.dart';
 import 'package:medical_app/src/presentation/doctor/profile/presentation/widgets/update_profile.dart';
+import 'package:medical_app/src/presentation/organization/org_profile/presentation/widgets/update_profile.dart';
 
 import '../../../../core/api.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../../login/domain/model/user.dart';
 
-class DocProfilePage extends ConsumerWidget {
+class OrgProfilePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context,ref) {
@@ -32,84 +33,84 @@ class DocProfilePage extends ConsumerWidget {
     bool isNarrowScreen = screenSize.width < 420;
     return userInfo.when(
         data: (data){
-         return  Scaffold(
-             backgroundColor: ColorManager.white.withOpacity(0.99),
-             appBar: AppBar(
-               elevation: 1,
-               backgroundColor: ColorManager.white,
-               leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
-               title: Text('Profile',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 24.sp:28),),
-               actions: [
-                 IconButton(onPressed: ()=>Get.to(()=>UpdateDocProfile(isWideScreen, isNarrowScreen,data)), icon: Icon(Icons.edit_note_outlined,color: ColorManager.primary,size: 30,))
-               ],
+          return  Scaffold(
+              backgroundColor: ColorManager.white.withOpacity(0.99),
+              appBar: AppBar(
+                elevation: 1,
+                backgroundColor: ColorManager.white,
+                leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
+                title: Text('Profile',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 24.sp:28),),
+                actions: [
+                  IconButton(onPressed: ()=>Get.to(()=>UpdateOrgProfile(isWideScreen, isNarrowScreen,data)), icon: Icon(Icons.edit_note_outlined,color: ColorManager.primary,size: 30,))
+                ],
 
-             ),
-             body: Column(
-               mainAxisAlignment: MainAxisAlignment.start,
-               crossAxisAlignment: CrossAxisAlignment.start,
-               children: [
-                 FadeIn(
-                     duration: Duration(milliseconds: 500),
-                     child: profileBanner(context,data)),
-                 Container(
-                   height: MediaQuery.of(context).size.height * 3/5,
-                   child: SingleChildScrollView(
-                     physics: BouncingScrollPhysics(),
-                     child: FadeInUp(
-                       duration: Duration(milliseconds: 700),
-                       child: Column(
-                         mainAxisAlignment: MainAxisAlignment.start,
-                         crossAxisAlignment: CrossAxisAlignment.start,
-                         children: [
+              ),
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FadeIn(
+                      duration: Duration(milliseconds: 500),
+                      child: profileBanner(context,data)),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 3/5,
+                    child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: FadeInUp(
+                        duration: Duration(milliseconds: 700),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
 
-                           h16,
-                           Container(
-                             padding: EdgeInsets.symmetric(horizontal: 12.w),
-                             child: Column(
-                               mainAxisSize: MainAxisSize.min,
-                               mainAxisAlignment: MainAxisAlignment.start,
-                               crossAxisAlignment: CrossAxisAlignment.start,
-                               children: [
-                                 Row(
-                                   children: [
-                                     Text('Details',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen?24.sp: 24),),
-                                     w10,
-                                     Container(
-                                       width: isNarrowScreen? 220.w: 320.w,
-                                       child: Divider(
-                                         thickness: 0.5,
-                                         color: ColorManager.black,
-                                       ),
+                            h16,
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 12.w),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text('Details',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen?24.sp: 24),),
+                                      w10,
+                                      Container(
+                                        width: isNarrowScreen? 220.w: 320.w,
+                                        child: Divider(
+                                          thickness: 0.5,
+                                          color: ColorManager.black,
+                                        ),
 
-                                     )
-                                   ],
-                                 ),
-                                 h10,
-                                 _profileItems(screenSize: screenSize,title: 'Phone Number', icon: FontAwesomeIcons.phone, onTap: (){},subtitle: '${user.contactNo}'),
-                                 _profileItems(screenSize: screenSize,title: 'E-Mail', icon: Icons.email_outlined, onTap: (){},subtitle: '${user.email}'),
-                                 _profileItems(screenSize: screenSize,title: 'License No.', icon: FontAwesomeIcons.idCard, onTap: (){},subtitle: '${user.liscenceNo}'),
-                               ],
-                             ),
-                           ),
-                           h20,
+                                      )
+                                    ],
+                                  ),
+                                  h10,
+                                  _profileItems(screenSize: screenSize,title: 'Phone Number', icon: FontAwesomeIcons.phone, onTap: (){},subtitle: '${user.contactNo}'),
+                                  _profileItems(screenSize: screenSize,title: 'E-Mail', icon: Icons.email_outlined, onTap: (){},subtitle: '${user.email}'),
+                                  _profileItems(screenSize: screenSize,title: 'PAN No.', icon: FontAwesomeIcons.idCard, onTap: (){},subtitle: '${user.panNo}'),
+                                ],
+                              ),
+                            ),
+                            h20,
 
-                           h20,
-                           h20,
-                           h20,
-
-
+                            h20,
+                            h20,
+                            h20,
 
 
-                         ],
-                       ),
-                     ),
-                   ),
-                 ),
-               ],
-             )
 
 
-         );
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+
+
+          );
         },
         error: (error,stack)=>Center(child: Text('$error')),
         loading: ()=>Center(child: CircularProgressIndicator())
@@ -121,7 +122,7 @@ class DocProfilePage extends ConsumerWidget {
 
   Widget profileBanner(BuildContext context,User user) {
     final screenSize = MediaQuery.of(context).size;
-    String? userGender;
+
 
     ImageProvider<Object>? profileImage;
     if (user.profileImage == null) {
@@ -130,17 +131,6 @@ class DocProfilePage extends ConsumerWidget {
       profileImage = NetworkImage('${Api.baseUrl}/${user.profileImage}');
     }
 
-    if(user.genderID != null ){
-      if(user.genderID == 1){
-        userGender = 'Male';
-      } else if(user.genderID == 2){
-        userGender = 'Female';
-      } else{
-        userGender ='Others';
-      }
-    } else{
-      userGender = 'Others';
-    }
 
 
     // Check if width is greater than height
@@ -159,7 +149,7 @@ class DocProfilePage extends ConsumerWidget {
               child: Container(
                 height: 120.h,
                 decoration: BoxDecoration(
-                    image: DecorationImage(image:AssetImage('assets/images/containers/Tip-Container-3.png'),fit: BoxFit.cover),
+                    image: DecorationImage(image:AssetImage('assets/images/containers/Tip-Container.png'),fit: BoxFit.cover),
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(10),
                         topRight: Radius.circular(10)
@@ -193,15 +183,7 @@ class DocProfilePage extends ConsumerWidget {
                     children: [
                       Text('${user.firstName} ${user.lastName}',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 32.sp:32),),
                       h10,
-                      Row(
-                        children: [
-                          Text('$userGender',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?16.sp:16),),
-                          w10,
-                          Text('|',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?12.sp:12),),
-                          w10,
-                          Text('${user.localAddress}',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?16.sp:16),),
-                        ],
-                      )
+                      Text('${user.localAddress}',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?16.sp:16),)
                     ],
                   )
                 ],

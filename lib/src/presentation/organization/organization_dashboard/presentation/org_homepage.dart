@@ -16,6 +16,7 @@ import 'package:linear_progress_bar/linear_progress_bar.dart';
 import 'package:medical_app/src/data/model/registered_patient_model.dart';
 import 'package:medical_app/src/data/services/registered_patient_services.dart';
 import 'package:medical_app/src/data/services/user_services.dart';
+import 'package:medical_app/src/presentation/organization/org_profile/presentation/org_profile_page.dart';
 import 'package:medical_app/src/presentation/patient/quick_services/presentation/telemedicine.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
@@ -151,31 +152,8 @@ class _OrgHomePageState extends State<OrgHomePage> {
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-
-    double getExpandedHeight(Size screenSize) {
-      final double width = screenSize.width;
-      final double height = screenSize.height;
-      final double ratio = (width / height).toPrecision(2);
-
-      print(width);
-
-      if(width< 400){
-        return 210.h;
-      } else if(width > 500 && width <600){
-        return 250.h;
-      }else if(width > 700 && width <1000){
-        return 200.h;
-      } else if(width >= 1000){
-        return 300.h;
-      } else {
-        return 200.h;
-      }
-
-    }
-
-
-
-
+    final userBox = Hive.box<User>('session').values.toList();
+    String firstName = userBox[0].firstName!;
 
 
 
@@ -183,18 +161,81 @@ class _OrgHomePageState extends State<OrgHomePage> {
       duration: Duration(milliseconds: 700),
       child: Scaffold(
         key: scaffoldKey,
+        appBar: AppBar(
+          elevation: 0,
+          iconTheme: IconThemeData(color: ColorManager.black),
+          backgroundColor: ColorManager.white,
+          toolbarHeight: 100,
+          leadingWidth: 70,
+          leading: Padding(
+            padding: EdgeInsets.only(left: 18),
+            child: InkWell(
+              onTap: ()=>Get.to(()=>OrgProfilePage()),
+              child: CircleAvatar(
+                backgroundColor: ColorManager.black,
+                radius: widget.isNarrowScreen? 40 : 40.r,
+                child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
+              ),
+            ),
+          ),
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Good Morning',style: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen? 14.sp:14 ),),
+              Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?32.sp:32),),
+            ],
+          ),
+          actions: [
+            IconButton(
+                onPressed: ()=>Get.to(()=>NotificationPage()),
+                icon: Icon(Icons.notifications_none_outlined,color: ColorManager.black,)),
+
+          ],
+        ),
         body: RefreshIndicator(
           onRefresh: _refreshData,
-          child: CustomScrollView(
+          child: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
-            slivers: [
-              SliverPersistentHeader(
-                delegate: CustomSliverAppBarDelegate(
-                    expandedHeight:getExpandedHeight(MediaQuery.of(context).size), scaffoldKey: scaffoldKey,widget.isWideScreen,widget.isNarrowScreen),
-                pinned: true,
-              ),
-              buildBody(context)
-            ],
+            child: Column(
+              children: [
+                InkWell(
+                  // onTap: ()=>Get.to(()=>SearchNearByPage(),transition: Transition.fadeIn),
+                  splashColor: ColorManager.primary.withOpacity(0.4),
+                  child: Center(
+                    child: Container(
+                        height: 50.h,
+                        width: 390.w,
+                        padding: EdgeInsets.symmetric(horizontal: 18.w),
+                        decoration: BoxDecoration(
+                            color: ColorManager.searchColor.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                                color:ColorManager.searchColor,
+                                width: 1
+                            )
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(Icons.search,color: ColorManager.iconGrey,),
+                                w10,
+                                Text('Search medical...',style: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?15.sp:15),),
+                              ],
+                            ),
+                            SizedBox()
+                          ],
+                        )
+                    ),
+                  ),
+                ),
+                h20,
+                buildBody(context)
+              ],
+            ),
           ),
         ),
         extendBody: true,
@@ -207,32 +248,30 @@ class _OrgHomePageState extends State<OrgHomePage> {
 
 
 
-    return SliverToBoxAdapter(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          h20,
-          _overallStat(),
-          h20,
-          _surveyStat(),
-          h20,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        h20,
+        _overallStat(),
+        h20,
+        _surveyStat(),
+        h20,
 
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: ColorManager.black.withOpacity(0.5),
-                width: 0.5
-              )
-            ),
-            margin: EdgeInsets.symmetric(horizontal: 32.w,vertical: 18.h),
-              child: SfCharts()),
-          h100,
-          h100, h100, h100, h100
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: ColorManager.black.withOpacity(0.5),
+              width: 0.5
+            )
+          ),
+          margin: EdgeInsets.symmetric(horizontal: 32.w,vertical: 18.h),
+            child: SfCharts()),
+        h100,
+        h100, h100, h100, h100
 
-        ],
-      ),
+      ],
     );
   }
 
@@ -423,11 +462,11 @@ class _OrgHomePageState extends State<OrgHomePage> {
         ),
         h20,
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
               height: 200.h,
-              width: 160.w,
+              width: 180.w,
               margin: EdgeInsets.only(left: 18),
               decoration: BoxDecoration(
                 border: Border.all(
@@ -495,7 +534,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
                   onTap: ()=>Get.to(()=>DocStatPage()),
                   child: Container(
                     height: 90.h,
-                    width: 160.w,
+                    width: 180.w,
                     margin: EdgeInsets.only(right: 18),
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -527,7 +566,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
                 h20,
                 Container(
                   height: 90.h,
-                  width: 160.w,
+                  width: 180.w,
                   margin: EdgeInsets.only(right: 18),
                   decoration: BoxDecoration(
                     border: Border.all(

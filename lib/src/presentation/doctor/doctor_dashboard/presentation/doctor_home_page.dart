@@ -210,13 +210,13 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
           ),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 42.w,vertical: 8.h),
-            padding: EdgeInsets.symmetric(horizontal: 8.w),
-            width: widget.isWideScreen?90:90.w,
+            padding: EdgeInsets.only(left: 8.w),
+            width: widget.isWideScreen?70:70.w,
             height: 35.h,
             color: ColorManager.white,
             child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text('My Circle',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?14.sp:widget.isWideScreen?14:16.sp),)),
+                child: Text('My Circle',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:widget.isWideScreen?14:18.sp),)),
           )
         ],
       ),

@@ -138,6 +138,7 @@ class _AnimatedBarExampleState extends State<DoctorMainPage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: PageView(
+        physics: NeverScrollableScrollPhysics(),
         controller: controller,
         children: [
           DoctorHomePage(isWideScreen,isNarrowScreen),

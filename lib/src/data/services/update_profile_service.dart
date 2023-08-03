@@ -1,13 +1,13 @@
 
-
-
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../../core/api.dart';
+import '../../core/api.dart';
+import '../../presentation/login/domain/model/user.dart';
+
 
 final userUpdateProvider = StateProvider((ref) => UpdateProfile());
 
@@ -44,10 +44,12 @@ class UpdateProfile{
     required int PrefixSettingID,
     required String token,
     required String flag,
-    required XFile profileImageUrl,
-    required XFile signatureImageUrl,
+    required int liscenceNo,
+    XFile? profileImageUrl,
+    XFile? signatureImageUrl,
   }) async {
     try {
+      dio.options.headers['Authorization'] = Api.bearerToken;
       Map<String, dynamic> data = {
         'ID': ID,
         'userID': userID,
@@ -77,21 +79,39 @@ class UpdateProfile{
         'PrefixSettingID': PrefixSettingID,
         'token': token,
         'flag': flag,
-        'profileImageUrl': profileImageUrl,
-        'signatureImageUrl': signatureImageUrl,
+        'liscenceNo':liscenceNo,
+        'profileImageUrl': profileImageUrl !=null? await MultipartFile.fromFile(profileImageUrl.path):'',
+        'signatureImageUrl': signatureImageUrl != null ? await MultipartFile.fromFile(signatureImageUrl.path):'',
       };
 
       FormData formData = FormData.fromMap(data);
-      final response = await dio.post('${Api.userUpdate}', data: formData);
+      final response = await dio.put('${Api.userUpdate}', data: formData);
 
       if (response.statusCode == 200) {
+        String? profileImg = response.data['result']['profileImage'];
+        String? signatureImg = response.data['result']['signatureImage'];
+
+        print(profileImg);
+        print(signatureImg);
+
+        final userBox = Hive.box<User>('session').values.toList();
+
+        userBox[0].profileImage = profileImg??'';
+        userBox[0].signatureImage = signatureImg??'';
+
+        print(userBox[0].firstName);
+        print(userBox[0].lastName);
+        print(userBox[0].profileImage);
+        print(userBox[0].signatureImage);
+        print(userBox[0].liscenceNo);
+
         return Right(response.data);
       } else {
         print(response);
         return Left('Unable to register.');
       }
     } on DioException catch (e) {
-      print('$e');
+      print('${e}');
       return Left('Something went wrong');
     }
   }

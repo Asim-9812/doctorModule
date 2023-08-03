@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 
 import '../../../../core/resources/value_manager.dart';
+import '../../../../test/test.dart';
 import '../widgets/bmi.dart';
 import '../widgets/bmr.dart';
 
@@ -515,7 +516,7 @@ class _PatientUtilitiesPageState extends State<PatientUtilitiesPage> {
               _buildCalculators(
                   icon: 'bmi',
                   name: 'BMI',
-                  onTap: ()=>Get.to(()=>BMICalculatorScreen())
+                  onTap: ()=>Get.to(()=>TestPage())
               ),
               _buildCalculators(
                   icon: 'bmr',

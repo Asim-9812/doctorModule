@@ -26,21 +26,19 @@ import '../../../../../data/services/country_services.dart';
 import '../../../../common/snackbar.dart';
 import '../../../../login/domain/model/user.dart';
 
-class UpdateDocProfile extends ConsumerStatefulWidget {
+class UpdateOrgProfile extends ConsumerStatefulWidget {
   final bool isWideScreen;
   final bool isNarrowScreen;
   final User user;
-  UpdateDocProfile(this.isWideScreen,this.isNarrowScreen,this.user);
+  UpdateOrgProfile(this.isWideScreen,this.isNarrowScreen,this.user);
 
   @override
-  ConsumerState<UpdateDocProfile> createState() => _UpdateDocProfileState();
+  ConsumerState<UpdateOrgProfile> createState() => _UpdateOrgProfileState();
 }
 
-class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
+class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
 
-  List<String> genderType = ['Select Gender','Male', 'Female', 'Other'];
-  String? selectedGender;
-  int? genderId;
+
   final formKey = GlobalKey<FormState>();
   bool isPostingData = false;
   final TextEditingController _emailController = TextEditingController();
@@ -51,7 +49,7 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _mobileController = TextEditingController();
-  final TextEditingController _licenseController = TextEditingController();
+  final TextEditingController _PANController = TextEditingController();
   final TextEditingController _wardController = TextEditingController();
 
   List<Country> countries = [];
@@ -81,10 +79,6 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
     _getCountry();
     _fillForm();
 
-    genderId = widget.user.genderID ;
-
-    selectedGender = genderId == '0' ? 'Select a Gender' : genderId == 1? 'Male' : genderId == 2 ? 'Female':'Others';
-
 
 
   }
@@ -99,7 +93,7 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
       _emailController.text = widget.user.email ?? '';
       _wardController.text = widget.user.wardNo.toString() ?? '';
       _addressController.text = widget.user.localAddress ?? '';
-      _licenseController.text = widget.user.liscenceNo.toString() ?? '';
+      _PANController.text = widget.user.panNo.toString() ?? '';
     });
 
   }
@@ -215,7 +209,7 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                   municipalityID: municipalityId!,
                   wardNo: int.parse(_wardController.text),
                   localAddress: _addressController.text.trim(),
-                  genderID: genderId == null? 3 :genderId!,
+                  genderID: 0,
                   contactNo: _mobileController.text.trim(),
                   email: _emailController.text.trim(),
                   roleID: 2,
@@ -231,7 +225,7 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                   flag: 'UPDATE',
                   profileImageUrl: profileImg,
                   signatureImageUrl: signatureImg,
-                  liscenceNo:int.parse(_licenseController.text)
+                  liscenceNo:int.parse(_PANController.text)
               );
 
               if (response.isLeft()) {
@@ -289,7 +283,7 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
               height: MediaQuery.of(context).size.height * 1/5,
               width: double.infinity,
               decoration: BoxDecoration(
-                image: DecorationImage(image: AssetImage('assets/images/containers/Tip-Container-3.png'),fit: BoxFit.cover),
+                image: DecorationImage(image: AssetImage('assets/images/containers/Tip-Container.png'),fit: BoxFit.cover),
 
               ),
               child: Column(
@@ -311,50 +305,50 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                   ),
                   h10,
                   Builder(
-                    builder: (context) {
-                      return ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: ColorManager.white,
-                              elevation: 5,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              )
-                          ),
-                          onPressed: ()async{
-                            await showModalBottomSheet(
-                              isDismissible: true,
-                                context: context,
-                                builder: (context){
-                                  return Container(
-                                    padding: EdgeInsets.all(16),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        ListTile(
-                                          leading: Icon(Icons.photo_library),
-                                          title: Text('Pick from Gallery'),
-                                          onTap: () {
-                                             ref.read(imageProvider.notifier).pickAnImage();
-                                            Navigator.pop(context); // Close the bottom sheet after selection
-                                          },
-                                        ),
-                                        ListTile(
-                                          leading: Icon(Icons.camera_alt),
-                                          title: Text('Capture from Camera'),
-                                          onTap: () {
-                                           ref.read(imageProvider.notifier).camera();
-                                            Navigator.pop(context); // Close the bottom sheet after selection
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }
-                            );
-                          },
-                          child: Text('Update Profile Picture',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 14:14.sp),)
-                      );
-                    }
+                      builder: (context) {
+                        return ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: ColorManager.white,
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                )
+                            ),
+                            onPressed: ()async{
+                              await showModalBottomSheet(
+                                  isDismissible: true,
+                                  context: context,
+                                  builder: (context){
+                                    return Container(
+                                      padding: EdgeInsets.all(16),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          ListTile(
+                                            leading: Icon(Icons.photo_library),
+                                            title: Text('Pick from Gallery'),
+                                            onTap: () {
+                                              ref.read(imageProvider.notifier).pickAnImage();
+                                              Navigator.pop(context); // Close the bottom sheet after selection
+                                            },
+                                          ),
+                                          ListTile(
+                                            leading: Icon(Icons.camera_alt),
+                                            title: Text('Capture from Camera'),
+                                            onTap: () {
+                                              ref.read(imageProvider.notifier).camera();
+                                              Navigator.pop(context); // Close the bottom sheet after selection
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                              );
+                            },
+                            child: Text('Update Profile Picture',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 14:14.sp),)
+                        );
+                      }
                   )
                 ],
               ),
@@ -532,28 +526,28 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                 ],
               ),
               h20,
-              Text('License No',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
+              Text('PAN No',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
               h10,
               Container(
                 height: 60,
                 width: 400.w,
                 child: TextFormField(
-                  controller: _licenseController,
+                  controller: _PANController,
                   keyboardType: TextInputType.phone,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value){
                     if (value!.isEmpty) {
-                      return 'License number is required';
+                      return 'PAN number is required';
                     }
 
                     if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                      return 'Please enter a valid License Number';
+                      return 'Please enter a valid PAN Number';
                     }
                     return null;
                   },
                   decoration: InputDecoration(
                     floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                    hintText: 'License Number',
+                    hintText: 'PAN Number',
                     hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -564,54 +558,7 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                   ),
                 ),
               ),
-              h20,
-              Text('Gender',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?18.sp:18),),
-              h10,
-              Container(
-                height: 60,
-                width: 400.w,
-                child: DropdownButtonFormField<String>(
 
-                  padding: EdgeInsets.zero,
-                  value: selectedGender,
-                  validator: (value){
-                    if(selectedGender == genderType[0]){
-                      return 'Please select a Gender';
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: ColorManager.black.withOpacity(0.5)),
-                    ),
-                  ),
-                  items: genderType
-                      .map(
-                        (String item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  )
-                      .toList(),
-                  onChanged: (String? value) {
-                    setState(() {
-                      selectedGender = value!;
-                      genderId = genderType.indexOf(value);
-                    });
-                  },
-                ),
-              ),
               h20,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

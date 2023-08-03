@@ -297,6 +297,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0+3"
+  draggable_resizer:
+    dependency: "direct main"
+    description:
+      name: draggable_resizer
+      sha256: "5907bc4ebe8311b57ff006de606aed7c0164f205611b7bfd2e7a914ef9b7eb4c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   dropdown_button2:
     dependency: "direct main"
     description:

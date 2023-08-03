@@ -17,6 +17,7 @@ class RegisteredPatientService{
       final data = (response.data['result'] as List)
           .map((e) => RegisteredPatientModel.fromJson(e))
           .toList();
+
       return data;
 
     }on DioException catch(e){
