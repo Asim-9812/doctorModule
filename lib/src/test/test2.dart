@@ -1,251 +1,115 @@
-import 'dart:async';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sensors/flutter_sensors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:medical_app/src/core/resources/style_manager.dart';
 
-class Test2 extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
+import '../core/resources/value_manager.dart';
 
-class _MyAppState extends State<Test2> {
-  bool _accelAvailable = false;
-  bool _gyroAvailable = false;
-  List<double> _accelData = List.filled(3, 0.0);
-  List<double> _gyroData = List.filled(3, 0.0);
-  StreamSubscription? _accelSubscription;
-  StreamSubscription? _gyroSubscription;
-  int count = 0;
-  int stepCount = 0;
-  bool isInThreshold = false;
-  Timer? _resetCountTimer;
+class Test4 extends StatelessWidget {
 
-  @override
-  void initState() {
-    _checkAccelerometerStatus();
-    _checkGyroscopeStatus();
-    _resetCountTimer?.cancel();
-    super.initState();
-  }
+  final double result;
+  Test4(this.result);
 
-  @override
-  void dispose() {
-    _stopAccelerometer();
-    _stopGyroscope();
-    super.dispose();
-  }
 
-  void _checkAccelerometerStatus() async {
-    await SensorManager()
-        .isSensorAvailable(Sensors.ACCELEROMETER)
-        .then((result) {
-      setState(() {
-        _accelAvailable = result;
-      });
-    });
-  }
+  double _getSize() {
 
-  Future<void> _startAccelerometer() async {
-    final stepThreshold = 500; // Set the threshold for the step count
-    final stepIncrement = 1; // Set the step increment value
-    final timeThreshold = Duration(seconds: 1);
-    if (_accelSubscription != null) return;
-    if (_accelAvailable) {
-      final stream = await SensorManager().sensorUpdates(
-        sensorId: Sensors.ACCELEROMETER,
-        interval: Sensors.SENSOR_DELAY_FASTEST,
-      );
-      _accelSubscription = stream.listen((sensorEvent) {
-        setState(() {
-          _accelData = sensorEvent.data;
-          if (_accelData[0] >= 4.0 || _accelData[0] <= -4.0 || _accelData[2] >= 4.0 || _accelData[2] <= -4.0 ) {
-            if (!isInThreshold) {
-              // Start the timer when entering the threshold
-              isInThreshold = true;
-              _resetCountTimer?.cancel();
-              _resetCountTimer = Timer(timeThreshold, () {
-                // Reset the count after 1 second
-                setState(() {
-                  count = 0;
-                  isInThreshold = false;
-                });
-              });
-            }
-          } else {
-            isInThreshold = false;
-            _resetCountTimer?.cancel();
-          }
-
-          if (isInThreshold) {
-            count++;
-            // Check if count reaches the threshold to increment the step count
-            if (count >= stepThreshold) {
-              stepCount += stepIncrement;
-              count = 0; // Reset the count
-            }
-          }
-        });
-      });
+    if(result >= 0.0 && result < 16){
+      return 0.1;
+    } else if(result >=16 && result < 17){
+      return 0.2;
+    } else if(result >=17 && result < 18.5){
+      return 0.25;
+    } else if(result >=18.5 && result < 25){
+      return 0.42;
+    } else if(result >=25 && result < 30){
+      return 0.63;
+    } else if(result >=30 && result < 35){
+      return 0.73;
+    } else if(result >=35 && result < 40){
+      return 0.83;
+    } else{
+      return 0.95;
     }
-  }
 
-  void _stopAccelerometer() {
-    if (_accelSubscription == null) return;
-    _accelSubscription?.cancel();
-    _accelSubscription = null;
-  }
-
-  void _checkGyroscopeStatus() async {
-    await SensorManager().isSensorAvailable(Sensors.GYROSCOPE).then((result) {
-      setState(() {
-        _gyroAvailable = result;
-      });
-    });
-  }
-
-  Future<void> _startGyroscope() async {
-    if (_gyroSubscription != null) return;
-    if (_gyroAvailable) {
-      final stream =
-      await SensorManager().sensorUpdates(sensorId: Sensors.GYROSCOPE);
-      _gyroSubscription = stream.listen((sensorEvent) {
-        setState(() {
-          _gyroData = sensorEvent.data;
-        });
-      });
-    }
-  }
-
-  void _stopGyroscope() {
-    if (_gyroSubscription == null) return;
-    _gyroSubscription?.cancel();
-    _gyroSubscription = null;
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Flutter Sensors Example'),
-        ),
-        body: Container(
-          padding: EdgeInsets.all(16.0),
-          alignment: AlignmentDirectional.topCenter,
+    double size = _getSize();
+    return Center(
+        child: Container(
+          height: MediaQuery.of(context).size.height*1/3,
+          width: MediaQuery.of(context).size.height*2/3,
+          color: Colors.white,
           child: Column(
-            children: <Widget>[
-              Text(
-                "Accelerometer Test",
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                "Accelerometer Enabled: $_accelAvailable",
-                textAlign: TextAlign.center,
-              ),
-              Padding(padding: EdgeInsets.only(top: 16.0)),
-              Text(
-                "[0](X) = ${_accelData[0]}",
-                textAlign: TextAlign.center,
-              ),
-              Padding(padding: EdgeInsets.only(top: 16.0)),
-              Text(
-                "[1](Y) = ${_accelData[1]}",
-                textAlign: TextAlign.center,
-              ),
-              Padding(padding: EdgeInsets.only(top: 16.0)),
-              Text(
-                "[2](Z) = ${_accelData[2]}",
-                textAlign: TextAlign.center,
-              ),
-              Padding(padding: EdgeInsets.only(top: 16.0)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  MaterialButton(
-                    child: Text("Start"),
-                    color: Colors.green,
-                    onPressed:
-                    _accelAvailable ? () => _startAccelerometer() : null,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                  ),
-                  MaterialButton(
-                    child: Text("Stop"),
-                    color: Colors.red,
-                    onPressed:
-                    _accelAvailable ? () => _stopAccelerometer() : null,
-                  ),
-                ],
-              ),
-              Padding(padding: EdgeInsets.only(top: 16.0)),
-              Text(
-                "Gyroscope Test",
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                "Gyroscope Enabled: $_gyroAvailable",
-                textAlign: TextAlign.center,
-              ),
-              Padding(padding: EdgeInsets.only(top: 16.0)),
-              Text(
-                "[0](X) = ${_gyroData[0]}",
-                textAlign: TextAlign.center,
-              ),
-              Padding(padding: EdgeInsets.only(top: 16.0)),
-              Text(
-                "[1](Y) = ${_gyroData[1]}",
-                textAlign: TextAlign.center,
-              ),
-              Padding(padding: EdgeInsets.only(top: 16.0)),
-              Text(
-                "[2](Z) = ${_gyroData[2]}",
-                textAlign: TextAlign.center,
-              ),
-              Padding(padding: EdgeInsets.only(top: 16.0)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  MaterialButton(
-                    child: Text("Start"),
-                    color: Colors.green,
-                    onPressed: _gyroAvailable ? () => _startGyroscope() : null,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                  ),
-                  MaterialButton(
-                    child: Text("Stop"),
-                    color: Colors.red,
-                    onPressed: _gyroAvailable ? () => _stopGyroscope() : null,
-                  ),
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Calculated BMI',style: getMediumStyle(color: Colors.black),),
+              h20,
+              Container(
+                height: MediaQuery.of(context).size.height*0.1,
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
+                    Container(
+                      width: double.infinity,
+                      height: 50.h,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.15,
+                            color: Colors.red,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.05,
+                            color: Colors.redAccent,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.05,
+                            color: Colors.yellow,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.3,
+                            color: Colors.green,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.1,
+                            color: Colors.yellow,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.1,
+                            color: Colors.pink,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.1,
+                            color: Colors.redAccent,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width*0.15,
+                            color: Colors.red,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width*size,
+                      child: Align(
+                        alignment: AlignmentDirectional.topEnd,
+                        child: FaIcon(CupertinoIcons.triangle_fill,color: Colors.black,),
 
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  // ... (existing code)
-
-                  Padding(padding: EdgeInsets.only(top: 16.0)),
-                  Text(
-                    "Count: $count",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 16.0)),
-                  Text(
-                    "Step Count: $stepCount",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ],
-              ),
+                      ),
+                    )
+                  ],
+                ),
+              )
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
