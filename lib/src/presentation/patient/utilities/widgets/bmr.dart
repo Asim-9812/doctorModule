@@ -1,214 +1,500 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:medical_app/src/core/resources/style_manager.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import '../../../../core/resources/color_manager.dart';
+import 'package:medical_app/src/core/resources/color_manager.dart';
+import 'package:medical_app/src/test/test2.dart';
+
+import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
 
-enum Gender { male, female }
 
-class BMRCalculatorScreen extends StatefulWidget {
+class BMR extends StatefulWidget {
   @override
-  _BMRCalculatorScreenState createState() => _BMRCalculatorScreenState();
+  BMRState createState() => BMRState();
 }
 
-class _BMRCalculatorScreenState extends State<BMRCalculatorScreen> {
-  TextEditingController weightController = TextEditingController();
-  TextEditingController heightController = TextEditingController();
-  TextEditingController ageController = TextEditingController();
-  double? bmrResult;
-  Gender selectedGender = Gender.male;
+class BMRState extends State<BMR> {
+  double _linePositionY = 200.0;
+  double y = 0.4; // Initial Y position of the line
+  int selectedOption = 1;
+  final TextEditingController weightController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+  // final TextEditingController feetController = TextEditingController();
+  // final TextEditingController inchController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
+  double result = 0.0;
+  int category = 0;
 
-  void calculateBMR() {
-    double weight = double.tryParse(weightController.text) ?? 0.0;
-    double height = double.tryParse(heightController.text) ?? 0.0;
-    int age = int.tryParse(ageController.text) ?? 0;
+  double _calculateHeight(double y){
+    double res = 10 - (y * 10).toPrecision(1);
+    return res;
+  }
 
-    if (weight > 0 && height > 0 && age > 0) {
-      double bmr = selectedGender == Gender.male
-          ? 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age)
-          : 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+  double _convertCM(double y){
+    double res = 11.75*y+55.75 ;
+    return res;
+  }
 
+
+  double _calculateBMR({
+    required double w,
+    required double h,
+    required double a
+  }) {
+    if(selectedOption == 1){
+      double bmr = 10 * w + 6.25 * h - 5 * a + 5;
       setState(() {
-        bmrResult = bmr;
+        result = bmr;
+        isLoading = false;
       });
-    } else {
+      print(bmr.toPrecision(1));
+      return bmr.toPrecision(1);
+    } else{
+      double bmr = 10 * w + 6.25 * h- 5 * a - 161;
       setState(() {
-        bmrResult = null;
+        result = bmr;
+        isLoading = false;
       });
+      print(bmr.toPrecision(1));
+      return bmr.toPrecision(1);
     }
+
+  }
+
+
+
+
+
+  Future<void> _showDialog(double heightCM,bool isWideScreen,bool isNarrowScreen) async {
+    final List<Map<String, String>> activityLevels = [
+      {
+        'activityLevel': 'Sedentary: little or no exercise',
+        'calorie': '${result.round() + 300}',
+      },
+      {
+        'activityLevel': 'Exercise 1-3 times/week',
+        'calorie': '${result.round() + 600}',
+      },
+      {
+        'activityLevel': 'Exercise 4-5 times/week',
+        'calorie': '${result.round() + 800}',
+      },
+      {
+        'activityLevel': 'Daily exercise or intense exercise 3-4 times/week',
+        'calorie': '${result.round() + 900}',
+      },
+      {
+        'activityLevel': 'Intense exercise 6-7 times/week',
+        'calorie': '${result.round() + 1100}',
+      },
+      {
+        'activityLevel': 'Very intense exercise daily, or physical job',
+        'calorie': '${result.round() + 1400}',
+      },
+    ];
+    showDialog(
+        context: context,
+        builder: (context){
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15)
+            ),
+            content: Container(
+              // height: 450.h,
+              width: MediaQuery.of(context).size.height*2/3,
+              // color: Colors.red,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text('Calculated BMR',style: getMediumStyle(color: Colors.black),),
+                  h20,
+                  Text('${result.round()} calories/day',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                  h20,
+                  Text('Daily calorie needs based on activity level',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
+                  h10,
+                  ListTile(
+                    tileColor: ColorManager.primary,
+                    title: Text('Activity Level',style: getRegularStyle(color: ColorManager.white,fontSize: 20),),
+                    trailing: Text('Calories',style: getRegularStyle(color: ColorManager.white,fontSize: 16),),
+                  ),
+                  h10,
+                  ListView.builder(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    itemCount: activityLevels.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        shape: Border(
+                            bottom: BorderSide(
+                                color: ColorManager.black.withOpacity(0.5)
+                            )
+                        ),
+                        title: Text(activityLevels[index]['activityLevel']!,style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                        trailing: Text('${activityLevels[index]['calorie']}',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                      );
+                    },
+                  )
+
+                ],
+              ),
+            ),
+            actions: [
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      fixedSize: Size.fromWidth(200.w),
+                      backgroundColor: ColorManager.primary
+                  ),
+                  onPressed: ()=>Navigator.pop(context),
+                  child: Text('OK',style: getMediumStyle(color: Colors.white,fontSize: 16),)
+              )
+            ],
+            actionsAlignment: MainAxisAlignment.center,
+          );
+        }
+    );
+
   }
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+
+    // Check if width is greater than height
+    bool isWideScreen = screenSize.width > 500;
+    bool isNarrowScreen = screenSize.width < 420;
+
+    double fontSize = isWideScreen?14: 14.sp;
+    double height = _calculateHeight(y);
+    double heightCM = _convertCM(height);
+    double size = isWideScreen? ((_calculateHeight(y).toPrecision(1) * 25)+40):((_calculateHeight(y).toPrecision(1) * 25)+40).sp;
+    print(size);
+    // Get the screen size
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          centerTitle: true,
-          title: Text(
-            'BMR Calculator',
-            style: getMediumStyle(color: Colors.black),
-          ),
-          backgroundColor: ColorManager.white,
-          elevation: 1,
-          leading: IconButton(
-            onPressed: () => Get.back(),
-            icon: FaIcon(
-              Icons.chevron_left,
-              color: ColorManager.black,
-            ),
-          ),
-          automaticallyImplyLeading: false,
+          elevation: 3,
+          backgroundColor: ColorManager.primary,
+          title: Text('BMR'),
         ),
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              h20,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('Gender :', style: getRegularStyle(color: Colors.black)),
-                  w16,
-                  Radio<Gender>(
-                    value: Gender.male,
-                    groupValue: selectedGender,
-                    onChanged: (value) {
+              Container(
+                height: MediaQuery.of(context).size.height * 1.4 / 2,
+                child: GestureDetector(
+                  onVerticalDragUpdate: (value) {
+                    double yValue = value.delta.dy;
+                    if ((y > -0.5 && y <= 0.7) || (yValue > 0 && y <= 0.7)) {
+                      // Only allow dragging if y is in the range of -0.1 to 0.5
                       setState(() {
-                        selectedGender = value!;
-                      });
-                    },
-                  ),
-                  Text('Male', style: getRegularStyle(color: Colors.black)),
-                  Radio<Gender>(
-                    value: Gender.female,
-                    groupValue: selectedGender,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedGender = value!;
-                      });
-                    },
-                  ),
-                  Text('Female', style: getRegularStyle(color: Colors.black)),
-                ],
-              ),
-              SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('Weight (in kg) :',
-                      style: getRegularStyle(color: Colors.black)),
-                  w16,
-                  Container(
-                    width: 50.w,
-                    height: 40.h,
-                    child: TextField(
-                      controller: weightController,
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 12.w, vertical: 0),
-                        border: UnderlineInputBorder(),
-                        hintText: 'kg',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('Height (in cm) :',
-                      style: getRegularStyle(color: Colors.black)),
-                  w16,
-                  Container(
-                    width: 50.w,
-                    height: 40.h,
-                    child: TextField(
-                      controller: heightController,
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 12.w, vertical: 0),
-                        border: UnderlineInputBorder(),
-                        hintText: 'cm',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('Age :', style: getRegularStyle(color: Colors.black)),
-                  w16,
-                  Container(
-                    width: 50.w,
-                    height: 40.h,
-                    child: TextField(
-                      controller: ageController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 12.w, vertical: 0),
-                        border: UnderlineInputBorder(),
-                        hintText: 'years',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: calculateBMR,
-                child: Text('Calculate BMR'),
-              ),
-              SizedBox(height: 16),
-              // ... previous code ...
+                        y += yValue * 0.004;
 
-              if (bmrResult != null)
-                Text(
-                  'BMR: ${bmrResult!.toStringAsFixed(2)}',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-                ),
-              if (bmrResult != null)
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
+                        // Limit y within the range of -0.1 to 0.5
+                        y = y.clamp(-0.5, 0.7);
+
+
+                      });
+                      // print(yValue > 0 ? 'downward' : 'upward');
+                    }
+                  },
+                  child: Row(
                     children: [
-                      Text(
-                        'Basal Metabolic Rate (BMR) is the number of calories your body needs to maintain its basic functions at rest. It represents the energy required for vital bodily processes such as breathing, circulating blood, and maintaining body temperature.',
-                        style: TextStyle(fontSize: 16),
+                      Form(
+                        key:_formKey,
+                        child: Container(
+                          width:MediaQuery.of(context).size.width * 1/ 2 ,
+                          padding: EdgeInsets.symmetric(vertical: 24.h),
+                          height: MediaQuery.of(context).size.height ,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text('Gender',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                              h20,
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+
+                                  Container(
+                                    height: 100,
+                                    width: 90.w,
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          selectedOption = 1;
+                                        });
+                                      },
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(color: selectedOption == 2 ? ColorManager.primaryDark : ColorManager.dotGrey),
+                                              shape: BoxShape.circle,
+                                              color: selectedOption == 1 ? ColorManager.primary : Colors.transparent,
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Image.asset(
+                                                'assets/icons/man.png',
+                                                width: 40,
+                                                height: 40,
+                                              ),
+                                            ),
+                                          ),
+                                          h10,
+                                          Text(
+                                            'Male',
+                                            style: getRegularStyle(color: selectedOption == 1 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  w05,
+                                  Container(
+                                    height: 100,
+                                    width: 90.w,
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          selectedOption = 2;
+                                        });
+                                      },
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(color: selectedOption == 2 ? ColorManager.primaryDark : ColorManager.dotGrey),
+                                              shape: BoxShape.circle,
+                                              color: selectedOption ==2 ? ColorManager.primary : Colors.transparent,
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Image.asset(
+                                                'assets/icons/woman.png',
+                                                width: 40,
+                                                height: 40,
+                                              ),
+                                            ),
+                                          ),
+                                          h10,
+                                          Text(
+                                            'Doctor',
+                                            style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+
+                                ],
+                              ),
+                              h20,
+                              Text('Age',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                              h20,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    width: 50.w,
+                                    child: TextFormField(
+                                      controller: ageController,
+                                      validator: (value){
+                                        if(value!.isEmpty){
+                                          return 'Field must not be empty';
+                                        }
+                                        else if(double.parse(value)<10 && double.parse(value)>100 ){
+                                          return 'Age must be above 10 and below 100';
+                                        }
+                                        else{
+                                          return null;
+                                        }
+                                      },
+                                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                                      style: getRegularStyle(color: ColorManager.black,fontSize: 18),
+                                      keyboardType: TextInputType.phone,
+                                      decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.only(left: 8.w,top: 24.h),
+                                          border: UnderlineInputBorder()
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 70.w,
+                                    child: Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Text('yrs old',style: getRegularStyle(color: ColorManager.black,fontSize: 20),)),
+                                  ),
+                                ],
+                              ),
+                              h20,
+                              h20,
+                              h20,
+                              Text('Weight',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                              h20,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    width: 50.w,
+                                    child: TextFormField(
+                                      controller: weightController,
+                                      validator: (value){
+                                        if(value!.isEmpty){
+                                          return 'Field must not be empty';
+                                        }
+                                        else{
+                                          return null;
+                                        }
+                                      },
+                                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                                      style: getRegularStyle(color: ColorManager.black,fontSize: 18),
+                                      keyboardType: TextInputType.phone,
+                                      decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.only(left: 8.w,top: 24.h),
+                                          border: UnderlineInputBorder()
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 70.w,
+                                    child: Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Text('in KG',style: getRegularStyle(color: ColorManager.black,fontSize: 20),)),
+                                  ),
+                                ],
+                              ),
+                              h20,
+                            ],
+                          ),
+                        ),
                       ),
-                      SizedBox(height: 16),
-                      Text(
-                        'Your calculated BMR is ${bmrResult!.toStringAsFixed(2)} calories per day.',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        'This means that if you were to rest and do no physical activity for the entire day, your body would burn approximately ${bmrResult!.toStringAsFixed(2)} calories just to support its essential functions.',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      SizedBox(height: 16),
-                      Text(
-                        'To maintain your current weight, you would need to consume roughly this number of calories per day. If you want to lose weight, you can create a calorie deficit by consuming fewer calories than your BMR, and to gain weight, you can consume more calories than your BMR.',
-                        style: TextStyle(fontSize: 16),
+                      Container(
+                        width:MediaQuery.of(context).size.width * 1/ 2 ,
+                        padding: EdgeInsets.symmetric(vertical: 24.h),
+                        height: MediaQuery.of(context).size.height ,
+                        decoration: BoxDecoration(
+                            color: ColorManager.primary,
+                            border: BorderDirectional(
+                                start: BorderSide(
+                                    color: ColorManager.primaryDark
+                                ),
+                                bottom: BorderSide(
+                                    color: ColorManager.primaryDark
+                                )
+                            )
+                        ),
+                        child: Container(
+                          color: ColorManager.white,
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment.bottomLeft,
+                                child:  Container(
+                                  width: 50,
+                                  height: MediaQuery.of(context).size.height*0.8,
+                                  decoration: BoxDecoration(
+                                      color: ColorManager.primary,
+                                      border: Border.all(
+                                          color: ColorManager.primaryDark
+                                      )
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: List.generate(
+                                      50, // Number of scale divisions
+                                          (index) {
+                                        double position =  index *0.01;
+                                        return Container(
+                                          height: 5,
+                                          color: Colors.white,
+                                          margin: EdgeInsets.only(top: position),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 24.w,vertical: 5.h),
+                                  child: Image.asset(selectedOption == 1 ? 'assets/icons/man.png':'assets/icons/woman.png',width: 120.w,height: size,fit: BoxFit.fitHeight,),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment(0, y),
+                                child: Container(
+                                  height: 100,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Container(
+                                          color: ColorManager.primary,
+                                          height: 50,
+                                          width: 100,
+                                          child: Center(
+                                            child: Text(
+                                              '${heightCM.toPrecision(1)} cm',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        height: 2,
+                                        width: double.infinity,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
+              ),
+              h20,
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: ColorManager.primary,
+                      fixedSize: Size.fromWidth(250.w)
+                  ),
+                  onPressed: () async {
+                    if(_formKey.currentState!.validate()){
+                      setState(() {
+                        isLoading = true;
+                      });
+                      double x=  _calculateBMR(a:double.parse(ageController.text),w: double.parse(weightController.text), h:heightCM.toPrecision(1) );
+                      _showDialog(x,isWideScreen,isNarrowScreen);
 
+                    }
+                  },
+                  child:isLoading? SpinKitDualRing(color: ColorManager.white): Text('Submit'),
+                ),
+              )
             ],
           ),
         ),

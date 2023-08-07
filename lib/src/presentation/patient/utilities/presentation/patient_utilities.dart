@@ -516,12 +516,12 @@ class _PatientUtilitiesPageState extends State<PatientUtilitiesPage> {
               _buildCalculators(
                   icon: 'bmi',
                   name: 'BMI',
-                  onTap: ()=>Get.to(()=>TestPage())
+                  onTap: ()=>Get.to(()=>BMI())
               ),
               _buildCalculators(
                   icon: 'bmr',
                   name: 'BMR',
-                  onTap: ()=>Get.to(()=>BMRCalculatorScreen())
+                  onTap: ()=>Get.to(()=>BMR())
               ),
               _buildCalculators(
                   icon: 'calories',

@@ -171,6 +171,10 @@ dependencies:
 
   draggable_resizer: ^0.0.2
 
+  khalti_flutter: ^3.0.0
+
+  lottie: ^2.5.0
+
 
 
 
@@ -231,6 +235,7 @@ flutter:
     - assets/images/splash.gif
     - assets/images/logo.png
     - assets/images/eticket.png
+    - assets/jsons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

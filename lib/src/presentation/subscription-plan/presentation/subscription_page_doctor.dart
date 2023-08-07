@@ -10,6 +10,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/core/utils/shimmer.dart';
@@ -19,6 +20,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../core/api.dart';
 import '../../../core/resources/value_manager.dart';
+import '../../../data/services/payment_services.dart';
 import '../../common/snackbar.dart';
 import '../../register/domain/register_model/register_model.dart';
 import '../../register/domain/register_service.dart';
@@ -41,9 +43,11 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
   int selectedDuration = 0;
   int selectSubscription = 0;
   int schemePlanId = 1;
+  String schemePlanName = '';
   final dio = Dio();
   SchemePlaneModel? selectedScheme;
   bool isPostingData = false;
+  int amount = 0;
 
 
   Map<String,dynamic> outputValue = {};
@@ -61,7 +65,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
             "doctorPassword": widget.registerDoctorModel.password,
             "roleID": 1,
             "referenceNo": "1",
-            "subscriptionID": schemePlanId,
+            "subscriptionID": 0,
             "isActive": true,
             "entryDate": "2023-07-17T10:43:10.315Z",
             "genderID": 1,
@@ -236,6 +240,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
                         ? null // Disable the button while posting data
                         : ()async{
                       final scaffoldMessage = ScaffoldMessenger.of(context);
+                      print(schemePlanName.toLowerCase());
                       if(selectedScheme == null){
                         scaffoldMessage.showSnackBar(
                           SnackbarUtil.showFailureSnackbar(
@@ -243,35 +248,39 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
                               duration: const Duration(seconds: 2)
                           ),
                         );
-                      } else{
+                      }else if(schemePlanName.toLowerCase() =='trail 15 days'||schemePlanName.toLowerCase() =='trial 15 days' ){
                         setState(() {
                           isPostingData = true; // Show loading spinner
                         });
-                        await docRegister().then((value) async => await subscriptionPlanDoctor(
+                        subscriptionPlanDoctor(
                             schemePlanId: selectedScheme?.schemeplanID ?? 0
-                        ).then((value) async => await userRegisterDoctor()).then((value) =>Future.delayed(Duration(seconds: 3))).then((value) =>
-                            setState(() {
-                              isPostingData = false; // Show loading spinner
-                            })
-                        ).then((value) {
+                        ).then((value) async => await userRegisterDoctor()).then((value) {
                           scaffoldMessage.showSnackBar(
                             SnackbarUtil.showSuccessSnackbar(
-                                message: 'User Registered! Please Login again.',
-                                duration: const Duration(seconds: 3)
+                                message: 'User registered successfully',
+                                duration: const Duration(seconds: 2)
                             ),
                           );
-
-                        }).then((value) =>  Get.offAll(()=>LoginPage())).catchError((e){
+                          setState(() {
+                            isPostingData = false;
+                          });
+                          Get.offAll(()=>LoginPage());
+                        }).catchError((e){
                           scaffoldMessage.showSnackBar(
                             SnackbarUtil.showFailureSnackbar(
                                 message: '$e',
                                 duration: const Duration(seconds: 2)
                             ),
                           );
-                          setState(() {
-                            isPostingData = false; // Show loading spinner
-                          });
-                        }));
+
+                        });
+                      } else{
+                        setState(() {
+                          isPostingData = true; // Show loading spinner
+                        });
+                        await docRegister().then((value) => payWithKhaltiInApp(productId: outputValue['result']['docID'], amount: amount, schemePlanId: schemePlanId, schemePlanName: schemePlanName));
+
+
                       }
 
                     },
@@ -288,6 +297,111 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
       ),
     );
   }
+  payWithKhaltiInApp({
+    required String productId,
+    required int amount,
+    required int schemePlanId,
+    required String schemePlanName
+  }){
+    print('doc id : ${outputValue['result']['docID']}');
+    final config = PaymentConfig(
+      amount: amount, // Amount should be in paisa
+      productIdentity: productId,
+      productName: schemePlanName,
+    );
+
+    KhaltiScope.of(context).pay(
+        config: config,
+        preferences: [
+          PaymentPreference.khalti
+        ],
+        onSuccess: onSuccess,
+        onFailure: onFailure,
+        onCancel: onCancel
+    );
+  }
+  void onSuccess(PaymentSuccessModel success) async {
+    final scaffoldMessage = ScaffoldMessenger.of(context);
+    scaffoldMessage.showSnackBar(
+      SnackbarUtil.showProcessSnackbar(
+          message: 'Please Wait. Verification in process...',
+          duration: const Duration(seconds: 2)
+      ),
+    );
+    final response = await ref.read(verificationProvider).VerificationProcess(token: success.token, amount: success.amount);
+    if(response.isLeft()){
+      final leftValue= response.fold(
+              (l) => 'Payment incomplete',
+              (r) => null
+      );
+      scaffoldMessage.showSnackBar(
+        SnackbarUtil.showFailureSnackbar(
+            message: '$leftValue',
+            duration: const Duration(seconds: 2)
+        ),
+      );
+    } else{
+      final rightValue = response.fold(
+              (l) => '',
+              (r) => 'Payment Complete'
+      );
+      subscriptionPlanDoctor(
+          schemePlanId: selectedScheme?.schemeplanID ?? 0
+      ).then((value) async => await userRegisterDoctor()).then((value) {
+        scaffoldMessage.showSnackBar(
+          SnackbarUtil.showSuccessSnackbar(
+              message: 'User registered successfully',
+              duration: const Duration(seconds: 2)
+          ),
+        );
+        setState(() {
+          isPostingData = false;
+        });
+        Get.offAll(()=>LoginPage());
+      }).catchError((e){
+        scaffoldMessage.showSnackBar(
+          SnackbarUtil.showFailureSnackbar(
+              message: '$e',
+              duration: const Duration(seconds: 2)
+          ),
+        );
+
+      });
+
+    }
+
+
+  }
+
+
+
+  void onFailure(PaymentFailureModel failure) {
+    setState(() {
+      isPostingData = false;
+    });
+
+    final scaffoldMessage = ScaffoldMessenger.of(context);
+    debugPrint(failure.toString());
+    scaffoldMessage.showSnackBar(
+      SnackbarUtil.showFailureSnackbar(
+        message: '${failure.toString()}',
+        duration: const Duration(milliseconds: 1200),
+      ),
+    );
+  }
+  void onCancel(){
+    setState(() {
+      isPostingData = false;
+    });
+    final scaffoldMessage = ScaffoldMessenger.of(context);
+    scaffoldMessage.showSnackBar(
+        SnackbarUtil.showFailureSnackbar(
+            message: 'Payment Cancelled',
+            duration: const Duration(milliseconds: 1200)
+        )
+    );
+  }
+
 
 
   Widget _buildMonthBody(AsyncValue<List<SchemePlaneModel>> schemeData) {
@@ -308,54 +422,60 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
               width: double.infinity,
               padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 24.h),
               child: SafeArea(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Select your',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 30),),
-                    h10,
-                    Text('Subscription\nPlan',style: getBoldStyle(color: ColorManager.textGrey,fontSize: 60),textAlign: TextAlign.start,),
-                    h10,
-                    Center(
-                      child: _buildSubBanner(
-                        schemeName: '${selectedScheme?.schemeName}',
-                        schemeDuration: selectedScheme?.storageType == 1 ? 'month' : 'year',
-                        schemePrice: int.parse(selectedScheme?.price!.round().toString() ?? '0'),
-                        selectSubscription: schemePlanId,
-                        gradient: selectedScheme?.schemeName == 'GOLD'
-                            ?ColorManager.goldContainer
-                            :selectedScheme?.schemeName == 'SILVER'
-                            ?ColorManager.silverContainer
-                            :selectedScheme?.schemeName == 'PLATINUM'
-                            ?ColorManager.blackContainer
-                            :ColorManager.primary ,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Select your',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 30),),
+                      h10,
+                      Text('Subscription\nPlan',style: getBoldStyle(color: ColorManager.textGrey,fontSize: 60),textAlign: TextAlign.start,),
+                      h10,
+                      Center(
+                        child: _buildSubBanner(
+                          schemeName: '${selectedScheme?.schemeName}',
+                          schemeDuration: selectedScheme?.storageType == 1 ? 'month' : 'year',
+                          schemePrice: int.parse(selectedScheme?.price!.round().toString() ?? '0'),
+                          selectSubscription: schemePlanId,
+                          gradient: selectedScheme?.schemeName == 'GOLD'
+                              ?ColorManager.goldContainer
+                              :selectedScheme?.schemeName == 'SILVER'
+                              ?ColorManager.silverContainer
+                              :selectedScheme?.schemeName == 'PLATINUM'
+                              ?ColorManager.blackContainer
+                              :ColorManager.primary ,
+                        ),
                       ),
-                    ),
 
 
-                    h20,
-                    ListView.builder(
-
-                      shrinkWrap: true,
-                      itemCount: schemeMonth.length,
-                      itemBuilder: (context, index) {
-                        return _buildSubscriptionTile(
-                          onTap: () {
-                            setState(() {
-                              schemePlanId = schemeMonth[index].schemeplanID!;
-                              selectedScheme = schemeMonth[index]; // Set the selectedScheme
-                            });
-                            print(schemePlanId);
+                      h20,
+                      Container(
+                        height: 300,
+                        child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          itemCount: schemeMonth.length,
+                          itemBuilder: (context, index) {
+                            return _buildSubscriptionTile(
+                              onTap: () {
+                                setState(() {
+                                  schemePlanId = schemeMonth[index].schemeplanID!;
+                                  selectedScheme = schemeMonth[index]; // Set the selectedScheme
+                                  schemePlanName = schemeMonth[index].schemeName!;
+                                  amount =schemeMonth[index].price!.round();
+                                });
+                                print(schemePlanId);
+                              },
+                              schemeName: '${schemeMonth[index].schemeName}',
+                              schemePrice: int.parse(schemeMonth[index].price!.round().toString()),
+                              schemeDuration: schemeMonth[index].storageType!,
+                              selection: schemeMonth[index].schemeplanID!,
+                            );
                           },
-                          schemeName: '${schemeMonth[index].schemeName}',
-                          schemePrice: int.parse(schemeMonth[index].price!.round().toString()),
-                          schemeDuration: schemeMonth[index].storageType!,
-                          selection: schemeMonth[index].schemeplanID!,
-                        );
-                      },
-                    )
+                        ),
+                      )
 
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -388,57 +508,63 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
               width: double.infinity,
               padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 24.h),
               child: SafeArea(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Select your',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 30),),
-                    h10,
-                    Text('Subscription\nPlan',style: getBoldStyle(color: ColorManager.textGrey,fontSize: 60),textAlign: TextAlign.start,),
-                    h10,
-                    Visibility(
-                      visible: selectedScheme != null && schemePlanId == selectedScheme!.schemeplanID,
-                      child: Center(
-                        child: _buildSubBanner(
-                          schemeName: '${selectedScheme?.schemeName}',
-                          schemeDuration: selectedScheme?.storageType == 1 ? 'month' : 'year',
-                          schemePrice: int.parse(selectedScheme?.price!.round().toString() ?? '0'),
-                          selectSubscription: schemePlanId,
-                          gradient: selectedScheme?.schemeName == 'GOLD'
-                              ?ColorManager.goldContainer
-                              :selectedScheme?.schemeName == 'SILVER'
-                              ?ColorManager.silverContainer
-                              :selectedScheme?.schemeName == 'PLATINUM'
-                              ?ColorManager.blackContainer
-                              :ColorManager.primary ,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Select your',style: getRegularStyle(color: ColorManager.textGrey,fontSize: 30),),
+                      h10,
+                      Text('Subscription\nPlan',style: getBoldStyle(color: ColorManager.textGrey,fontSize: 60),textAlign: TextAlign.start,),
+                      h10,
+                      Visibility(
+                        visible: selectedScheme != null && schemePlanId == selectedScheme!.schemeplanID,
+                        child: Center(
+                          child: _buildSubBanner(
+                            schemeName: '${selectedScheme?.schemeName}',
+                            schemeDuration: selectedScheme?.storageType == 1 ? 'month' : 'year',
+                            schemePrice: int.parse(selectedScheme?.price!.round().toString() ?? '0'),
+                            selectSubscription: schemePlanId,
+                            gradient: selectedScheme?.schemeName == 'GOLD'
+                                ?ColorManager.goldContainer
+                                :selectedScheme?.schemeName == 'SILVER'
+                                ?ColorManager.silverContainer
+                                :selectedScheme?.schemeName == 'PLATINUM'
+                                ?ColorManager.blackContainer
+                                :ColorManager.primary ,
+                          ),
                         ),
                       ),
-                    ),
 
 
-                    h20,
-                    ListView.builder(
-
-                      shrinkWrap: true,
-                      itemCount: schemeYear.length,
-                      itemBuilder: (context, index) {
-                        return _buildSubscriptionTile(
-                          onTap: () {
-                            setState(() {
-                              schemePlanId = schemeYear[index].schemeplanID!;
-                              selectedScheme = schemeYear[index]; // Set the selectedScheme
-                            });
-                            print(schemePlanId);
+                      h20,
+                      Container(
+                        height: 300,
+                        child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          itemCount: schemeYear.length,
+                          itemBuilder: (context, index) {
+                            return _buildSubscriptionTile(
+                              onTap: () {
+                                setState(() {
+                                  schemePlanId = schemeYear[index].schemeplanID!;
+                                  selectedScheme = schemeYear[index];
+                                  schemePlanName = schemeYear[index].schemeName!;
+                                  amount =schemeYear[index].price!.round();
+                                });
+                                print(schemePlanId);
+                              },
+                              schemeName: '${schemeYear[index].schemeName}',
+                              schemePrice: int.parse(schemeYear[index].price!.round().toString()),
+                              schemeDuration: schemeYear[index].storageType!,
+                              selection: schemeYear[index].schemeplanID!,
+                            );
                           },
-                          schemeName: '${schemeYear[index].schemeName}',
-                          schemePrice: int.parse(schemeYear[index].price!.round().toString()),
-                          schemeDuration: schemeYear[index].storageType!,
-                          selection: schemeYear[index].schemeplanID!,
-                        );
-                      },
-                    )
+                        ),
+                      )
 
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

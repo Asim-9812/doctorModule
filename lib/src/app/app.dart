@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:khalti_flutter/khalti_flutter.dart';
 
 import '../core/resources/route_manager.dart';
 
@@ -25,10 +26,24 @@ class MyAppState extends State<MyApp> {
     return ScreenUtilInit(
       designSize: const Size(428, 926),
       builder: (context, child) {
-        return GetMaterialApp(
-          debugShowCheckedModeBanner: false,
-          onGenerateRoute: RouteGenerator.getRoute,
-          initialRoute: Routes.splashRoute,
+        return KhaltiScope(
+          publicKey: 'test_public_key_d5355c28fd984efabb516a5b832a769e',
+          enabledDebugging: true,
+          builder: (context,navKey) {
+            return GetMaterialApp(
+              supportedLocales:const [
+                Locale('en', 'US'),
+                Locale('ne', 'NP'),
+              ] ,
+              navigatorKey: navKey,
+              localizationsDelegates: const [
+                KhaltiLocalizations.delegate,
+              ],
+              debugShowCheckedModeBanner: false,
+              onGenerateRoute: RouteGenerator.getRoute,
+              initialRoute: Routes.splashRoute,
+            );
+          }
         );
       },
     );
