@@ -3,6 +3,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:dartz/dartz.dart' as dartz;
 import 'package:dio/dio.dart';
+import 'package:esewa_flutter_sdk/esewa_config.dart';
+import 'package:esewa_flutter_sdk/esewa_flutter_sdk.dart';
+import 'package:esewa_flutter_sdk/esewa_payment.dart';
+import 'package:esewa_flutter_sdk/esewa_payment_success_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,12 +47,24 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
   int selectedDuration = 0;
   int selectSubscription = 0;
   int schemePlanId = 1;
-  String schemePlanName = '';
+  String schemePlanName = 'GOLD';
   final dio = Dio();
   SchemePlaneModel? selectedScheme;
   bool isPostingData = false;
-  int amount = 0;
+  int amount = 1000;
 
+  int paymentOption = 0;
+  int selectedPayment = 0;
+
+  void onSelected(int selectedPaymentOption){
+    setState(() {
+      paymentOption = selectedPaymentOption;
+    });
+  }
+
+  Color? getPaymentContainerColor(int paymentOption) {
+    return selectedPayment == paymentOption ? ColorManager.primary : null;
+  }
 
   Map<String,dynamic> outputValue = {};
 
@@ -278,7 +294,118 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
                         setState(() {
                           isPostingData = true; // Show loading spinner
                         });
-                        await docRegister().then((value) => payWithKhaltiInApp(productId: outputValue['result']['docID'], amount: amount, schemePlanId: schemePlanId, schemePlanName: schemePlanName));
+                        await docRegister().then((value) {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+
+
+                              return StatefulBuilder(
+                                  builder: (context,setState) {
+                                    return Container(
+                                      padding: EdgeInsets.all(16),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              InkWell(
+                                                onTap:(){
+                                                  setState(() {
+                                                    selectedPayment = 1;
+                                                  });
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(10),
+                                                      color: getPaymentContainerColor(1),
+                                                      border: Border.all(
+                                                          color: ColorManager.black.withOpacity(0.5)
+                                                      )
+                                                  ),
+                                                  padding: EdgeInsets.symmetric(horizontal: 18,vertical: 18),
+                                                  child: Column(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      Image.asset('assets/images/esewa.png',height: 30,fit: BoxFit.contain,),
+                                                      h10,
+                                                      Text('E-sewa',style: getRegularStyle(color: ColorManager.black),),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              InkWell(
+                                                onTap:(){
+                                                  setState(() {
+                                                    selectedPayment = 2;
+                                                  });
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(10),
+                                                      color: getPaymentContainerColor(2),
+                                                      border: Border.all(
+                                                          color: ColorManager.black.withOpacity(0.5)
+                                                      )
+                                                  ),
+                                                  padding: EdgeInsets.symmetric(horizontal: 24,vertical: 18),
+                                                  child: Column(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: [
+                                                      Image.asset('assets/images/khalti.png',height: 30,fit: BoxFit.contain,),
+                                                      h10,
+                                                      Text('Khalti',style: getRegularStyle(color: ColorManager.black),),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 16),
+                                          ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor: ColorManager.primary,
+                                                fixedSize: Size.fromWidth(300)
+
+                                            ),
+                                            onPressed: () {
+
+                                              if(selectedPayment == 1){
+                                                Navigator.pop(context);
+                                                payWithEsewaInApp(productId: outputValue['result']['docID'], amount: amount, schemePlanId: schemePlanId, schemePlanName: schemePlanName);
+                                              }else if(selectedPayment ==2 ){
+                                                Navigator.pop(context);
+                                                payWithKhaltiInApp(productId: outputValue['result']['docID'], amount: amount, schemePlanId: schemePlanId, schemePlanName: schemePlanName);
+                                                print(selectedPayment);
+
+                                              } else {
+                                                final scaffoldMessage = ScaffoldMessenger.of(context);
+                                                scaffoldMessage.showSnackBar(
+                                                  SnackbarUtil.showFailureSnackbar(
+                                                    message: 'Please select a payment option',
+                                                    duration: const Duration(milliseconds: 1400),
+                                                  ),
+                                                );
+                                              }
+
+                                            },
+                                            child: Text('Select',style: getRegularStyle(color: ColorManager.white),),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+                              );
+                            },
+                          );
+                        });
+
+                            // payWithKhaltiInApp(productId: outputValue['result']['docID'], amount: amount, schemePlanId: schemePlanId, schemePlanName: schemePlanName)
 
 
                       }
@@ -297,13 +424,141 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
       ),
     );
   }
+
+  ///-------------------------ESEWA SERVICES---------------------------///
+
+  payWithEsewaInApp({
+    required String productId,
+    required int amount,
+    required int schemePlanId,
+    required String schemePlanName
+  }){
+    const String kEsewaClientId = 'JB0BBQ4aD0UqIThFJwAKBgAXEUkEGQUBBAwdOgABHD4DChwUAB0R';
+    const String kEsewaSecretKey = 'BhwIWQQADhIYSxILExMcAgFXFhcOBwAKBgAXEQ==';
+    try{
+      EsewaFlutterSdk.initPayment(
+          esewaConfig: EsewaConfig(
+            environment: Environment.test,
+            clientId: kEsewaClientId,
+            secretId: kEsewaSecretKey,
+          ),
+          esewaPayment: EsewaPayment(
+            productId: productId,
+            productName: schemePlanName,
+            productPrice: '$amount',
+            callbackUrl: '',
+          ),
+          onPaymentSuccess: onEsewaSuccess,
+          onPaymentFailure: (failure){
+            setState(() {
+              isPostingData = false;
+            });
+
+            final scaffoldMessage = ScaffoldMessenger.of(context);
+            debugPrint(failure.toString());
+            scaffoldMessage.showSnackBar(
+              SnackbarUtil.showFailureSnackbar(
+                message: '${failure.toString()}',
+                duration: const Duration(milliseconds: 1200),
+              ),
+            );
+          },
+          onPaymentCancellation: (){
+            setState(() {
+              isPostingData = false;
+            });
+            final scaffoldMessage = ScaffoldMessenger.of(context);
+            scaffoldMessage.showSnackBar(
+                SnackbarUtil.showFailureSnackbar(
+                    message: 'Payment Cancelled',
+                    duration: const Duration(milliseconds: 1200)
+                )
+            );
+          }
+      );
+    }catch(e){
+      debugPrint('EXCEPTION');
+    }
+
+
+  }
+  void onEsewaSuccess(EsewaPaymentSuccessResult success) async {
+    final scaffoldMessage = ScaffoldMessenger.of(context);
+    scaffoldMessage.showSnackBar(
+      SnackbarUtil.showProcessSnackbar(
+          message: 'Please Wait. Verification in process...',
+          duration: const Duration(seconds: 2)
+      ),
+    );
+    if(success.status.toLowerCase() == 'complete'){
+      final paymentResponse = await ref.read(paymentSuccessProvider).InsertPaymentInfo(
+          token: '',
+          amount: double.parse(success.totalAmount).round(),
+          mobile: widget.registerDoctorModel.contactNo,
+          pid: success.productId,
+          orderName: schemePlanName,
+          tId: success.refId
+      );
+      if(paymentResponse.isLeft()){
+        final leftValue= paymentResponse.fold(
+                (l) => 'Payment incomplete',
+                (r) => null
+        );
+        scaffoldMessage.showSnackBar(
+          SnackbarUtil.showFailureSnackbar(
+              message: '$leftValue',
+              duration: const Duration(seconds: 2)
+          ),
+        );
+      }else{
+        subscriptionPlanDoctor(
+            schemePlanId: selectedScheme?.schemeplanID ?? 0
+        ).then((value) async => await userRegisterDoctor()).then((value) {
+          scaffoldMessage.showSnackBar(
+            SnackbarUtil.showSuccessSnackbar(
+                message: 'User registered successfully',
+                duration: const Duration(seconds: 2)
+            ),
+          );
+          setState(() {
+            isPostingData = false;
+          });
+          Get.offAll(()=>LoginPage());
+        }).catchError((e){
+          scaffoldMessage.showSnackBar(
+            SnackbarUtil.showFailureSnackbar(
+                message: '$e',
+                duration: const Duration(seconds: 2)
+            ),
+          );
+
+        });
+      }
+    }
+
+
+
+
+
+
+  }
+
+
+
+
+
+  ///-------------------------ESEWA SERVICES - END---------------------------///
+
+
+  ///------------------------KHALTI SERVICES---------------------------///
   payWithKhaltiInApp({
     required String productId,
     required int amount,
     required int schemePlanId,
     required String schemePlanName
   }){
-    print('doc id : ${outputValue['result']['docID']}');
+
+
     final config = PaymentConfig(
       amount: amount, // Amount should be in paisa
       productIdentity: productId,
@@ -343,30 +598,55 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
     } else{
       final rightValue = response.fold(
               (l) => '',
-              (r) => 'Payment Complete'
+              (r) => r
       );
-      subscriptionPlanDoctor(
-          schemePlanId: selectedScheme?.schemeplanID ?? 0
-      ).then((value) async => await userRegisterDoctor()).then((value) {
+      final paymentResponse = await ref.read(paymentSuccessProvider).InsertPaymentInfo(
+          token: success.token,
+          amount: success.amount,
+          mobile: success.mobile,
+          pid: success.productIdentity,
+          orderName: success.productName,
+          tId: success.idx
+      );
+      if(paymentResponse.isLeft()){
+        final leftValue= paymentResponse.fold(
+                (l) => 'Payment incomplete',
+                (r) => null
+        );
         scaffoldMessage.showSnackBar(
-          SnackbarUtil.showSuccessSnackbar(
-              message: 'User registered successfully',
+          SnackbarUtil.showFailureSnackbar(
+              message: '$leftValue',
               duration: const Duration(seconds: 2)
           ),
         );
         setState(() {
           isPostingData = false;
         });
-        Get.offAll(()=>LoginPage());
-      }).catchError((e){
-        scaffoldMessage.showSnackBar(
-          SnackbarUtil.showFailureSnackbar(
-              message: '$e',
-              duration: const Duration(seconds: 2)
-          ),
-        );
+      }else{
+        subscriptionPlanDoctor(
+            schemePlanId: selectedScheme?.schemeplanID ?? 0
+        ).then((value) async => await userRegisterDoctor()).then((value) {
+          scaffoldMessage.showSnackBar(
+            SnackbarUtil.showSuccessSnackbar(
+                message: 'User registered successfully',
+                duration: const Duration(seconds: 2)
+            ),
+          );
+          setState(() {
+            isPostingData = false;
+          });
+          Get.offAll(()=>LoginPage());
+        }).catchError((e){
+          scaffoldMessage.showSnackBar(
+            SnackbarUtil.showFailureSnackbar(
+                message: '$e',
+                duration: const Duration(seconds: 2)
+            ),
+          );
 
-      });
+        });
+      }
+
 
     }
 
@@ -402,6 +682,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
     );
   }
 
+  ///------------------------KHALTI SERVICES - END---------------------------///
 
 
   Widget _buildMonthBody(AsyncValue<List<SchemePlaneModel>> schemeData) {

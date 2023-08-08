@@ -329,6 +329,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  esewa_flutter_sdk:
+    dependency: "direct main"
+    description:
+      path: "external_sdk/esewa_sdk/esewa_flutter_sdk"
+      relative: true
+    source: path
+    version: "2.1.0+13"
   expandable_text:
     dependency: "direct main"
     description:

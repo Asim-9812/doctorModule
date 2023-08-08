@@ -337,7 +337,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
                 :() async {
               final scaffoldMessage = ScaffoldMessenger.of(context);
               if (formKey.currentState!.validate()) {
-                if (widget.accountId == 2) {
+                if (widget.accountId == 1) {
                   setState(() {
                     isPostingData = true; // Show loading spinner
                   });

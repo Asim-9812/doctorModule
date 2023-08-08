@@ -175,6 +175,10 @@ dependencies:
 
   lottie: ^2.5.0
 
+  #esewa_flutter_sdk:
+  esewa_flutter_sdk:
+    path: ./external_sdk/esewa_sdk/esewa_flutter_sdk
+
 
 
 

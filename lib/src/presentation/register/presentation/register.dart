@@ -205,7 +205,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                     },
                   ),
                   if(selectedAccountType == accountType[1]||selectedAccountType==accountType[2])
-                    RegisterOrganization(accountId: accountId,),
+                    RegisterOrganization(accountId: 1,),
 
 
                   if(selectedAccountType == accountType[3])

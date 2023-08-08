@@ -23,6 +23,7 @@ class Api{
    ///scheme - subscription plan...
    static const schemePlan = '$baseUrl/api/SchemePlans/GetList';
    static const subscriptionPlan = '$baseUrl/api/SchemeSubscription/Insert';
+   static const paymentSuccessUrl = '$baseUrl/api/PaymentSuccess/InsertPaymentSuccess';
 
    ///user Login...
    static const userLogin = '$baseUrl/api/Users/UserLogin';
