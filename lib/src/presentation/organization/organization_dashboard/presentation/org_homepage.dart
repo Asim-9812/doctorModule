@@ -17,6 +17,7 @@ import 'package:medical_app/src/data/model/registered_patient_model.dart';
 import 'package:medical_app/src/data/services/registered_patient_services.dart';
 import 'package:medical_app/src/data/services/user_services.dart';
 import 'package:medical_app/src/presentation/organization/org_profile/presentation/org_profile_page.dart';
+import 'package:medical_app/src/presentation/organization/organization_dashboard/presentation/dashboard_graphs/patient_groups.dart';
 import 'package:medical_app/src/presentation/patient/quick_services/presentation/telemedicine.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
@@ -28,7 +29,8 @@ import '../../../../test/test.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../../patient/quick_services/presentation/e_ticket.dart';
-import '../../doctor_statistics/presentation/doc_stat_page.dart';
+import 'dashboard_graphs/doctor_charts.dart';
+import 'dashboard_graphs/total_patients.dart';
 
 class OrgHomePage extends StatefulWidget {
   final bool isWideScreen;
@@ -161,11 +163,12 @@ class _OrgHomePageState extends State<OrgHomePage> {
       duration: Duration(milliseconds: 700),
       child: Scaffold(
         key: scaffoldKey,
+        backgroundColor: ColorManager.white,
         appBar: AppBar(
           elevation: 0,
           iconTheme: IconThemeData(color: ColorManager.black),
           backgroundColor: ColorManager.white,
-          toolbarHeight: 100,
+          toolbarHeight: 80,
           leadingWidth: 70,
           leading: Padding(
             padding: EdgeInsets.only(left: 18),
@@ -189,7 +192,11 @@ class _OrgHomePageState extends State<OrgHomePage> {
           actions: [
             IconButton(
                 onPressed: ()=>Get.to(()=>NotificationPage()),
-                icon: Icon(Icons.notifications_none_outlined,color: ColorManager.black,)),
+                icon: FaIcon(Icons.search,color: ColorManager.black,)),
+
+            IconButton(
+                onPressed: ()=>Get.to(()=>NotificationPage()),
+                icon: FaIcon(Icons.notifications_none_outlined,color: ColorManager.black,)),
 
           ],
         ),
@@ -199,40 +206,6 @@ class _OrgHomePageState extends State<OrgHomePage> {
             physics: BouncingScrollPhysics(),
             child: Column(
               children: [
-                InkWell(
-                  // onTap: ()=>Get.to(()=>SearchNearByPage(),transition: Transition.fadeIn),
-                  splashColor: ColorManager.primary.withOpacity(0.4),
-                  child: Center(
-                    child: Container(
-                        height: 50.h,
-                        width: 390.w,
-                        padding: EdgeInsets.symmetric(horizontal: 18.w),
-                        decoration: BoxDecoration(
-                            color: ColorManager.searchColor.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                                color:ColorManager.searchColor,
-                                width: 1
-                            )
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(Icons.search,color: ColorManager.iconGrey,),
-                                w10,
-                                Text('Search medical...',style: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?15.sp:15),),
-                              ],
-                            ),
-                            SizedBox()
-                          ],
-                        )
-                    ),
-                  ),
-                ),
-                h20,
                 buildBody(context)
               ],
             ),
@@ -252,22 +225,17 @@ class _OrgHomePageState extends State<OrgHomePage> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        h20,
+        h10,
         _overallStat(),
         h20,
         _surveyStat(),
         h20,
+        PatientChart(),
+        h20,
+        PatientGroups(),
+        h20,
 
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: ColorManager.black.withOpacity(0.5),
-              width: 0.5
-            )
-          ),
-          margin: EdgeInsets.symmetric(horizontal: 32.w,vertical: 18.h),
-            child: SfCharts()),
+        DoctorCharts(),
         h100,
         h100, h100, h100, h100
 
@@ -285,7 +253,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
 
     bool isIncrease = percentageChange > 0;
     return Container(
-      height: 220,
+      height: 180,
       width: double.infinity,
       child: ListView(
         scrollDirection: Axis.horizontal,
@@ -293,18 +261,29 @@ class _OrgHomePageState extends State<OrgHomePage> {
         shrinkWrap: true,
         children: [
           widget.isNarrowScreen?w10:w18,
+
           Container(
             decoration: BoxDecoration(
-                color: ColorManager.primary.withOpacity(0.1),
+                gradient: LinearGradient(
+                  colors: [
+                    ColorManager.primaryDark.withOpacity(0.9),
+                    ColorManager.primaryDark.withOpacity(0.9),
+                    ColorManager.primaryDark.withOpacity(0.75),
+                    ColorManager.primaryDark.withOpacity(0.75),
+                    ColorManager.primaryDark.withOpacity(0.6)
+                  ],
+                  stops: [0.0,0.65,0.65, 0.85,0.85],
+                  transform: GradientRotation(0),
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  tileMode: TileMode.repeated
+                ),
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                    color: ColorManager.black.withOpacity(0.5),
-                    width: 0.5
-                )
+
             ),
             margin: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
             padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
-            height:200.h,
+            height:160.h,
             width: 280.w,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -315,125 +294,202 @@ class _OrgHomePageState extends State<OrgHomePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    FaIcon(CupertinoIcons.graph_square,color: ColorManager.primaryDark,),
-                    w10,
-                    Text('Overall Patients Stat',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen?18 :18.sp),)
-                  ],
-                ),
-                h20,
-                Text('Total Patients Registered Today :',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isWideScreen?14:14.sp),),
-                h10,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      '$todayRegisters',
-                      style: getSemiBoldHeadStyle(color: isIncrease ? ColorManager.primary : ColorManager.red.withOpacity(0.8),),
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      '${percentageChange.abs().toStringAsFixed(1)}% ',
-                      style: getRegularStyle(
-                        color: isIncrease ? ColorManager.primaryDark : ColorManager.red.withOpacity(0.8),
-                        fontSize: widget.isWideScreen?14:14.sp,
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color:ColorManager.white.withOpacity(0.3),
                       ),
-                    ),
-                    FaIcon(
-                      isIncrease ? CupertinoIcons.arrowtriangle_up_fill : CupertinoIcons.arrowtriangle_down_fill,
-                      color: isIncrease ? ColorManager.primaryDark : ColorManager.red.withOpacity(0.7),
-                      size:widget.isWideScreen?16:16.sp,
-                    ),
+
+                        padding: EdgeInsets.symmetric(vertical: 5.w,horizontal: 10.w),
+                        child: FaIcon(CupertinoIcons.person_2_fill,color: ColorManager.white,)),
+                    w10,
+                    Text('Overall Patients Stat',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?24 :24.sp),)
                   ],
                 ),
                 h20,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('Total patients registered :',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isWideScreen?14:14.sp),),
-                    w10,
-                    Text('${patients.length}',style: getRegularStyle(color: ColorManager.black,fontSize:widget.isWideScreen?28: 28.sp),),
-                  ],
-                ),
+                Text('Total Patients Registered :',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:18.sp),),
+                h10,
+                Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?40:40.sp),),
+                h10,
+                Text('Last 7 days',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:18.sp),),
+
               ],
             ),
 
           ),
           Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
+              gradient: LinearGradient(
+                  colors: [
+                    ColorManager.blue,
+                    ColorManager.blue,
+                    ColorManager.blue.withOpacity(0.9),
+                    ColorManager.blue.withOpacity(0.9),
+                    ColorManager.blue.withOpacity(0.8),
+                    ColorManager.blue.withOpacity(0.8),
+                    ColorManager.blue.withOpacity(0.7)
+                  ],
+                  stops: [0.0,0.65,0.65,0.75,0.75, 0.85,0.85],
+                  transform: GradientRotation(5),
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  tileMode: TileMode.repeated
+              ),
+              borderRadius: BorderRadius.circular(20),
+
             ),
             margin: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
-            height:200.h,
-            width: 200.w,
+            padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
+            height:160.h,
+            width: 280.w,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  height: widget.isWideScreen? 90:90.h,
-                  width: widget.isWideScreen? 200: 200.w,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: ColorManager.black.withOpacity(0.5),
-                      width: 0.5
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: widget.isWideScreen? 18:18.w,vertical:widget.isWideScreen? 12: 12.h),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('OPD Patient',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 16: 20.sp),),
-                          h16,
-                          Text('12',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 12: 20.sp),),
-                        ],
-                      ),
-                      FaIcon(CupertinoIcons.person_2_alt,color: ColorManager.primary,size: widget.isWideScreen? 28: 32.sp,)
-                    ],
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color:ColorManager.white.withOpacity(0.3),
+                        ),
+
+                        padding: EdgeInsets.symmetric(vertical: 5.w,horizontal: 10.w),
+                        child: FaIcon(CupertinoIcons.graph_square_fill,color: ColorManager.white,)),
+                    w10,
+                    Text('General',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?24 :24.sp),)
+                  ],
                 ),
-                Container(
-                  height: widget.isWideScreen? 90: 90.h,
-                  width: widget.isWideScreen? 200: 200.w,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: ColorManager.black.withOpacity(0.5),
-                      width: 0.5
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: widget.isWideScreen? 18:18.w,vertical:widget.isWideScreen? 12: 12.h),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Today\'s Operation',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 16: 18.sp),),
-                          h16,
-                          Text('5',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 12: 20.sp),),
-                        ],
-                      ),
-                      FaIcon(Icons.emergency,color: ColorManager.yellowFellow,size: widget.isWideScreen? 24: 24.sp,)
-                    ],
-                  ),
-                ),
+                h20,
+                Text('General Ward :',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:18.sp),),
+                h10,
+                Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?40:40.sp),),
+                h10,
+                Text('Last 7 days',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:18.sp),),
 
               ],
             ),
 
           ),
-          w20
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [
+                    ColorManager.red.withOpacity(0.8),
+                    ColorManager.red.withOpacity(0.8),
+                    ColorManager.red.withOpacity(0.7),
+                    ColorManager.red.withOpacity(0.7),
+                    ColorManager.red.withOpacity(0.6),
+                    ColorManager.red.withOpacity(0.6),
+                    ColorManager.red.withOpacity(0.5)
+                  ],
+                  stops: [0.0,0.6,0.6, 0.7,0.7,0.8,0.8],
+                  transform: GradientRotation(6),
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  tileMode: TileMode.mirror
+              ),
+              borderRadius: BorderRadius.circular(20),
+
+            ),
+            margin: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+            padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
+            height:160.h,
+            width: 280.w,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color:ColorManager.white.withOpacity(0.3),
+                        ),
+
+                        padding: EdgeInsets.symmetric(vertical: 5.w,horizontal: 10.w),
+                        child: FaIcon(Icons.emergency,color: ColorManager.white,)),
+                    w10,
+                    Text('Emergency',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?24 :24.sp),)
+                  ],
+                ),
+                h20,
+                Text('Emergency cases :',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:18.sp),),
+                h10,
+                Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?40:40.sp),),
+                h10,
+                Text('Last 7 days',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:18.sp),),
+
+              ],
+            ),
+
+          ),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [
+                    ColorManager.orange,
+                    ColorManager.orange,
+                    ColorManager.orange.withOpacity(0.8),
+                    ColorManager.orange.withOpacity(0.8),
+                    ColorManager.orange.withOpacity(0.7),
+                    ColorManager.orange.withOpacity(0.7),
+                    ColorManager.orange.withOpacity(0.6)
+                  ],
+                  stops: [0.0,0.65,0.65,0.75,0.75, 0.85,0.85],
+                  transform: GradientRotation(1),
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  tileMode: TileMode.repeated
+              ),
+              borderRadius: BorderRadius.circular(20),
+
+            ),
+            margin: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+            padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
+            height:160.h,
+            width: 280.w,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color:ColorManager.white.withOpacity(0.3),
+                        ),
+
+                        padding: EdgeInsets.symmetric(vertical: 8.w,horizontal: 10.w),
+                        child: FaIcon(FontAwesomeIcons.bedPulse,color: ColorManager.white,size: 20,)),
+                    w10,
+                    Text('Surgical Stats',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?24 :24.sp),)
+                  ],
+                ),
+                h20,
+                Text('Total Operations :',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:18.sp),),
+                h10,
+                Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?40:40.sp),),
+                h10,
+                Text('Last 7 days',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:18.sp),),
+
+              ],
+            ),
+
+          ),
+
+
         ],
       ),
     );
@@ -531,7 +587,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 InkWell(
-                  onTap: ()=>Get.to(()=>DocStatPage()),
+                  onTap: ()=>Get.to(()=>DoctorCharts()),
                   child: Container(
                     height: 90.h,
                     width: 180.w,
@@ -810,94 +866,6 @@ class LinearProgressBar extends StatelessWidget {
 
 
 
-class UserData {
-  final DateTime date;
-  final int numberOfUsers;
-  final String userType;
-
-  UserData(this.date, this.numberOfUsers, this.userType);
-}
-
-class SfCharts extends StatefulWidget {
-  const SfCharts({super.key});
-
-  @override
-  State<SfCharts> createState() => _SfChartsState();
-}
-
-class _SfChartsState extends State<SfCharts> {
-
-  final List<UserData> dummyData = [
-    UserData(DateTime(2023, 7, 1), 50, 'trial'),
-    UserData(DateTime(2023, 7, 2), 60, 'trial'),
-    UserData(DateTime(2023, 7, 3), 80, 'trial'),
-    UserData(DateTime(2023, 7, 4), 70, 'trial'),
-    UserData(DateTime(2023, 7, 1), 30, 'gold'),
-    UserData(DateTime(2023, 7, 2), 40, 'gold'),
-    UserData(DateTime(2023, 7, 3), 55, 'gold'),
-    UserData(DateTime(2023, 7, 4), 50, 'gold'),
-    UserData(DateTime(2023, 7, 1), 20, 'silver'),
-    UserData(DateTime(2023, 7, 2), 25, 'silver'),
-    UserData(DateTime(2023, 7, 3), 35, 'silver'),
-    UserData(DateTime(2023, 7, 4), 30, 'silver'),
-    UserData(DateTime(2023, 7, 1), 10, 'premium'),
-    UserData(DateTime(2023, 7, 2), 15, 'premium'),
-    UserData(DateTime(2023, 7, 3), 20, 'premium'),
-    UserData(DateTime(2023, 7, 4), 25, 'premium'),
-  ];
-
-
-  List<AreaSeries<UserData, DateTime>> getSeriesData(List<String> userTypes) {
-    List<AreaSeries<UserData, DateTime>> seriesList = [];
-
-    for (String userType in userTypes) {
-      List<UserData> filteredData =
-      dummyData.where((data) => data.userType == userType).toList();
-      seriesList.add(AreaSeries<UserData, DateTime>(
-        dataSource: filteredData,
-        xValueMapper: (UserData data, _) => data.date,
-        yValueMapper: (UserData data, _) => data.numberOfUsers,
-        name: userType,
-        color: _getUserTypeColor(userType),
-      ));
-    }
-
-    return seriesList;
-  }
-
-  Color _getUserTypeColor(String userType) {
-    switch (userType) {
-      case 'trial':
-        return ColorManager.primary.withOpacity(0.5);
-      case 'gold':
-        return ColorManager.brightYellow.withOpacity(0.8);
-      case 'silver':
-        return ColorManager.silver.withOpacity(0.99);
-      case 'premium':
-        return ColorManager.premiumContainer.withOpacity(1);
-      default:
-        return ColorManager.black.withOpacity(0.5);
-    }
-  }
-
-
-
-  final List<String> userTypes = ['trial', 'gold', 'silver', 'premium'];
-
-  @override
-  Widget build(BuildContext context) {
-    return SfCartesianChart(
-      primaryXAxis: DateTimeAxis(),
-      title: ChartTitle(text: 'Number of Users by User Type'),
-      series: getSeriesData(userTypes),
-      legend: Legend(
-        width: '20%',
-        alignment: ChartAlignment.far,
-        isVisible: true,
-      ),
-    );
-  }
-}
 
 
 

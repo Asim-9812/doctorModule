@@ -59,6 +59,7 @@ class ColorManager {
   static Color accentPink = HexColor.fromHex('#be60eb');
   static Color accentLightGreen = HexColor.fromHex('#00c781');
   static Color accentOrange = HexColor.fromHex('#f96856');
+  static Color orange = HexColor.fromHex('#FF8C00');
 }
 
 extension HexColor on Color {

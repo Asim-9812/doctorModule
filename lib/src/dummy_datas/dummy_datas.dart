@@ -425,3 +425,48 @@ List<Map<String, dynamic>> appointments = [
 ];
 
 
+
+
+  List<String> patient1 = [
+    '1', 'John Doe', 'M', '30', '1234567890', 'john@example.com', '123 Main St', 'Dr. Smith', '2023-08-09', '2023-08-08', 'View/Edit'
+  ];
+
+  List<String> patient2 = [
+    '2', 'Jane Smith', 'F', '25', '9876543210', 'jane@example.com', '456 Elm St', 'Dr. Johnson', '2023-08-10', '2023-08-09', 'View/Edit'
+  ];
+
+  List<String> patient3 = [
+    '3', 'Michael Johnson', 'M', '45', '5555555555', 'michael@example.com', '789 Oak St', 'Dr. Williams', '2023-08-11', '2023-08-10', 'View/Edit'
+  ];
+
+  List<String> patient4 = [
+    '4', 'Emily Brown', 'F', '28', '1112223333', 'emily@example.com', '567 Pine St', 'Dr. Davis', '2023-08-12', '2023-08-11', 'View/Edit'
+  ];
+
+  List<String> patient5 = [
+    '5', 'Alex Taylor', 'M', '35', '4445556666', 'alex@example.com', '789 Maple St', 'Dr. Martinez', '2023-08-13', '2023-08-12', 'View/Edit'
+  ];
+
+  List<String> patient6 = [
+    '6', 'Jordan Lee', 'O', '22', '7778889999', 'jordan@example.com', '890 Birch St', 'Dr. Rodriguez', '2023-08-14', '2023-08-13', 'View/Edit'
+  ];
+
+  List<String> patient7 = [
+    '7', 'Avery Davis', 'M', '50', '2223334444', 'avery@example.com', '234 Cedar St', 'Dr. Anderson', '2023-08-15', '2023-08-14', 'View/Edit'
+  ];
+
+  List<String> patient8 = [
+    '8', 'Harper Wilson', 'F', '32', '6667778888', 'harper@example.com', '456 Oak St', 'Dr. Thompson', '2023-08-16', '2023-08-15', 'View/Edit'
+  ];
+
+  List<String> patient9 = [
+    '9', 'Riley Martinez', 'M', '40', '9990001111', 'riley@example.com', '789 Elm St', 'Dr. Scott', '2023-08-17', '2023-08-16', 'View/Edit'
+  ];
+
+  List<String> patient10 = [
+    '10', 'Taylor Rodriguez', 'F', '29', '3334445555', 'taylor@example.com', '567 Maple St', 'Dr. Hall', '2023-08-18', '2023-08-17', 'View/Edit'
+  ];
+
+
+
+

@@ -880,7 +880,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
 
     // Check if width is greater than height
     bool isWideScreen = screenSize.width > 500;
-    bool isNarrowScreen = screenSize.width < 420;
+    bool isNarrowScreen = screenSize.width < 400;
 
     return CustomBannerShimmer(
         width: isNarrowScreen? 340.w: 340,
@@ -900,13 +900,13 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text('Rs. ',style: getMediumStyle(color: ColorManager.white,fontSize: 24),),
-                Text('$schemePrice',style: getMediumStyle(color: ColorManager.white,fontSize: 80),),
+                Text('$schemePrice',style: getMediumStyle(color: ColorManager.white,fontSize: 60),),
                 w10,
                 Text('for a $schemeDuration',style: getMediumStyle(color: ColorManager.white,fontSize: 24),),
               ],
             )
                     :Text('Free for a 15 days',style: getMediumStyle(color: ColorManager.white,fontSize: 24),)
-                :Text('$schemeName',style: getMediumStyle(color: ColorManager.white,fontSize: 40),),
+                :Text('$schemeName',style: getMediumStyle(color: ColorManager.white,fontSize: 30),),
             h12,
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
