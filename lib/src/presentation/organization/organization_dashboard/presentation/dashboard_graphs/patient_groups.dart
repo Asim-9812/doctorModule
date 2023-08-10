@@ -38,20 +38,13 @@ class _PatientGroupsState extends State<PatientGroups> {
       ChartData('Physio', 52,ColorManager.orange.withOpacity(0.6))
     ];
     return Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-                color: ColorManager.black.withOpacity(0.5)
-            )
-        ),
-        margin: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-        padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h),
+      width: 320,
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text('Total Number of patients',style: getMediumStyle(color: Colors.black,fontSize: 24),),
+                Text('Total Number of patients',style: getMediumStyle(color: Colors.black,fontSize: 20),),
                 InkWell(
                     onTap: (){
                       setState(() {
@@ -61,7 +54,6 @@ class _PatientGroupsState extends State<PatientGroups> {
                     child: FaIcon(tapped? CupertinoIcons.eye:CupertinoIcons.eye_slash,color: Colors.black,))
               ],
             ),
-            h20,
             SfCircularChart(
               legend: Legend(
                 position: LegendPosition.top,
@@ -95,6 +87,14 @@ class _PatientGroupsState extends State<PatientGroups> {
                   )
                 ]
             ),
+            h20,
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorManager.primary
+                ),
+                onPressed: (){},
+                child: Text('View full information',style: getRegularStyle(color: ColorManager.white,fontSize: 16),)
+            )
           ],
         )
     );

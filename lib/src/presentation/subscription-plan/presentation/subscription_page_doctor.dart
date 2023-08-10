@@ -291,9 +291,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
 
                         });
                       } else{
-                        setState(() {
-                          isPostingData = true; // Show loading spinner
-                        });
+
                         await docRegister().then((value) {
                           showModalBottomSheet(
                             context: context,
@@ -374,6 +372,9 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
 
                                             ),
                                             onPressed: () {
+                                              setState(() {
+                                                isPostingData = true; // Show loading spinner
+                                              });
 
                                               if(selectedPayment == 1){
                                                 Navigator.pop(context);
@@ -478,6 +479,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
       );
     }catch(e){
       debugPrint('EXCEPTION');
+
     }
 
 
@@ -485,7 +487,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
   void onEsewaSuccess(EsewaPaymentSuccessResult success) async {
     final scaffoldMessage = ScaffoldMessenger.of(context);
     scaffoldMessage.showSnackBar(
-      SnackbarUtil.showProcessSnackbar(
+      SnackbarUtil.showProcessSnackbar2(
           message: 'Please Wait. Verification in process...',
           duration: const Duration(seconds: 2)
       ),
@@ -578,7 +580,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
   void onSuccess(PaymentSuccessModel success) async {
     final scaffoldMessage = ScaffoldMessenger.of(context);
     scaffoldMessage.showSnackBar(
-      SnackbarUtil.showProcessSnackbar(
+      SnackbarUtil.showProcessSnackbar2(
           message: 'Please Wait. Verification in process...',
           duration: const Duration(seconds: 2)
       ),

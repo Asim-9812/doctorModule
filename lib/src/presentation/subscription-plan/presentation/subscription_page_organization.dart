@@ -263,9 +263,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
 
                       });
                     } else{
-                      setState(() {
-                        isPostingData = true; // Show loading spinner
-                      });
+
                      // payWithKhaltiInApp(productId: widget.outputValue['result']['orgId'], amount: amount, schemePlanId: schemePlanId, schemePlanName: schemePlanName);
 
                       showModalBottomSheet(
@@ -347,6 +345,9 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
 
                                       ),
                                       onPressed: () {
+                                        setState(() {
+                                          isPostingData = true; // Show loading spinner
+                                        });
 
                                         if(selectedPayment == 1){
                                           Navigator.pop(context);
@@ -457,7 +458,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
   void onEsewaSuccess(EsewaPaymentSuccessResult success) async {
     final scaffoldMessage = ScaffoldMessenger.of(context);
     scaffoldMessage.showSnackBar(
-      SnackbarUtil.showProcessSnackbar(
+      SnackbarUtil.showProcessSnackbar2(
           message: 'Please Wait. Verification in process...',
           duration: const Duration(seconds: 2)
       ),
@@ -550,7 +551,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
   void onSuccess(PaymentSuccessModel success) async {
     final scaffoldMessage = ScaffoldMessenger.of(context);
     scaffoldMessage.showSnackBar(
-      SnackbarUtil.showProcessSnackbar(
+      SnackbarUtil.showProcessSnackbar2(
           message: 'Please Wait. Verification in process...',
           duration: const Duration(seconds: 2)
       ),

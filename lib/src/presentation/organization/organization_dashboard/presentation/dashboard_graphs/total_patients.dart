@@ -64,20 +64,14 @@ class _PatientChartState extends State<PatientChart> {
 
 
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: ColorManager.black.withOpacity(0.5)
-        )
-      ),
-      margin: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-      padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h),
+      width: 320,
+
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text('Total Number of patients',style: getMediumStyle(color: Colors.black,fontSize: 24),),
+                Text('Total Number of patients',style: getMediumStyle(color: Colors.black,fontSize: 18),),
                 InkWell(
                     onTap: (){
                       setState(() {
@@ -87,7 +81,6 @@ class _PatientChartState extends State<PatientChart> {
                     child: FaIcon(tapped? CupertinoIcons.eye:CupertinoIcons.eye_slash,color: Colors.black,))
               ],
             ),
-            h20,
             SfCartesianChart(
 
               legend: Legend(
@@ -104,7 +97,7 @@ class _PatientChartState extends State<PatientChart> {
                       color: Colors.blue,
                       isVisible: tapped,
                     ),
-                    name: 'Unregistered Patients',
+                    name: 'Unregistered',
                     gradient: gradientColors,
                       dataSource: unregisteredPatient,
                       xValueMapper: (PatientData data, _) => data.x,
@@ -116,7 +109,7 @@ class _PatientChartState extends State<PatientChart> {
                         isVisible: tapped,
                         color: ColorManager.primaryDark
                       ),
-                    name: 'Registered Patients',
+                    name: 'Registered',
                     gradient: LinearGradient(
                         colors: [
                           ColorManager.primary.withOpacity(0.2),
@@ -132,6 +125,14 @@ class _PatientChartState extends State<PatientChart> {
                   )
                 ]
             ),
+            h20,
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: ColorManager.primary
+              ),
+                onPressed: (){},
+                child: Text('View full information',style: getRegularStyle(color: ColorManager.white,fontSize: 16),)
+            )
           ],
         )
     );

@@ -134,14 +134,15 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
           ),
           TextFormField(
             controller: _licenseController,
+            keyboardType: TextInputType.phone,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value){
               if (value!.isEmpty) {
-                return 'License number is required';
+                return 'License is required';
               }
 
-              if (RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                return 'Please enter a valid License No';
+              if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                return 'Please enter a valid Mobile Number';
               }
               return null;
             },

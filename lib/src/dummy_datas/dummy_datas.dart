@@ -425,48 +425,301 @@ List<Map<String, dynamic>> appointments = [
 ];
 
 
+List<Map<String, dynamic>> patientData = [
+  {
+    "id": 1040,
+    "patientID": "anopat1040",
+    "firstName": "another",
+    "lastName": "patient2",
+    "dob": "2023-07-11T00:00:00",
+    "contact": "12345",
+    "imagePhoto": "image\\e1ec4e0a-4d38-43a4-90fc-da139f657aaf_eb3b8e176ca84644c5b6787d91709630.png",
+    "countryID": 1,
+    "countryName": "Nepal",
+    "provinceID": 3,
+    "provinceName": "Bagmati",
+    "districtID": 26,
+    "municipality": "Kathmandu",
+    "municipalityID": 331,
+    "districtName": "Kathmandu",
+    "ward": 1,
+    "localAddress": "fds",
+    "genderID": 1,
+    "nid": "1",
+    "uhid": "1",
+    "entryDate": "2023-07-29T00:00:00",
+    "flag": null,
+    "serviceCategory":1
+  },
+  {
+    "id": 1041,
+    "patientID": "anopat1041",
+    "firstName": "John",
+    "lastName": "Doe",
+    "dob": "1985-03-15T00:00:00",
+    "contact": "9876543210",
+    "imagePhoto": "image\\a1b2c3d4e5.png",
+    "countryID": 2,
+    "countryName": "USA",
+    "provinceID": 5,
+    "provinceName": "California",
+    "districtID": 42,
+    "municipality": "Los Angeles",
+    "municipalityID": 543,
+    "districtName": "Los Angeles",
+    "ward": 8,
+    "localAddress": "123 Main St",
+    "genderID": 1,
+    "nid": "987654",
+    "uhid": "54321",
+    "entryDate": "2023-07-15T00:00:00",
+    "flag": null,
+    "serviceCategory":2
+  },
+  {
+    "id": 1042,
+    "patientID": "anopat1042",
+    "firstName": "Emily",
+    "lastName": "Johnson",
+    "dob": "1990-06-20T00:00:00",
+    "contact": "5555555555",
+    "imagePhoto": "image\\f6g7h8i9j0.png",
+    "countryID": 3,
+    "countryName": "Canada",
+    "provinceID": 7,
+    "provinceName": "Ontario",
+    "districtID": 57,
+    "municipality": "Toronto",
+    "municipalityID": 753,
+    "districtName": "Toronto",
+    "ward": 3,
+    "localAddress": "789 Oak St",
+    "genderID": 2,
+    "nid": "543210",
+    "uhid": "987654",
+    "entryDate": "2023-07-10T00:00:00",
+    "flag": null,
+    "serviceCategory":1
+  },
+  {
+    "id": 1043,
+    "patientID": "anopat1043",
+    "firstName": "Michael",
+    "lastName": "Smith",
+    "dob": "1978-12-01T00:00:00",
+    "contact": "5551234567",
+    "imagePhoto": "image\\k1l2m3n4o5.png",
+    "countryID": 4,
+    "countryName": "UK",
+    "provinceID": 9,
+    "provinceName": "England",
+    "districtID": 68,
+    "municipality": "London",
+    "municipalityID": 964,
+    "districtName": "London",
+    "ward": 6,
+    "localAddress": "456 Elm St",
+    "genderID": 1,
+    "nid": "876543",
+    "uhid": "432156",
+    "entryDate": "2023-07-25T00:00:00",
+    "flag": null,
+    "serviceCategory":2
+  },
+  {
+    "id": 1044,
+    "patientID": "anopat1044",
+    "firstName": "Emma",
+    "lastName": "Wilson",
+    "dob": "1998-09-05T00:00:00",
+    "contact": "9998887777",
+    "imagePhoto": "image\\p1q2r3s4t5.png",
+    "countryID": 1,
+    "countryName": "Nepal",
+    "provinceID": 12,
+    "provinceName": "Gandaki",
+    "districtID": 84,
+    "municipality": "Pokhara",
+    "municipalityID": 1122,
+    "districtName": "Pokhara",
+    "ward": 4,
+    "localAddress": "567 Pine St",
+    "genderID": 2,
+    "nid": "7654321",
+    "uhid": "123456",
+    "entryDate": "2023-07-20T00:00:00",
+    "flag": null,
+    "serviceCategory":1
+  },
+  {
+    "id": 1045,
+    "patientID": "anopat1045",
+    "firstName": "Alexander",
+    "lastName": "Martinez",
+    "dob": "2000-11-30T00:00:00",
+    "contact": "3334445555",
+    "imagePhoto": "image\\u6v7w8x9y0.png",
+    "countryID": 2,
+    "countryName": "USA",
+    "provinceID": 14,
+    "provinceName": "Texas",
+    "districtID": 99,
+    "municipality": "Houston",
+    "municipalityID": 1313,
+    "districtName": "Houston",
+    "ward": 7,
+    "localAddress": "789 Maple St",
+    "genderID": 1,
+    "nid": "5432100",
+    "uhid": "9876543",
+    "entryDate": "2023-07-05T00:00:00",
+    "flag": null,
+    "serviceCategory":2
+  },
+  {
+    "id": 1046,
+    "patientID": "anopat1046",
+    "firstName": "Olivia",
+    "lastName": "Brown",
+    "dob": "1982-04-22T00:00:00",
+    "contact": "7776665555",
+    "imagePhoto": "image\\z1a2b3c4d5.png",
+    "countryID": 5,
+    "countryName": "Australia",
+    "provinceID": 17,
+    "provinceName": "New South Wales",
+    "districtID": 112,
+    "municipality": "Sydney",
+    "municipalityID": 1515,
+    "districtName": "Sydney",
+    "ward": 10,
+    "localAddress": "890 Birch St",
+    "genderID": 2,
+    "nid": "9876543",
+    "uhid": "5432100",
+    "entryDate": "2023-07-08T00:00:00",
+    "flag": null,
+    "serviceCategory":1
+  },
+  {
+    "id": 1047,
+    "patientID": "anopat1047",
+    "firstName": "James",
+    "lastName": "Johnson",
+    "dob": "1995-01-17T00:00:00",
+    "contact": "2223334444",
+    "imagePhoto": "image\\e1ec4e0a-4d38-43a4-90fc-da139f657aaf_eb3b8e176ca84644c5b6787d91709630.png",
+    "countryID": 3,
+    "countryName": "Canada",
+    "provinceID": 20,
+    "provinceName": "British Columbia",
+    "districtID": 126,
+    "municipality": "Vancouver",
+    "municipalityID": 1717,
+    "districtName": "Vancouver",
+    "ward": 12,
+    "localAddress": "234 Cedar St",
+    "genderID": 1,
+    "nid": "7654321",
+    "uhid": "1234567",
+    "entryDate": "2023-07-12T00:00:00",
+    "flag": null,
+    "serviceCategory":2
+  },
+  {
+    "id": 1048,
+    "patientID": "anopat1048",
+    "firstName": "Sophia",
+    "lastName": "Garcia",
+    "dob": "1997-08-29T00:00:00",
+    "contact": "6667778888",
+    "imagePhoto": "image\\f6g7h8i9j0.png",
+    "countryID": 4,
+    "countryName": "UK",
+    "provinceID": 23,
+    "provinceName": "Scotland",
+    "districtID": 140,
+    "municipality": "Edinburgh",
+    "municipalityID": 1919,
+    "districtName": "Edinburgh",
+    "ward": 14,
+    "localAddress": "456 Oak St",
+    "genderID": 2,
+    "nid": "9876543",
+    "uhid": "5432100",
+    "entryDate": "2023-07-18T00:00:00",
+    "flag": null,
+    "serviceCategory":1
+  },
+  {
+    "id": 1049,
+    "patientID": "anopat1049",
+    "firstName": "Mia",
+    "lastName": "Lopez",
+    "dob": "1994-02-14T00:00:00",
+    "contact": "9990001111",
+    "imagePhoto": "image\\k1l2m3n4o5.png",
+    "countryID": 5,
+    "countryName": "Australia",
+    "provinceID": 26,
+    "provinceName": "Queensland",
+    "districtID": 154,
+    "municipality": "Brisbane",
+    "municipalityID": 2121,
+    "districtName": "Brisbane",
+    "ward": 16,
+    "localAddress": "789 Elm St",
+    "genderID": 1,
+    "nid": "7654321",
+    "uhid": "1234567",
+    "entryDate": "2023-07-22T00:00:00",
+    "flag": null,
+    "serviceCategory":1
+  },
+];
 
 
-  List<String> patient1 = [
-    '1', 'John Doe', 'M', '30', '1234567890', 'john@example.com', '123 Main St', 'Dr. Smith', '2023-08-09', '2023-08-08', 'View/Edit'
-  ];
 
-  List<String> patient2 = [
-    '2', 'Jane Smith', 'F', '25', '9876543210', 'jane@example.com', '456 Elm St', 'Dr. Johnson', '2023-08-10', '2023-08-09', 'View/Edit'
-  ];
-
-  List<String> patient3 = [
-    '3', 'Michael Johnson', 'M', '45', '5555555555', 'michael@example.com', '789 Oak St', 'Dr. Williams', '2023-08-11', '2023-08-10', 'View/Edit'
-  ];
-
-  List<String> patient4 = [
-    '4', 'Emily Brown', 'F', '28', '1112223333', 'emily@example.com', '567 Pine St', 'Dr. Davis', '2023-08-12', '2023-08-11', 'View/Edit'
-  ];
-
-  List<String> patient5 = [
-    '5', 'Alex Taylor', 'M', '35', '4445556666', 'alex@example.com', '789 Maple St', 'Dr. Martinez', '2023-08-13', '2023-08-12', 'View/Edit'
-  ];
-
-  List<String> patient6 = [
-    '6', 'Jordan Lee', 'O', '22', '7778889999', 'jordan@example.com', '890 Birch St', 'Dr. Rodriguez', '2023-08-14', '2023-08-13', 'View/Edit'
-  ];
-
-  List<String> patient7 = [
-    '7', 'Avery Davis', 'M', '50', '2223334444', 'avery@example.com', '234 Cedar St', 'Dr. Anderson', '2023-08-15', '2023-08-14', 'View/Edit'
-  ];
-
-  List<String> patient8 = [
-    '8', 'Harper Wilson', 'F', '32', '6667778888', 'harper@example.com', '456 Oak St', 'Dr. Thompson', '2023-08-16', '2023-08-15', 'View/Edit'
-  ];
-
-  List<String> patient9 = [
-    '9', 'Riley Martinez', 'M', '40', '9990001111', 'riley@example.com', '789 Elm St', 'Dr. Scott', '2023-08-17', '2023-08-16', 'View/Edit'
-  ];
-
-  List<String> patient10 = [
-    '10', 'Taylor Rodriguez', 'F', '29', '3334445555', 'taylor@example.com', '567 Maple St', 'Dr. Hall', '2023-08-18', '2023-08-17', 'View/Edit'
-  ];
-
-
-
-
+List<Map<String, dynamic>> financialData = [
+  {
+    "date": "2023-08-01",
+    "totalIncome": 1500.0,
+    "totalExpenses": 800.0,
+  },
+  {
+    "date": "2023-08-02",
+    "totalIncome": 1800.0,
+    "totalExpenses": 950.0,
+  },
+  {
+    "date": "2023-08-03",
+    "totalIncome": 2000.0,
+    "totalExpenses": 1200.0,
+  },
+  {
+    "date": "2023-08-04",
+    "totalIncome": 1600.0,
+    "totalExpenses": 850.0,
+  },
+  {
+    "date": "2023-08-05",
+    "totalIncome": 2200.0,
+    "totalExpenses": 1100.0,
+  },
+  {
+    "date": "2023-08-06",
+    "totalIncome": 1200.0,
+    "totalExpenses": 1500.0,
+  },
+  {
+    "date": "2023-08-07",
+    "totalIncome": 1800.0,
+    "totalExpenses": 2000.0,
+  },
+  {
+    "date": "2023-08-08",
+    "totalIncome": 2000.0,
+    "totalExpenses": 1800.0,
+  },
+  // Add more entries as needed
+];

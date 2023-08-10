@@ -1,203 +1,634 @@
 
 
-
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:khalti_flutter/khalti_flutter.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
-import 'package:lottie/lottie.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
-import 'package:medical_app/src/data/services/payment_services.dart';
-
+import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
+import 'package:medical_app/src/test/test.dart';
 import '../core/resources/value_manager.dart';
-import '../presentation/common/snackbar.dart';
+import '../presentation/organization/organization_dashboard/presentation/dashboard_graphs/patient_groups.dart';
+import '../presentation/organization/organization_dashboard/presentation/dashboard_graphs/total_patients.dart';
 
-
-class Test extends ConsumerStatefulWidget {
-  const Test({super.key});
+class OrgPatientReports extends StatefulWidget {
+  const OrgPatientReports({super.key});
 
   @override
-  ConsumerState<Test> createState() => _TestState();
+  State<OrgPatientReports> createState() => _OrgPatientReportsState();
 }
 
-class _TestState extends ConsumerState<Test> with TickerProviderStateMixin {
-  late final AnimationController _controller;
-  late final AnimationController _successController;
-  late final AnimationController _failedController;
-
-  String? loadingString;
-  int loadingStatus = 0;
-  bool success = false;
+class _OrgPatientReportsState extends State<OrgPatientReports> {
 
 
-  @override
-  void initState() {
-    super.initState();
+  bool _isExpanded = false;
+  bool _isExpanded2 = false;
+  int currentPage = 0;
+  int itemsPerPage = 5;
 
-    _controller =
-        AnimationController(vsync: this);
+  List<Map<String, dynamic>> getDisplayedPatients() {
+    final startIndex = currentPage * itemsPerPage;
+    final endIndex = startIndex + itemsPerPage;
+    return patientData.sublist(startIndex, endIndex);
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  void nextPage() {
+    setState(() {
+      if (currentPage < (patientData.length - 1) ~/ itemsPerPage) {
+        currentPage++;
+      }
+    });
   }
+
+  void previousPage() {
+    setState(() {
+      if (currentPage > 0) {
+        currentPage--;
+      }
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    final displayedPatients = getDisplayedPatients();
+    // Get the screen size
+    final screenSize = MediaQuery.of(context).size;
 
-
+    // Check if width is greater than height
+    bool isWideScreen = screenSize.width > 500;
+    bool isNarrowScreen = screenSize.width < 420;
 
     return Scaffold(
       backgroundColor: ColorManager.white,
-      body: ElevatedButton(
-        onPressed: (){
-          payWithKhaltiInApp();
-        },
-        child: Text('PAY'),
+      appBar: AppBar(
+        backgroundColor: ColorManager.primaryDark,
+        centerTitle: true,
+        title: Text('Patient Reports',style: getMediumStyle(color: ColorManager.white,fontSize: 24),),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            h20,
+
+            Container(
+              height: 320,
+              width: double.infinity,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                physics: BouncingScrollPhysics(),
+                shrinkWrap: true,
+                children: [
+                  isNarrowScreen?w10:w18,
+
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [
+                            ColorManager.primaryDark.withOpacity(0.9),
+                            ColorManager.primaryDark.withOpacity(0.9),
+                            ColorManager.primaryDark.withOpacity(0.75),
+                            ColorManager.primaryDark.withOpacity(0.75),
+                            ColorManager.primaryDark.withOpacity(0.6)
+                          ],
+                          stops: [0.0,0.65,0.65, 0.85,0.85],
+                          transform: GradientRotation(0),
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          tileMode: TileMode.repeated
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+                    padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
+                    height:160.h,
+                    width: 280.w,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color:ColorManager.white.withOpacity(0.3),
+                                ),
+
+                                padding: EdgeInsets.symmetric(vertical: 5.w,horizontal: 10.w),
+                                child: FaIcon(CupertinoIcons.person_2_fill,color: ColorManager.white,)),
+                            w10,
+                            Text('Total Patients',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?24 :24.sp),)
+                          ],
+                        ),
+                        h20,
+                        Text('150 patients',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?44:44.sp),),
+                        h10,
+                        Text('Registered Today :',style: getRegularStyle(color: ColorManager.white,fontSize: isWideScreen?18:18.sp),),
+                        h10,
+                        Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?40:40.sp),),
+                        h10,
+                        Text('Last 7 days :',style: getRegularStyle(color: ColorManager.white,fontSize: isWideScreen?18:18.sp),),
+                        h10,
+                        Text('30',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?40:40.sp),),
+                        h10,
+                        Text('Last month :',style: getRegularStyle(color: ColorManager.white,fontSize: isWideScreen?18:18.sp),),
+                        h10,
+                        Text('120',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?40:40.sp),),
+
+                      ],
+                    ),
+
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [
+                            ColorManager.blue,
+                            ColorManager.blue,
+                            ColorManager.blue.withOpacity(0.9),
+                            ColorManager.blue.withOpacity(0.9),
+                            ColorManager.blue.withOpacity(0.8),
+                            ColorManager.blue.withOpacity(0.8),
+                            ColorManager.blue.withOpacity(0.7)
+                          ],
+                          stops: [0.0,0.65,0.65,0.75,0.75, 0.85,0.85],
+                          transform: GradientRotation(5),
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          tileMode: TileMode.repeated
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+                    padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
+                    height:160.h,
+                    width: 280.w,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color:ColorManager.white.withOpacity(0.3),
+                                ),
+
+                                padding: EdgeInsets.symmetric(vertical: 5.w,horizontal: 10.w),
+                                child: FaIcon(CupertinoIcons.graph_square_fill,color: ColorManager.white,)),
+                            w10,
+                            Text('General',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?24 :24.sp),)
+                          ],
+                        ),
+                        h20,
+                        Text('General Ward :',style: getRegularStyle(color: ColorManager.white,fontSize: isWideScreen?18:18.sp),),
+                        h10,
+                        Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?40:40.sp),),
+                        h10,
+                        Text('Last 7 days',style: getRegularStyle(color: ColorManager.white,fontSize: isWideScreen?18:18.sp),),
+
+                      ],
+                    ),
+
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [
+                            ColorManager.red.withOpacity(0.8),
+                            ColorManager.red.withOpacity(0.8),
+                            ColorManager.red.withOpacity(0.7),
+                            ColorManager.red.withOpacity(0.7),
+                            ColorManager.red.withOpacity(0.6),
+                            ColorManager.red.withOpacity(0.6),
+                            ColorManager.red.withOpacity(0.5)
+                          ],
+                          stops: [0.0,0.6,0.6, 0.7,0.7,0.8,0.8],
+                          transform: GradientRotation(6),
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          tileMode: TileMode.mirror
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+                    padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
+                    height:160.h,
+                    width: 280.w,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color:ColorManager.white.withOpacity(0.3),
+                                ),
+
+                                padding: EdgeInsets.symmetric(vertical: 5.w,horizontal: 10.w),
+                                child: FaIcon(Icons.emergency,color: ColorManager.white,)),
+                            w10,
+                            Text('Emergency',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?24 :24.sp),)
+                          ],
+                        ),
+                        h20,
+                        Text('Emergency cases :',style: getRegularStyle(color: ColorManager.white,fontSize: isWideScreen?18:18.sp),),
+                        h10,
+                        Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?40:40.sp),),
+                        h10,
+                        Text('Last 7 days',style: getRegularStyle(color: ColorManager.white,fontSize: isWideScreen?18:18.sp),),
+
+                      ],
+                    ),
+
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [
+                            ColorManager.orange,
+                            ColorManager.orange,
+                            ColorManager.orange.withOpacity(0.8),
+                            ColorManager.orange.withOpacity(0.8),
+                            ColorManager.orange.withOpacity(0.7),
+                            ColorManager.orange.withOpacity(0.7),
+                            ColorManager.orange.withOpacity(0.6)
+                          ],
+                          stops: [0.0,0.65,0.65,0.75,0.75, 0.85,0.85],
+                          transform: GradientRotation(1),
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          tileMode: TileMode.repeated
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
+                    padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
+                    height:160.h,
+                    width: 280.w,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color:ColorManager.white.withOpacity(0.3),
+                                ),
+
+                                padding: EdgeInsets.symmetric(vertical: 8.w,horizontal: 10.w),
+                                child: FaIcon(FontAwesomeIcons.bedPulse,color: ColorManager.white,size: 20,)),
+                            w10,
+                            Text('Surgical Stats',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?24 :24.sp),)
+                          ],
+                        ),
+                        h20,
+                        Text('Total Operations :',style: getRegularStyle(color: ColorManager.white,fontSize: isWideScreen?18:18.sp),),
+                        h10,
+                        Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: isWideScreen?40:40.sp),),
+                        h10,
+                        Text('Last 7 days',style: getRegularStyle(color: ColorManager.white,fontSize: isWideScreen?18:18.sp),),
+
+                      ],
+                    ),
+
+                  ),
+
+
+                ],
+              ),
+            ),
+            h20,
+            Container(
+
+              padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+              child: Column(
+                children: [
+                  Text('Patient Statistics',style: getMediumStyle(color: Colors.black,fontSize: 20),),
+                  h10,
+                  Container(
+                    decoration: BoxDecoration(
+                      color: ColorManager.primary,
+                      borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                            color: ColorManager.black.withOpacity(0.5)
+                        )
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 8.w),
+                    child: ExpansionPanelList(
+                        expandIconColor: ColorManager.primaryDark,
+                        elevation: 0,
+                        expandedHeaderPadding: EdgeInsets.zero,
+                        expansionCallback: (int index, bool isExpanded) {
+                          setState(() {
+                            _isExpanded = !_isExpanded; // Toggle the expansion state
+                          });
+                        },
+                        children:[
+                          ExpansionPanel(
+                              isExpanded: _isExpanded,
+                              headerBuilder: (BuildContext context, bool isExpanded) {
+                                return ListTile(
+
+                                  onTap: (){
+                                    setState(() {
+                                      _isExpanded = !_isExpanded; // Toggle the expansion state
+                                    });
+                                  },
+                                  title: Text('Total Patients', style: getMediumStyle(color:ColorManager.black, fontSize: 20)),
+                                ); // Empty header, handled above
+                              },
+                              body: Container(
+                                width: double.infinity,
+                                height: 450,
+                                child: PatientChart(),
+                              ),
+                          ),
+
+                        ]
+
+
+
+                    ),
+                  ),
+                  h10,
+                  Container(
+                    decoration: BoxDecoration(
+                        color: ColorManager.blue,
+                      borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                            color: ColorManager.black.withOpacity(0.5)
+                        )
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 8.w),
+                    child: ExpansionPanelList(
+                        expandIconColor: ColorManager.primaryDark,
+                        elevation: 0,
+                        expandedHeaderPadding: EdgeInsets.zero,
+                        expansionCallback: (int index, bool isExpanded) {
+                          setState(() {
+                            _isExpanded2 = !_isExpanded2; // Toggle the expansion state
+                          });
+                        },
+                        children:[
+                          ExpansionPanel(
+                              isExpanded: _isExpanded2,
+                              headerBuilder: (BuildContext context, bool isExpanded) {
+                                return ListTile(
+                                  onTap: (){
+                                    setState(() {
+                                      _isExpanded2 = !_isExpanded2; // Toggle the expansion state
+                                    });
+                                  },
+                                  title: Text('Patient Groups', style: getMediumStyle(color:ColorManager.black, fontSize: 20)),
+                                ); // Empty header, handled above
+                              },
+                              body: Container(
+                                width: double.infinity,
+                                height: 450,
+                                child: PatientGroups()
+                              ),
+                          ),
+
+                        ]
+
+
+
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            h20,
+            ListTile(
+              title: Text('Recent Patients',style: getMediumStyle(color: ColorManager.black,fontSize: 22),),
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                border: TableBorder.all(
+                  color: ColorManager.black.withOpacity(0.3),
+                ),
+                headingRowColor: MaterialStateColor.resolveWith((states) => ColorManager.primary),
+                headingTextStyle: getMediumStyle(color: ColorManager.white,fontSize: 18),
+                columns: [
+                  DataColumn(label: Text('S.N.')),
+                  DataColumn(label: Text('Name')),
+                  DataColumn(label: Text('Age')),
+                  DataColumn(label: Text('Gender')),
+                  DataColumn(label: Text('Contact')),
+                  DataColumn(label: Text('Address')),
+                  DataColumn(label: Text('Entry Date')),
+                  DataColumn(label: Text('Action')),
+                ],
+                rows: displayedPatients
+                    .asMap()
+                    .entries
+                    .map((entry) {
+                  final index = entry.key + 1 + currentPage * itemsPerPage;
+                  final patient = entry.value;
+                  final age = DateTime
+                      .now()
+                      .year - DateTime
+                      .parse(patient['dob'])
+                      .year;
+                  final gender = patient['genderID'] == 1
+                      ? 'M'
+                      : (patient['genderID'] == 2 ? 'F' : 'O');
+
+                  return DataRow(
+                    cells: [
+                      DataCell(Text(index.toString())),
+                      DataCell(
+                          Text('${patient['firstName']} ${patient['lastName']}')),
+                      DataCell(Text(age.toString())),
+                      DataCell(Text(gender)),
+                      DataCell(Text(patient['contact'])),
+                      DataCell(Text(patient['localAddress'])),
+                      DataCell(Text(patient['entryDate'].toString())),
+                      DataCell(
+                          IconButton(onPressed: (){
+                            print(patient["serviceCategory"]);
+                            _showDetails(patient: patient);
+
+                          },icon: FaIcon(CupertinoIcons.eye_fill,color: ColorManager.primaryOpacity80,))
+                      ),
+                    ],
+                  );
+                }).toList(),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: FaIcon(Icons.chevron_left),
+                  onPressed: currentPage > 0 ? previousPage : null,
+                ),
+                Text('Page ${currentPage + 1}'),
+                IconButton(
+                  icon: FaIcon(Icons.chevron_right),
+                  onPressed: currentPage < (patientData.length - 1) ~/ itemsPerPage
+                      ? nextPage
+                      : null,
+                ),
+              ],
+            ),
+
+            h100,
+            h100,
+          ],
+        ),
       ),
     );
   }
 
-  payWithKhaltiInApp(){
-    final config = PaymentConfig(
-      amount: 10000, // Amount should be in paisa
-      productIdentity: 'dell-g5-g5510-2021',
-      productName: 'Dell G5 G5510 2021',
-      productUrl: 'https://www.khalti.com/#/bazaar',
-    );
+  Future<void> _showDetails({
+    required Map<String,dynamic> patient
+}) async {
+    final screenSize = MediaQuery.of(context).size;
 
-    KhaltiScope.of(context).pay(
-        config: config,
-        preferences: [
-          PaymentPreference.khalti
-        ],
-        onSuccess: onSuccess,
-        onFailure: onFailure,
-      onCancel: onCancel
-    );
-  }
-  void onSuccess(PaymentSuccessModel success) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: StatefulBuilder(
-            builder: (context, setState) {
-              return FutureBuilder(
-                future: ref
-                    .read(verificationProvider)
-                    .VerificationProcess(token: success.token, amount: success.amount),
-                builder: (context, snapshot) {
-                  String localLoadingString = loadingString ?? 'Please wait. Verification in process...';
-                  int localLoadingStatus = loadingStatus;
+    // Check if width is greater than height
+    bool isWideScreen = screenSize.width > 500;
+    bool isNarrowScreen = screenSize.width < 420;
 
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    // While waiting for the future to complete, show loading animation
-                    return Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
+
+    ImageProvider<Object>? profileImage;
+
+    profileImage = AssetImage('assets/icons/user.png');
+
+    await showDialog(
+        context: context,
+        builder: (context){
+          return AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
+                    image: DecorationImage(image:patient["serviceCategory"]==1? AssetImage('assets/images/containers/Tip-Container-3.png'):AssetImage('assets/images/containers/Tip-Container-off.png'),fit: BoxFit.cover),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 30.h),
+                  margin: EdgeInsets.symmetric(vertical: 1),
+                  child: Center(
+                    child: Card(
+                      shape: CircleBorder(),
+                      elevation: 5,
+                      child: CircleAvatar(
+                        backgroundColor: ColorManager.white,
+                        radius: isNarrowScreen? 40.r:40,
+                        child: CircleAvatar(
+                          backgroundImage: profileImage,
+                          backgroundColor: ColorManager.white,
+                          radius: isNarrowScreen? 35.r:35,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                h16,
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(bottomRight: Radius.circular(10),bottomLeft: Radius.circular(10)),
+                    color: ColorManager.white,
+                  ),
+
+                  padding: EdgeInsets.symmetric(horizontal: 18.w),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Lottie.asset('assets/jsons/loading.json', repeat: true),
-                          h20,
-                          Text(
-                            '$localLoadingString',
-                            style: getRegularStyle(color: ColorManager.black),
-                          ),
-                          h20,
-                          h20,
-                          h20,
-                          if (localLoadingStatus != 0)
-                            ElevatedButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text('OK'),
-                            ),
+                          Text('Name :',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
+                          w10,
+                          Text('${patient['firstName']} ${patient['lastName']}',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
                         ],
                       ),
-                    );
-                  } else {
-                    // After the future is completed, handle success or failure
-                    if (snapshot.hasError) {
-                      // If there is an error, show failed animation
-                      localLoadingString = 'Payment Failed';
-                      localLoadingStatus = 2;
-                      print('$localLoadingString $localLoadingStatus');
-                    } else {
-                      // If the future is successful, show success animation
-                      localLoadingString = 'Payment Successful';
-                      localLoadingStatus = 1;
-                      print('$localLoadingString $localLoadingStatus');
-                    }
-                    return Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
+                      h10,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          localLoadingStatus == 1
-                              ? Lottie.asset('assets/jsons/success.json', repeat: false)
-                              : localLoadingStatus == 2
-                              ? Lottie.asset('assets/jsons/failed.json', repeat: false)
-                              : Lottie.asset('assets/jsons/loading.json', repeat: false),
-                          h20,
-                          Text(
-                            '$localLoadingString',
-                            style: getRegularStyle(color: ColorManager.black),
-                          ),
-                          h20,
-                          h20,
-                          h20,
-                          if (localLoadingStatus != 0)
-                            ElevatedButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text('OK'),
-                            ),
+                          Text('Contact :',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
+                          w10,
+                          Text('${patient['contact']}',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
                         ],
                       ),
-                    );
-                  }
-                },
-              );
-            },
-          ),
-        );
-      },
-    );
+                      
+                      h10,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text('Consultant :',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
+                          w10,
+                          Text('Dr. Consultant',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                        ],
+                      ),
+                      h10,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text('Consult Date:',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
+                          w10,
+                          Text('2022-02-02',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                        ],
+                      ),
+                      h20,
+                      Center(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorManager.primary
+                          ),
+                          onPressed: (){},
+                          child: Text('View More',style: getRegularStyle(color: ColorManager.white,fontSize: 16),),
+                        ),
+                      ),
+                      h20,
+
+                    ],
+                  ),
+                )
+              ],
+
+
+            ),
+          );
+        }
+    ) ;
   }
 
-
-
-  void onFailure(PaymentFailureModel failure) {
-    setState(() {
-      loadingString = 'Payment Failed';
-      loadingStatus = 2;
-    });
-    print('$loadingString $loadingStatus');
-
-    final scaffoldMessage = ScaffoldMessenger.of(context);
-    debugPrint(failure.toString());
-    scaffoldMessage.showSnackBar(
-      SnackbarUtil.showFailureSnackbar(
-        message: '${failure.toString()}',
-        duration: const Duration(milliseconds: 1200),
-      ),
-    );
-  }
-  void onCancel(){
-    final scaffoldMessage = ScaffoldMessenger.of(context);
-    scaffoldMessage.showSnackBar(
-        SnackbarUtil.showFailureSnackbar(
-            message: 'Payment Cancelled',
-            duration: const Duration(milliseconds: 1200)
-        )
-    );
-  }
 
 }

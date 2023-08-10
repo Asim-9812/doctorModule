@@ -163,6 +163,11 @@ class ProfilePage extends StatelessWidget {
     // Check if width is greater than height
     bool isWideScreen = screenSize.width > 500;
     bool isNarrowScreen = screenSize.width < 420;
+
+
+
+
+
     return Card(
       elevation: 3,
       shadowColor: ColorManager.textGrey.withOpacity(0.4),

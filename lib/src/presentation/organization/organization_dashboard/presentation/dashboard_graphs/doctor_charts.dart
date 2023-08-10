@@ -66,41 +66,59 @@ class _DoctorChartsState extends State<DoctorCharts> {
 
   @override
   Widget build(BuildContext context) {
+
+    // Get the screen size
+    final screenSize = MediaQuery.of(context).size;
+
+    // Check if width is greater than height
+    bool isWideScreen = screenSize.width > 500;
+    bool isNarrowScreen = screenSize.width < 400;
     Map<String, int> genderCounts = _calculateGenderCounts();
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-              color: ColorManager.black.withOpacity(0.5)
-          )
+    return Scaffold(
+      backgroundColor: ColorManager.white,
+      appBar: AppBar(
+        elevation: 1,
+        backgroundColor: ColorManager.white,
+        leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
+        title: Text('Doctors',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 24.sp:28),),
+
       ),
-      margin: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-      padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h),
-      child: Column(
-        children: [
-          Text('Total Doctors',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
-          h20,
-          SfCartesianChart(
-            primaryXAxis: CategoryAxis(),
-            series: <ChartSeries>[
-              ColumnSeries<String, String>(
-                dataSource: genderCounts.keys.toList(),
-                xValueMapper: (String gender, _) => gender,
-                yValueMapper: (String gender, _) => genderCounts[gender]!,
-                dataLabelSettings: DataLabelSettings(isVisible: true),
-                pointColorMapper: (String gender, _) {
-                  if (gender == 'Male') {
-                    return ColorManager.blue.withOpacity(0.7);
-                  } else if (gender == 'Female') {
-                    return ColorManager.premiumContainer.withOpacity(0.7);
-                  } else {
-                    return ColorManager.red.withOpacity(0.5);
-                  }
-                },
-              ),
-            ],
-          ),
-        ],
+      body: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+                color: ColorManager.black.withOpacity(0.5)
+            )
+        ),
+        margin: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+        padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Total Doctors',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
+            h20,
+            SfCartesianChart(
+              primaryXAxis: CategoryAxis(),
+              series: <ChartSeries>[
+                ColumnSeries<String, String>(
+                  dataSource: genderCounts.keys.toList(),
+                  xValueMapper: (String gender, _) => gender,
+                  yValueMapper: (String gender, _) => genderCounts[gender]!,
+                  dataLabelSettings: DataLabelSettings(isVisible: true),
+                  pointColorMapper: (String gender, _) {
+                    if (gender == 'Male') {
+                      return ColorManager.blue.withOpacity(0.7);
+                    } else if (gender == 'Female') {
+                      return ColorManager.premiumContainer.withOpacity(0.7);
+                    } else {
+                      return ColorManager.red.withOpacity(0.5);
+                    }
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

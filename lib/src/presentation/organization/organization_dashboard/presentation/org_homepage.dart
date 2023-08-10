@@ -17,6 +17,7 @@ import 'package:medical_app/src/data/model/registered_patient_model.dart';
 import 'package:medical_app/src/data/services/registered_patient_services.dart';
 import 'package:medical_app/src/data/services/user_services.dart';
 import 'package:medical_app/src/presentation/organization/org_profile/presentation/org_profile_page.dart';
+import 'package:medical_app/src/presentation/organization/organization_dashboard/presentation/dashboard_graphs/financial_charts.dart';
 import 'package:medical_app/src/presentation/organization/organization_dashboard/presentation/dashboard_graphs/patient_groups.dart';
 import 'package:medical_app/src/presentation/patient/quick_services/presentation/telemedicine.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -148,6 +149,32 @@ class _OrgHomePageState extends State<OrgHomePage> {
     return patientsRegisteredYesterday.length;
   }
 
+  bool _isExpanded = true;
+  int currentPage = 0;
+  int itemsPerPage = 5;
+
+  List<Map<String, dynamic>> getDisplayedPatients() {
+    final startIndex = currentPage * itemsPerPage;
+    final endIndex = startIndex + itemsPerPage;
+    return patientData.sublist(startIndex, endIndex);
+  }
+
+  void nextPage() {
+    setState(() {
+      if (currentPage < (patientData.length - 1) ~/ itemsPerPage) {
+        currentPage++;
+      }
+    });
+  }
+
+  void previousPage() {
+    setState(() {
+      if (currentPage > 0) {
+        currentPage--;
+      }
+    });
+  }
+
 
 
   @override
@@ -230,12 +257,10 @@ class _OrgHomePageState extends State<OrgHomePage> {
         h20,
         _surveyStat(),
         h20,
-        PatientChart(),
+        _financialReport(),
         h20,
-        PatientGroups(),
+        _operationTable(),
         h20,
-
-        DoctorCharts(),
         h100,
         h100, h100, h100, h100
 
@@ -651,6 +676,219 @@ class _OrgHomePageState extends State<OrgHomePage> {
                   ),
                 ),
               ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+
+  Widget _financialReport(){
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 18.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Financial Reports',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 24:24.sp),),
+              Container(
+                width: widget.isWideScreen?200:200.w,
+                child: Divider(
+                  color: ColorManager.black.withOpacity(0.5),
+                  thickness: 0.5,
+                ),
+              )
+            ],
+          ),
+        ),
+        h20,
+        Container(
+          decoration: BoxDecoration(
+              
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: ColorManager.black.withOpacity(0.5)
+            )
+          ),
+          margin: EdgeInsets.symmetric(horizontal: 18.w),
+          padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  w10,
+                  Text('2022-08-09',style: getRegularStyle(color: ColorManager.black),),
+                ],
+              ),
+              h20,
+
+              Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: ColorManager.textGrey.withOpacity(0.1)
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal:18.w,vertical: 18.h),
+                    child: FaIcon(FontAwesomeIcons.dollarSign,color: Colors.green,size: 12,),
+                  ),
+                  w10,
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Total Profit',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text('\$1522',style: getRegularStyle(color: ColorManager.primaryDark),),
+                          w10,
+                          FaIcon(CupertinoIcons.triangle_fill,color: ColorManager.primary,size: 16,)
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+
+
+              h20,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: ColorManager.textGrey.withOpacity(0.1)
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal:16.w,vertical: 18.h),
+                        child: FaIcon(FontAwesomeIcons.moneyBill,size: 12,color: ColorManager.primary,)
+                      ),
+                      w10,
+
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Total Income',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
+                          h10,
+                          Text('\$1522',style: getRegularStyle(color: ColorManager.primaryDark),),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: ColorManager.textGrey.withOpacity(0.1)
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal:16.w,vertical: 18.h),
+                          child: FaIcon(FontAwesomeIcons.chartLine,size: 12,color: ColorManager.red,)
+                      ),
+                      w10,
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Total Expense',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
+                          h10,
+                          Text('\$1522',style: getRegularStyle(color: ColorManager.red),),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              h20,
+              FinancialCharts()
+            ],
+          ),
+        ),
+
+
+      ],
+    );
+  }
+
+
+  Widget _operationTable(){
+    final displayedPatients = getDisplayedPatients();
+    return Column(
+      children: [
+        ListTile(
+          title: Text('Operations',style: getMediumStyle(color: ColorManager.black,fontSize: 22),),
+        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            border: TableBorder.all(
+              color: ColorManager.black.withOpacity(0.3),
+            ),
+            headingRowColor: MaterialStateColor.resolveWith((states) => ColorManager.primary),
+            headingTextStyle: getMediumStyle(color: ColorManager.white,fontSize: 18),
+            columns: [
+              DataColumn(label: Text('S.N.')),
+              DataColumn(label: Text('Name')),
+              DataColumn(label: Text('Age')),
+              DataColumn(label: Text('Gender')),
+              DataColumn(label: Text('Contact')),
+              DataColumn(label: Text('Address')),
+              DataColumn(label: Text('Entry Date')),
+              DataColumn(label: Text('Action')),
+            ],
+            rows: displayedPatients
+                .asMap()
+                .entries
+                .map((entry) {
+              final index = entry.key + 1 + currentPage * itemsPerPage;
+              final patient = entry.value;
+              final age = DateTime
+                  .now()
+                  .year - DateTime
+                  .parse(patient['dob'])
+                  .year;
+              final gender = patient['genderID'] == 1
+                  ? 'M'
+                  : (patient['genderID'] == 2 ? 'F' : 'O');
+
+              return DataRow(
+                cells: [
+                  DataCell(Text(index.toString())),
+                  DataCell(
+                      Text('${patient['firstName']} ${patient['lastName']}')),
+                  DataCell(Text(age.toString())),
+                  DataCell(Text(gender)),
+                  DataCell(Text(patient['contact'])),
+                  DataCell(Text(patient['localAddress'])),
+                  DataCell(Text(patient['entryDate'].toString())),
+                  DataCell(Text('View/Edit')),
+                ],
+              );
+            }).toList(),
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: FaIcon(Icons.chevron_left),
+              onPressed: currentPage > 0 ? previousPage : null,
+            ),
+            Text('Page ${currentPage + 1}'),
+            IconButton(
+              icon: FaIcon(Icons.chevron_right),
+              onPressed: currentPage < (patientData.length - 1) ~/ itemsPerPage
+                  ? nextPage
+                  : null,
             ),
           ],
         ),
