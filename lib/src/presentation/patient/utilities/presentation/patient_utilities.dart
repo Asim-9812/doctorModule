@@ -20,8 +20,8 @@ import 'package:medical_app/src/core/resources/color_manager.dart';
 
 import '../../../../core/resources/value_manager.dart';
 import '../../../../test/test.dart';
-import '../widgets/bmi.dart';
-import '../widgets/bmr.dart';
+import '../../../widgets/bmi.dart';
+import '../../../widgets/bmr.dart';
 
 class PatientUtilitiesPage extends StatefulWidget {
   final bool isWideScreen;

@@ -6,7 +6,7 @@ import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../../../../core/resources/value_manager.dart';
+import '../../../core/resources/value_manager.dart';
 
 class PatientData {
   PatientData(this.x, this.y);
@@ -64,7 +64,7 @@ class _PatientChartState extends State<PatientChart> {
 
 
     return Container(
-      width: 320,
+
 
         child: Column(
           children: [
@@ -82,7 +82,12 @@ class _PatientChartState extends State<PatientChart> {
               ],
             ),
             SfCartesianChart(
+                zoomPanBehavior: ZoomPanBehavior(
+                  enablePanning: true,
+                  enablePinching: true,
+                  zoomMode: ZoomMode.xy,
 
+                ),
               legend: Legend(
                 isVisible: true,
                 position: LegendPosition.top,

@@ -13,11 +13,10 @@ import 'package:intl/intl.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../../../../core/resources/style_manager.dart';
-import '../../../../../core/resources/value_manager.dart';
-import '../../../../../data/services/user_services.dart';
-import '../../../../../dummy_datas/dummy_datas.dart';
-import '../../../../login/domain/model/user.dart';
+import '../../../core/resources/style_manager.dart';
+import '../../../core/resources/value_manager.dart';
+import '../../../dummy_datas/dummy_datas.dart';
+
 
 class FinancialCharts extends StatefulWidget {
   const FinancialCharts({super.key});
@@ -40,7 +39,6 @@ class _DoctorChartsState extends State<FinancialCharts> {
     bool isWideScreen = screenSize.width > 500;
     bool isNarrowScreen = screenSize.width < 400;
     return Container(
-      width: 350,
 
       child: Column(
 
@@ -93,6 +91,12 @@ class _DoctorChartsState extends State<FinancialCharts> {
                           ],
                         ),
                         SfCartesianChart(
+                          zoomPanBehavior: ZoomPanBehavior(
+                            enablePanning: true,
+                            enablePinching: true,
+                            zoomMode: ZoomMode.xy,
+
+                          ),
                           legend: Legend(
                             isVisible: tapped,
                             position: LegendPosition.top,

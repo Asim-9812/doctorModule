@@ -6,9 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../../../../core/resources/color_manager.dart';
-import '../../../../../core/resources/style_manager.dart';
-import '../../../../../core/resources/value_manager.dart';
+import '../../../core/resources/color_manager.dart';
+import '../../../core/resources/style_manager.dart';
+import '../../../core/resources/value_manager.dart';
 
 class ChartData {
   ChartData(this.grpName, this.num, this.color);
@@ -55,6 +55,7 @@ class _PatientGroupsState extends State<PatientGroups> {
               ],
             ),
             SfCircularChart(
+
               legend: Legend(
                 position: LegendPosition.top,
                 overflowMode:LegendItemOverflowMode.wrap,

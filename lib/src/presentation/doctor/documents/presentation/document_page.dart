@@ -72,6 +72,14 @@ class _PatientDocumentPageState extends State<DoctorDocumentPage> {
 
   /// Folder Container...
   Widget myFolders(BuildContext context){
+    // Get the screen size
+    final screenSize = MediaQuery.of(context).size;
+    print(screenSize);
+
+    // Check if width is greater than height
+    bool isWideScreen = screenSize.width > 500;
+    bool isNarrowScreen = screenSize.width < 380;
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
       child: Column(
@@ -85,7 +93,7 @@ class _PatientDocumentPageState extends State<DoctorDocumentPage> {
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: widget.isWideScreen? 3: widget.isNarrowScreen?1: 2,
+                crossAxisCount: widget.isWideScreen? 3: isNarrowScreen?1: 2,
                 crossAxisSpacing: widget.isWideScreen?8:8.w,
                 mainAxisSpacing: widget.isWideScreen?8: 8.h,
                 childAspectRatio: widget.isWideScreen? 14/11:14/10

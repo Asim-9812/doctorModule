@@ -723,3 +723,239 @@ List<Map<String, dynamic>> financialData = [
   },
   // Add more entries as needed
 ];
+
+List<Map<String, dynamic>> dummyDoctorData = [
+  {
+    'name': 'Dr. Emily Smith',
+    'department': 'Medicine',
+    'gender': 'female',
+  },
+  {
+    'name': 'Dr. Michael Johnson',
+    'department': 'Surgery',
+    'gender': 'male',
+  },
+  {
+    'name': 'Dr. Jessica Williams',
+    'department': 'Gynaecology',
+    'gender': 'female',
+  },
+  {
+    'name': 'Dr. Christopher Lee',
+    'department': 'Obstetrics',
+    'gender': 'male',
+  },
+  {
+    'name': 'Dr. Olivia Taylor',
+    'department': 'Paediatrics',
+    'gender': 'female',
+  },
+  {
+    'name': 'Dr. William Martinez',
+    'department': 'Medicine',
+    'gender': 'male',
+  },
+  {
+    'name': 'Dr. Sophia Anderson',
+    'department': 'Surgery',
+    'gender': 'female',
+  },
+  {
+    'name': 'Dr. Benjamin White',
+    'department': 'Gynaecology',
+    'gender': 'male',
+  },
+  {
+    'name': 'Dr. Ava Davis',
+    'department': 'Obstetrics',
+    'gender': 'female',
+  },
+  {
+    'name': 'Dr. Ethan Garcia',
+    'department': 'Paediatrics',
+    'gender': 'male',
+  },
+  {
+    'name': 'Dr. Mia Johnson',
+    'department': 'Medicine',
+    'gender': 'female',
+  },
+  {
+    'name': 'Dr. Noah Wilson',
+    'department': 'Surgery',
+    'gender': 'male',
+  },
+  {
+    'name': 'Dr. Lily Anderson',
+    'department': 'Gynaecology',
+    'gender': 'female',
+  },
+  {
+    'name': 'Dr. James Clark',
+    'department': 'Obstetrics',
+    'gender': 'male',
+  },
+  {
+    'name': 'Dr. Grace Miller',
+    'department': 'Paediatrics',
+    'gender': 'female',
+  },
+  {
+    'name': 'Dr. Liam Robinson',
+    'department': 'Medicine',
+    'gender': 'male',
+  },
+  {
+    'name': 'Dr. Harper Martinez',
+    'department': 'Surgery',
+    'gender': 'female',
+  },
+  {
+    'name': 'Dr. Logan Brown',
+    'department': 'Gynaecology',
+    'gender': 'male',
+  },
+  {
+    'name': 'Dr. Abigail Harris',
+    'department': 'Obstetrics',
+    'gender': 'others',
+  },
+  {
+    'name': 'Dr. Jackson Taylor',
+    'department': 'Paediatrics',
+    'gender': 'others',
+  },
+];
+
+List<Map<String, dynamic>> surgeryData = [
+  {
+    'type': 'Cataract',
+    'successful': 12,
+    'unsuccessful': 2,
+  },
+  {
+    'type': 'Gastric Bypass',
+    'successful': 5,
+    'unsuccessful': 1,
+  },
+  {
+    'type': 'Endoscopy',
+    'successful': 8,
+    'unsuccessful': 0,
+  },
+  {
+    'type': 'Microsurgery',
+    'successful': 10,
+    'unsuccessful': 3,
+  },
+  {
+    'type': 'Endarterectomy',
+    'successful': 7,
+    'unsuccessful': 1,
+  },
+];
+
+
+List<Map<String, dynamic>> doctorsData = [
+  {
+    'name': 'Dr. John Smith',
+    'department_id': 1,
+    'department': 'Cardiology',
+  },
+  {
+    'name': 'Dr. Emily Johnson',
+    'department_id': 2,
+    'department': 'Orthopedics',
+  },
+  {
+    'name': 'Dr. Michael Williams',
+    'department_id': 3,
+    'department': 'Neurology',
+  },
+  {
+    'name': 'Dr. Sarah Brown',
+    'department_id': 4,
+    'department': 'Ophthalmology',
+  },
+  {
+    'name': 'Dr. Robert Davis',
+    'department_id': 5,
+    'department': 'Dermatology',
+  },
+  {
+    'name': 'Dr. Jennifer Martinez',
+    'department_id': 1,
+    'department': 'Cardiology',
+  },
+  {
+    'name': 'Dr. David Taylor',
+    'department_id': 2,
+    'department': 'Orthopedics',
+  },
+  {
+    'name': 'Dr. Jessica Anderson',
+    'department_id': 3,
+    'department': 'Neurology',
+  },
+  {
+    'name': 'Dr. Christopher Miller',
+    'department_id': 4,
+    'department': 'Ophthalmology',
+  },
+  {
+    'name': 'Dr. Elizabeth Wilson',
+    'department_id': 5,
+    'department': 'Dermatology',
+  },
+  {
+    'name': 'Dr. Andrew Thompson',
+    'department_id': 1,
+    'department': 'Cardiology',
+  },
+  {
+    'name': 'Dr. Samantha White',
+    'department_id': 2,
+    'department': 'Orthopedics',
+  },
+  {
+    'name': 'Dr. Daniel Martinez',
+    'department_id': 3,
+    'department': 'Neurology',
+  },
+  {
+    'name': 'Dr. Olivia Johnson',
+    'department_id': 4,
+    'department': 'Ophthalmology',
+  },
+  {
+    'name': 'Dr. William Lee',
+    'department_id': 5,
+    'department': 'Dermatology',
+  },
+  {
+    'name': 'Dr. Sophia Harris',
+    'department_id': 1,
+    'department': 'Cardiology',
+  },
+  {
+    'name': 'Dr. Ethan Davis',
+    'department_id': 2,
+    'department': 'Orthopedics',
+  },
+  {
+    'name': 'Dr. Ava Jackson',
+    'department_id': 3,
+    'department': 'Neurology',
+  },
+  {
+    'name': 'Dr. James Moore',
+    'department_id': 4,
+    'department': 'Ophthalmology',
+  },
+  {
+    'name': 'Dr. Mia Thompson',
+    'department_id': 5,
+    'department': 'Dermatology',
+  },
+];
+

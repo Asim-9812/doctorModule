@@ -20,6 +20,8 @@ import 'package:medical_app/src/test/test2.dart';
 import '../../../test/test.dart';
 import '../../common/snackbar.dart';
 import '../../doctor/profile/presentation/widgets/update_profile.dart';
+import '../../organization/organization_dashboard/presentation/org_homepage.dart';
+import '../../organization/patient_reports/presentation/report_page_org.dart';
 import '../../patient/patient_dashboard/presentation/patient_main_page.dart';
 import '../domain/service/login_service.dart';
 
@@ -90,10 +92,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     // Get the screen size
     final screenSize = MediaQuery.of(context).size;
+    print(screenSize);
 
     // Check if width is greater than height
     bool isWideScreen = screenSize.width > 500;
-    bool isNarrowScreen = screenSize.width < 420;
+    bool isNarrowScreen = screenSize.width < 380;
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -485,7 +488,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           BorderRadius.circular(10),
                         )),
                     child:Text(
-                      'Patient Dashboard',
+                      'Patient dashboard',
                       style: getRegularStyle(
                           color: ColorManager.black,
                           fontSize: 14),

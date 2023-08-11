@@ -7,17 +7,16 @@ import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/test/test2.dart';
 
-import '../../../../core/resources/style_manager.dart';
-import '../../../../core/resources/value_manager.dart';
-import 'list_of_bmi_category/bmi_list.dart';
+import '../../core/resources/style_manager.dart';
+import '../../core/resources/value_manager.dart';
 
 
-class BMI extends StatefulWidget {
+class BMR extends StatefulWidget {
   @override
-  BMIState createState() => BMIState();
+  BMRState createState() => BMRState();
 }
 
-class BMIState extends State<BMI> {
+class BMRState extends State<BMR> {
   double _linePositionY = 200.0;
   double y = 0.4; // Initial Y position of the line
   int selectedOption = 1;
@@ -28,7 +27,6 @@ class BMIState extends State<BMI> {
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
   double result = 0.0;
-  List bmiList = bmiCategories;
   int category = 0;
 
   double _calculateHeight(double y){
@@ -42,71 +40,62 @@ class BMIState extends State<BMI> {
   }
 
 
-  double _calculateBMI({
+  double _calculateBMR({
     required double w,
-    required double h
+    required double h,
+    required double a
   }) {
-    double m = h/100;
-    double bmi = w/(m*m);
-    setState(() {
-      result = bmi;
-      isLoading = false;
-    });
-    print(bmi.toPrecision(1));
-    return bmi.toPrecision(1);
-  }
-
-
-  double _getSize() {
-
-    if(result >= 0.0 && result < 16){
+    if(selectedOption == 1){
+      double bmr = 10 * w + 6.25 * h - 5 * a + 5;
       setState(() {
-        category = 0;
+        result = bmr;
+        isLoading = false;
       });
-      return 0.1;
-    } else if(result >=16 && result < 17){
-      setState(() {
-        category = 0;
-      });
-      return 0.18;
-    } else if(result >=17 && result < 18.5){
-      setState(() {
-        category = 0;
-      });
-      return 0.23;
-    } else if(result >=18.5 && result < 25){
-      setState(() {
-        category = 1;
-      });
-      return 0.35;
-    } else if(result >=25 && result < 30){
-      setState(() {
-        category = 2;
-      });
-      return 0.47;
-    } else if(result >=30 && result < 35){
-      setState(() {
-        category = 3;
-      });
-      return 0.53;
-    } else if(result >=35 && result < 40){
-      setState(() {
-        category =4;
-      });
-      return 0.575;
+      print(bmr.toPrecision(1));
+      return bmr.toPrecision(1);
     } else{
+      double bmr = 10 * w + 6.25 * h- 5 * a - 161;
       setState(() {
-        category = 5;
+        result = bmr;
+        isLoading = false;
       });
-      return 0.7;
+      print(bmr.toPrecision(1));
+      return bmr.toPrecision(1);
     }
 
   }
 
 
 
+
+
   Future<void> _showDialog(double heightCM,bool isWideScreen,bool isNarrowScreen) async {
-    double size = _getSize();
+    final List<Map<String, String>> activityLevels = [
+      {
+        'activityLevel': 'Sedentary: little or no exercise',
+        'calorie': '${result.round() + 300}',
+      },
+      {
+        'activityLevel': 'Exercise 1-3 times/week',
+        'calorie': '${result.round() + 600}',
+      },
+      {
+        'activityLevel': 'Exercise 4-5 times/week',
+        'calorie': '${result.round() + 800}',
+      },
+      {
+        'activityLevel': 'Daily exercise or intense exercise 3-4 times/week',
+        'calorie': '${result.round() + 900}',
+      },
+      {
+        'activityLevel': 'Intense exercise 6-7 times/week',
+        'calorie': '${result.round() + 1100}',
+      },
+      {
+        'activityLevel': 'Very intense exercise daily, or physical job',
+        'calorie': '${result.round() + 1400}',
+      },
+    ];
     showDialog(
         context: context,
         builder: (context){
@@ -123,87 +112,34 @@ class BMIState extends State<BMI> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('Calculated BMI',style: getMediumStyle(color: Colors.black),),
+                  Text('Calculated BMR',style: getMediumStyle(color: Colors.black),),
                   h20,
-                  Container(
-                    height: MediaQuery.of(context).size.height*0.15,
-                    // color: Colors.blue,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-
-                        Container(
-                          height: 50.h,
-                          // color: Colors.blue,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.1,
-                                color: ColorManager.red,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.05,
-                                color: ColorManager.red.withOpacity(0.7),
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.05,
-                                color: ColorManager.yellowFellow,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.19,
-                                color: ColorManager.primary,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.05,
-                                color: ColorManager.yellowFellow,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.05,
-                                color: ColorManager.red.withOpacity(0.5),
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.05,
-                                color: ColorManager.red.withOpacity(0.7),
-                              ),
-                              Container(
-                                width: isNarrowScreen? MediaQuery.of(context).size.width*0.11:MediaQuery.of(context).size.width*0.129,
-                                color: ColorManager.red,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width*size,
-                          child: Align(
-                            alignment: AlignmentDirectional.topEnd,
-                            child: Column(
-                              children: [
-                                FaIcon(CupertinoIcons.triangle_fill,color: Colors.black,size: 16,),
-                                Text('${result.toPrecision(1)} kg/m²',style: getRegularStyle(color: ColorManager.black,fontSize: 12),)
-                              ],
-                            ),
-
-                          ),
-                        ),
-
-                      ],
-                    ),
+                  Text('${result.round()} calories/day',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                  h20,
+                  Text('Daily calorie needs based on activity level',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
+                  h10,
+                  ListTile(
+                    tileColor: ColorManager.primary,
+                    title: Text('Activity Level',style: getRegularStyle(color: ColorManager.white,fontSize: 20),),
+                    trailing: Text('Calories',style: getRegularStyle(color: ColorManager.white,fontSize: 16),),
                   ),
-                  h20,
-                  Container(
-                    width: MediaQuery.of(context).size.height*1.5/3,
-                    child:Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('${bmiList[category]['name']} (${bmiList[category]['bmiRange']})',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
-                        h16,
-                        Text('${bmiList[category]['description']}',style: getRegularStyle(color: ColorManager.black,fontSize: 16),textAlign: TextAlign.justify,)
-                      ],
-                    ),
-                  ),
-                  h20,
+                  h10,
+                  ListView.builder(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    itemCount: activityLevels.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        shape: Border(
+                            bottom: BorderSide(
+                                color: ColorManager.black.withOpacity(0.5)
+                            )
+                        ),
+                        title: Text(activityLevels[index]['activityLevel']!,style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                        trailing: Text('${activityLevels[index]['calorie']}',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                      );
+                    },
+                  )
 
                 ],
               ),
@@ -246,7 +182,7 @@ class BMIState extends State<BMI> {
         appBar: AppBar(
           elevation: 3,
           backgroundColor: ColorManager.primary,
-          title: Text('BMI'),
+          title: Text('BMR'),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -551,7 +487,7 @@ class BMIState extends State<BMI> {
                       setState(() {
                         isLoading = true;
                       });
-                      double x=  _calculateBMI(w: double.parse(weightController.text), h:heightCM.toPrecision(1) );
+                      double x=  _calculateBMR(a:double.parse(ageController.text),w: double.parse(weightController.text), h:heightCM.toPrecision(1) );
                       _showDialog(x,isWideScreen,isNarrowScreen);
 
                     }
