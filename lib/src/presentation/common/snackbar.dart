@@ -115,9 +115,9 @@ class SnackbarUtil {
             ),
           )
       ),
-      backgroundColor: ColorManager.iconGrey.withOpacity(0.7),
+      backgroundColor: ColorManager.dotGrey.withOpacity(0.3),
       behavior: SnackBarBehavior.floating,
-      elevation: 10,
+      elevation: 0,
       margin: const EdgeInsets.fromLTRB(40, 0, 40, 50),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.r),

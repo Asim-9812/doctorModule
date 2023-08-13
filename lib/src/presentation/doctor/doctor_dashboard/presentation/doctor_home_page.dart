@@ -17,6 +17,7 @@ import '../../../../core/resources/value_manager.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../notification/presentation/notification_page.dart';
 import '../../../patient/search-near-by/presentation/search_for_page.dart';
+import '../../patient_profile/presentation/doctor_patient_profile_page.dart';
 
 class DoctorHomePage extends StatefulWidget {
   final bool isWideScreen;
@@ -132,13 +133,15 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
               h10,
               FadeInUp(
                   duration: Duration(milliseconds: 900),
+                  child: _buildAppointments()),
+              h10,
+
+              FadeInUp(
+                  duration: Duration(milliseconds: 1200),
                   child: _buildPatients()),
               h20,
               h20,
-              h20,
-              FadeInUp(
-                  duration: Duration(milliseconds: 1200),
-                  child: _buildAppointments()),
+
               h100,
             ],
 
@@ -176,7 +179,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
 
                   itemBuilder: (context,index){
                     return Container(
-                      width: 120.w,
+                      width: 130.w,
                       padding: EdgeInsets.symmetric(horizontal: 12.w),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -211,7 +214,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
           Container(
             margin: EdgeInsets.symmetric(horizontal: 42.w,vertical: 8.h),
             padding: EdgeInsets.only(left: 8.w),
-            width: widget.isWideScreen?70:70.w,
+            width: widget.isWideScreen?90:90.w,
             height: 35.h,
             color: ColorManager.white,
             child: Align(
@@ -226,7 +229,6 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
   ///my patient...
   Widget _buildPatients() {
     return Container(
-      height:widget.isWideScreen?300:widget.isNarrowScreen?310.h:280.h,
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 18.w),
       // color: Colors.red,
@@ -249,7 +251,6 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
           ),
           h20,
           Container(
-            height: widget.isWideScreen? 250:240.h,
             width: 390.w,
             // padding: EdgeInsets.symmetric(horizontal: 8.w),
             // decoration: BoxDecoration(
@@ -261,32 +262,27 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
             //     )
             // ),
             child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                physics: BouncingScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                physics: NeverScrollableScrollPhysics(),
                 itemCount: myPatients.length,
+                shrinkWrap: true,
 
 
                 itemBuilder: (context,index){
                   return InkWell(
-                    onTap: (){},
+                    onTap: ()=>Get.to(()=>DocPatientProfile()),
                     child: Container(
-                      width: 150.w,
-                      // padding: EdgeInsets.symmetric(horizontal: 2.w),
-                      margin: EdgeInsets.symmetric(horizontal: 12.w),
-                      decoration: BoxDecoration(
-                        color:ColorManager.lightBlueAccent.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: ColorManager.black.withOpacity(0.7),
-                          width: 0.5
-                        )
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Card(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
+                        child: ListTile(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            side: BorderSide(
+                              color: ColorManager.black.withOpacity(0.5)
+                            )
+                          ),
+                          leading: Card(
                             elevation: 0,
                             shape: CircleBorder(
                                 side: BorderSide(
@@ -302,28 +298,51 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                               radius: 30,
                             ),
                           ),
-                          h10,
-                          Text('${myPatients[index]['name']}',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isWideScreen?20:20.sp),),
-                          h10,
-                          if(myPatients[index]['department']!=null)Text('${myPatients[index]['department']}',style: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isWideScreen?14:14.sp),),
-                          h10,
-                          Card(
-
-                           shape: CircleBorder(
-                             side: BorderSide(
-                               color: ColorManager.black.withOpacity(0.5),
-                               width: 0.5
-                             )
-                           ),
-                            child:Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child:FaIcon(Icons.chevron_right,color: ColorManager.black,),
-                            )
-                          )
-
-                        ],
+                          title: Text('${myPatients[index]['name']}',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isWideScreen?20:20.sp),
+                        )
+                        // Container(
+                        //   width: 150.w,
+                        //   // padding: EdgeInsets.symmetric(horizontal: 2.w),
+                        //   margin: EdgeInsets.symmetric(horizontal: 12.w),
+                        //   decoration: BoxDecoration(
+                        //     color:ColorManager.lightBlueAccent.withOpacity(0.5),
+                        //     borderRadius: BorderRadius.circular(20),
+                        //     border: Border.all(
+                        //       color: ColorManager.black.withOpacity(0.7),
+                        //       width: 0.5
+                        //     )
+                        //   ),
+                        //   child: Column(
+                        //     mainAxisSize: MainAxisSize.min,
+                        //     mainAxisAlignment: MainAxisAlignment.center,
+                        //     crossAxisAlignment: CrossAxisAlignment.center,
+                        //     children: [
+                        //
+                        //       h10,
+                        //       Text('${myPatients[index]['name']}',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isWideScreen?20:20.sp),),
+                        //       h10,
+                        //       if(myPatients[index]['department']!=null)Text('${myPatients[index]['department']}',style: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isWideScreen?14:14.sp),),
+                        //       h10,
+                        //       Card(
+                        //
+                        //        shape: CircleBorder(
+                        //          side: BorderSide(
+                        //            color: ColorManager.black.withOpacity(0.5),
+                        //            width: 0.5
+                        //          )
+                        //        ),
+                        //         child:Padding(
+                        //           padding: const EdgeInsets.all(5.0),
+                        //           child:FaIcon(Icons.chevron_right,color: ColorManager.black,),
+                        //         )
+                        //       )
+                        //
+                        //     ],
+                        //   ),
+                        // ),
+                        ),
                       ),
-                    ),
+                    )
                   );
                 }
             ),
@@ -357,7 +376,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
           ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: 8,
+              itemCount: 3,
 
               itemBuilder: (context,index){
 

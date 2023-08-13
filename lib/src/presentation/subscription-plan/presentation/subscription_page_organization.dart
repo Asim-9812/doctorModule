@@ -111,7 +111,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageOrganization>
           Api.userRegister,
           data: {
             "userID": '${widget.outputValue['result']['orgId']}',
-            "typeID": 2,
+            "typeID": 1,
             "parentID": "0",
             "firstName": '${widget.outputValue['result']['organizationName']}',
             "lastName": "",

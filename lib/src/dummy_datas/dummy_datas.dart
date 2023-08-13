@@ -959,3 +959,21 @@ List<Map<String, dynamic>> doctorsData = [
   },
 ];
 
+List<Map<String, dynamic>> patientHistory = [
+{"date": "2023-08-01", "doctor": "Dr. Smith", "treatment": "Physical examination"},
+{"date": "2023-08-05", "doctor": "Dr. Johnson", "treatment": "Prescription for pain relief"},
+{"date": "2023-08-10", "doctor": "Dr. Anderson", "treatment": "Blood test and analysis"},
+{"date": "2023-08-15", "doctor": "Dr. Brown", "treatment": "X-ray for injury assessment"},
+{"date": "2023-08-20", "doctor": "Dr. Davis", "treatment": "Follow-up consultation"},
+{"date": "2023-08-25", "doctor": "Dr. Martinez", "treatment": "Physical therapy session"},
+{"date": "2023-08-30", "doctor": "Dr. Wilson", "treatment": "Medication adjustment"},
+{"date": "2023-09-05", "doctor": "Dr. Taylor", "treatment": "MRI scan"},
+];
+
+class PatientHistory {
+  final String date;
+  final String doctor;
+  final String treatment;
+
+  PatientHistory({required this.date, required this.doctor, required this.treatment});
+}

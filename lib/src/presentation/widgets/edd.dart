@@ -169,6 +169,7 @@ class _EDDState extends State<EDD> {
                         child: Text('Calculate')
                     )
                 ),
+                h20,
                 if (calculatedEDD != null)
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 20.h),
@@ -176,19 +177,21 @@ class _EDDState extends State<EDD> {
                       child: Column(
                         children: [
                           Text(
-                            'Estimated Due Date Range:',
+                            'Estimated Due Date :',
                             style: getMediumStyle(color: ColorManager.black, fontSize: 18),
                           ),
-                          SizedBox(height: 5.h),
+                          SizedBox(height: 10.h),
                           Text(
-                            '$calculatedEDD to ${calculateEDDRange()}',
+                            '$calculatedEDD',
                             style: getMediumStyle(color: ColorManager.primaryDark, fontSize: 18),
                           ),
+                          SizedBox(height: 30.h),
+                          Text(calculateEDDRange(),style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
                           SizedBox(height: 10.h),
                           Text(
                             'Please note that due dates are estimates and can vary for each individual. Factors such as menstrual cycle length, ovulation, and other medical considerations can influence the actual delivery date. Consult with a healthcare professional for personalized guidance.',
                             style: getRegularStyle(color: ColorManager.black, fontSize: 16),
-                            textAlign: TextAlign.center,
+                            textAlign: TextAlign.justify,
                           ),
                         ],
                       ),

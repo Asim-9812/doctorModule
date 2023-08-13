@@ -21,7 +21,7 @@ class ProfilePage extends StatelessWidget {
 
     // Check if width is greater than height
     bool isWideScreen = screenSize.width > 500;
-    bool isNarrowScreen = screenSize.width < 420;
+    bool isNarrowScreen = screenSize.width < 380;
     return Scaffold(
       backgroundColor: ColorManager.white.withOpacity(0.99),
       appBar: AppBar(
