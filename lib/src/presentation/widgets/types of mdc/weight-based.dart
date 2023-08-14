@@ -174,9 +174,15 @@ class _WBDState extends State<WBD> {
                     ],
                   ),
                   h20,
-                  ElevatedButton(
-                      onPressed: ()=>_calculateDose(w: double.parse(_weightController.text), d: double.parse(_dosageController.text), f: frequency),
-                      child: Text('Calculate',style: getMediumStyle(color: ColorManager.white,fontSize: 16),))
+                  Center(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: Size.fromWidth(300)
+                      ),
+                        onPressed: ()=>_calculateDose(w: double.parse(_weightController.text), d: double.parse(_dosageController.text), f: frequency),
+                        child: Text('Calculate',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
+                  ),
+                  h100,
 
                 ],
               ),
@@ -203,8 +209,11 @@ class _WBDState extends State<WBD> {
         context: context,
         builder: (context){
           return AlertDialog(
+            backgroundColor: ColorManager.white.withOpacity(0.7),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15)
+            ),
             content: Container(
-              padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -219,18 +228,22 @@ class _WBDState extends State<WBD> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          color: ColorManager.black.withOpacity(0.7),
+                          decoration: BoxDecoration(
+                              color: ColorManager.black.withOpacity(0.7),
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
                           child: Text('Calculated amount per single dose',style: getMediumStyle(color: ColorManager.white),),
                         ),
                         h20,
-                        Text('${dose.round()}mg/kg',style: getRegularStyle(color: ColorManager.black),)
+                        Text('${dose.round()}mg/kg',style: getMediumStyle(color: ColorManager.white),),
+                        h20,
                       ],
                     ),
                   ),
-                  h20,
                   h20,
                   Container(
 
@@ -241,7 +254,7 @@ class _WBDState extends State<WBD> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
                           width: isWideScreen? 300:300.w,
@@ -249,13 +262,23 @@ class _WBDState extends State<WBD> {
                               color: ColorManager.black.withOpacity(0.5),
                               borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))
                           ),
+                          padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
                           child: Text('Total daily dosage',style: getMediumStyle(color: ColorManager.white),),
                         ),
                         h20,
-                        Text('${total.round()}mg/kg',style: getRegularStyle(color: ColorManager.black),)
+                        Text('${total.round()}mg/kg',style: getMediumStyle(color: ColorManager.white),),
+                        h20
                       ],
                     ),
                   ),
+                  h20,
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: Size.fromWidth(300)
+                      ),
+                      onPressed: ()=>Navigator.pop(context), child: Text('OK')),
+                
+
 
                 ],
               ),

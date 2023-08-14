@@ -977,3 +977,112 @@ class PatientHistory {
 
   PatientHistory({required this.date, required this.doctor, required this.treatment});
 }
+
+
+List<Map<String, dynamic>> patientRecords = [
+  {
+    "date": "2023-08-14",
+    "heartrate": 75,
+    "bloodpressure high": 120,
+    "bloodpressure low": 80,
+    "cholesterol level": 180,
+    "sugar level": 110,
+  },
+  {
+    "date": "2023-08-15",
+    "heartrate": 80,
+    "bloodpressure high": 130,
+    "bloodpressure low": 90,
+    "cholesterol level": 190,
+    "sugar level": 105,
+  },
+  {
+    "date": "2023-08-16",
+    "heartrate": 72,
+    "bloodpressure high": 130,
+    "bloodpressure low": 60,
+    "cholesterol level": 175,
+    "sugar level": 120,
+  },
+  {
+    "date": "2023-08-17",
+    "heartrate": 68,
+    "bloodpressure high": 130,
+    "bloodpressure low": 80,
+    "cholesterol level": 170,
+    "sugar level": 95,
+  },
+  {
+    "date": "2023-08-18",
+    "heartrate": 85,
+    "bloodpressure high": 140,
+    "bloodpressure low": 70,
+    "cholesterol level": 200,
+    "sugar level": 130,
+  },
+  {
+    "date": "2023-08-19",
+    "heartrate": 78,
+    "bloodpressure high": 100,
+    "bloodpressure low": 75,
+    "cholesterol level": 185,
+    "sugar level": 115,
+  },
+  {
+    "date": "2023-08-20",
+    "heartrate": 70,
+    "bloodpressure high": 118,
+    "bloodpressure low": 90,
+    "cholesterol level": 178,
+    "sugar level": 105,
+  },
+  {
+    "date": "2023-08-21",
+    "heartrate": 74,
+    "bloodpressure high": 122,
+    "bloodpressure low": 70,
+    "cholesterol level": 180,
+    "sugar level": 100,
+  },
+];
+
+
+List<Map<String, dynamic>> patientMedications = [
+  {
+    "prescribed date": "2023-08-14",
+    "medicine name": "Aspirin",
+    "dosage": "75 mg",
+    "duration": "7 days",
+    "prescribed by": "Dr. Smith",
+  },
+  {
+    "prescribed date": "2023-08-15",
+    "medicine name": "Lisinopril",
+    "dosage": "10 mg",
+    "duration": "30 days",
+    "prescribed by": "Dr. Johnson",
+  },
+  {
+    "prescribed date": "2023-08-16",
+    "medicine name": "Simvastatin",
+    "dosage": "20 mg",
+    "duration": "90 days",
+    "prescribed by": "Dr. Williams",
+  },
+  {
+    "prescribed date": "2023-08-17",
+    "medicine name": "Metformin",
+    "dosage": "500 mg",
+    "duration": "60 days",
+    "prescribed by": "Dr. Davis",
+  },
+  {
+    "prescribed date": "2023-08-18",
+    "medicine name": "Levothyroxine",
+    "dosage": "100 mcg",
+    "duration": "180 days",
+    "prescribed by": "Dr. Martinez",
+  },
+  // Add more dummy data entries as needed
+];
+

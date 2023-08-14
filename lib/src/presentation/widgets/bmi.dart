@@ -30,6 +30,7 @@ class BMIState extends State<BMI> {
   double result = 0.0;
   List bmiList = bmiCategories;
   int category = 0;
+  int unit =1;
 
   double _calculateHeight(double y){
     double res = 10 - (y * 10).toPrecision(1);
@@ -42,7 +43,7 @@ class BMIState extends State<BMI> {
   }
 
 
-  double _calculateBMI({
+  void _calculateBMI({
     required double w,
     required double h
   }) {
@@ -52,61 +53,51 @@ class BMIState extends State<BMI> {
       result = bmi;
       isLoading = false;
     });
-    print(bmi.toPrecision(1));
-    return bmi.toPrecision(1);
+    _getCategory();
   }
 
 
-  double _getSize() {
+  void _getCategory() {
+    final screenSize = MediaQuery.of(context).size;
+
+    // Check if width is greater than height
+    bool isWideScreen = screenSize.width > 500;
+    bool isNarrowScreen = screenSize.width < 420;
 
     if(result >= 0.0 && result < 16){
-      setState(() {
-        category = 0;
-      });
-      return 0.1;
+      _showDialog(0, isWideScreen, isNarrowScreen);
+
     } else if(result >=16 && result < 17){
-      setState(() {
-        category = 0;
-      });
-      return 0.18;
+      _showDialog(1, isWideScreen, isNarrowScreen);
     } else if(result >=17 && result < 18.5){
-      setState(() {
-        category = 0;
-      });
-      return 0.23;
+      _showDialog(2, isWideScreen, isNarrowScreen);
     } else if(result >=18.5 && result < 25){
-      setState(() {
-        category = 1;
-      });
-      return 0.35;
+      _showDialog(3, isWideScreen, isNarrowScreen);
     } else if(result >=25 && result < 30){
-      setState(() {
-        category = 2;
-      });
-      return 0.47;
+      _showDialog(4, isWideScreen, isNarrowScreen);
     } else if(result >=30 && result < 35){
-      setState(() {
-        category = 3;
-      });
-      return 0.53;
+      _showDialog(5, isWideScreen, isNarrowScreen);
     } else if(result >=35 && result < 40){
-      setState(() {
-        category =4;
-      });
-      return 0.575;
+      _showDialog(6, isWideScreen, isNarrowScreen);
     } else{
-      setState(() {
-        category = 5;
-      });
-      return 0.7;
+      _showDialog(7, isWideScreen, isNarrowScreen);
     }
 
+
+
+  }
+  String _convertCmToFeetAndInches(double cm) {
+    final int totalInches = (cm * 0.393701).round();
+    final int feet = totalInches ~/ 12;
+    final int inches = totalInches % 12;
+
+    return '$feet\'$inches"';
   }
 
 
 
-  Future<void> _showDialog(double heightCM,bool isWideScreen,bool isNarrowScreen) async {
-    double size = _getSize();
+  Future<void> _showDialog(int category,bool isWideScreen,bool isNarrowScreen) async {
+
     showDialog(
         context: context,
         builder: (context){
@@ -128,68 +119,51 @@ class BMIState extends State<BMI> {
                   Container(
                     height: MediaQuery.of(context).size.height*0.15,
                     // color: Colors.blue,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-
-                        Container(
-                          height: 50.h,
-                          // color: Colors.blue,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.1,
-                                color: ColorManager.red,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.05,
-                                color: ColorManager.red.withOpacity(0.7),
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.05,
-                                color: ColorManager.yellowFellow,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.19,
-                                color: ColorManager.primary,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.05,
-                                color: ColorManager.yellowFellow,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.05,
-                                color: ColorManager.red.withOpacity(0.5),
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.05,
-                                color: ColorManager.red.withOpacity(0.7),
-                              ),
-                              Container(
-                                width: isNarrowScreen? MediaQuery.of(context).size.width*0.11:MediaQuery.of(context).size.width*0.129,
-                                color: ColorManager.red,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width*size,
-                          child: Align(
-                            alignment: AlignmentDirectional.topEnd,
-                            child: Column(
-                              children: [
-                                FaIcon(CupertinoIcons.triangle_fill,color: Colors.black,size: 16,),
-                                Text('${result.toPrecision(1)} kg/m²',style: getRegularStyle(color: ColorManager.black,fontSize: 12),)
-                              ],
+                    child: Center(
+                      child: Container(
+                        height: 50.h,
+                        // color: Colors.blue,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width*0.1,
+                              color: category==0? ColorManager.red : ColorManager.red.withOpacity(0.1),
                             ),
-
-                          ),
+                            Container(
+                              width: MediaQuery.of(context).size.width*0.05,
+                              color: category==1? ColorManager.red.withOpacity(0.7):ColorManager.red.withOpacity(0.1),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width*0.05,
+                              color: category==2? ColorManager.yellowFellow:ColorManager.yellowFellow.withOpacity(0.1),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width*0.19,
+                              color: category==3? ColorManager.primary:ColorManager.primary.withOpacity(0.1),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width*0.05,
+                              color: category==4? ColorManager.yellowFellow:ColorManager.yellowFellow.withOpacity(0.1),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width*0.05,
+                              color: category==5? ColorManager.red.withOpacity(0.5):ColorManager.red.withOpacity(0.1),
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width*0.05,
+                              color: category==6? ColorManager.red.withOpacity(0.7):ColorManager.red.withOpacity(0.1),
+                            ),
+                            Container(
+                              width: isNarrowScreen? MediaQuery.of(context).size.width*0.11:MediaQuery.of(context).size.width*0.129,
+                              color:category==7? ColorManager.red:ColorManager.red.withOpacity(0.1),
+                            ),
+                          ],
                         ),
-
-                      ],
+                      ),
                     ),
                   ),
+                  h10,
+                  Text('${result.toPrecision(1)} kg/m²',style: getMediumStyle(color: ColorManager.black),),
                   h20,
                   Container(
                     width: MediaQuery.of(context).size.height*1.5/3,
@@ -214,7 +188,12 @@ class BMIState extends State<BMI> {
                       fixedSize: Size.fromWidth(200.w),
                       backgroundColor: ColorManager.primary
                   ),
-                  onPressed: ()=>Navigator.pop(context),
+                  onPressed: (){
+                    setState(() {
+                      isLoading = false;
+                    });
+                    Navigator.pop(context);
+                  },
                   child: Text('OK',style: getMediumStyle(color: Colors.white,fontSize: 16),)
               )
             ],
@@ -366,81 +345,133 @@ class BMIState extends State<BMI> {
                               h20,
                               Text('Age',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
                               h20,
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Container(
-                                    width: 50.w,
-                                    child: TextFormField(
-                                      controller: ageController,
-                                      validator: (value){
-                                        if(value!.isEmpty){
-                                          return 'Field must not be empty';
-                                        }
-                                        else if(double.parse(value)<10 && double.parse(value)>100 ){
-                                          return 'Age must be above 10 and below 100';
-                                        }
-                                        else{
-                                          return null;
-                                        }
-                                      },
-                                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                                      style: getRegularStyle(color: ColorManager.black,fontSize: 18),
-                                      keyboardType: TextInputType.phone,
-                                      decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.only(left: 8.w,top: 24.h),
-                                          border: UnderlineInputBorder()
+                              Container(
+                                color: ColorManager.dotGrey.withOpacity(0.2),
+                                padding:EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h) ,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      width: 50.w,
+                                      child: TextFormField(
+                                        controller: ageController,
+                                        validator: (value){
+                                          if(value!.isEmpty){
+                                            return 'Field must not be empty';
+                                          }
+                                          else if(double.parse(value)<10 && double.parse(value)>100 ){
+                                            return 'Age must be above 10 and below 100';
+                                          }
+                                          else{
+                                            return null;
+                                          }
+                                        },
+                                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                                        style: getRegularStyle(color: ColorManager.black,fontSize: 18),
+                                        keyboardType: TextInputType.phone,
+                                        decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.only(left: 8.w,top: 24.h),
+                                            border: UnderlineInputBorder()
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    width: 70.w,
-                                    child: Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Text('yrs old',style: getRegularStyle(color: ColorManager.black,fontSize: 20),)),
-                                  ),
-                                ],
+                                    Container(
+                                      width: 70.w,
+                                      child: Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: Text('yrs old',style: getRegularStyle(color: ColorManager.black,fontSize: 20),)),
+                                    ),
+                                  ],
+                                ),
                               ),
                               h20,
                               h20,
                               h20,
                               Text('Weight',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
                               h20,
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Container(
-                                    width: 50.w,
-                                    child: TextFormField(
-                                      controller: weightController,
-                                      validator: (value){
-                                        if(value!.isEmpty){
-                                          return 'Field must not be empty';
-                                        }
-                                        else{
-                                          return null;
-                                        }
-                                      },
-                                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                                      style: getRegularStyle(color: ColorManager.black,fontSize: 18),
-                                      keyboardType: TextInputType.phone,
-                                      decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.only(left: 8.w,top: 24.h),
-                                          border: UnderlineInputBorder()
+                              Container(
+                                color: ColorManager.dotGrey.withOpacity(0.2),
+                                padding:EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h) ,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      width: 50.w,
+                                      child: TextFormField(
+                                        controller: weightController,
+                                        validator: (value){
+                                          if(value!.isEmpty){
+                                            return 'Field must not be empty';
+                                          }
+                                          else{
+                                            return null;
+                                          }
+                                        },
+                                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                                        style: getRegularStyle(color: ColorManager.black,fontSize: 18),
+                                        keyboardType: TextInputType.phone,
+                                        decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.only(left: 8.w,top: 24.h),
+                                            border: UnderlineInputBorder()
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    width: 70.w,
-                                    child: Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Text('in KG',style: getRegularStyle(color: ColorManager.black,fontSize: 20),)),
-                                  ),
-                                ],
+                                    Container(
+                                      width: 70.w,
+                                      child: Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: Text('in KG',style: getRegularStyle(color: ColorManager.black,fontSize: 20),)),
+                                    ),
+                                  ],
+                                ),
                               ),
                               h20,
+                              Container(
+                                color: ColorManager.dotGrey.withOpacity(0.2),
+                                padding:EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h) ,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Container(
+                                          width: 50.w,
+                                          child: Radio<int>(
+                                            value: 1,
+                                            groupValue: unit,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                unit = value!;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        Text('In CM')
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Container(
+                                          width: 50.w,
+                                          child: Radio<int>(
+                                            value: 2,
+                                            groupValue: unit,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                unit = value!;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        Text('In ft/inch')
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              )
                             ],
                           ),
                         ),
@@ -513,7 +544,7 @@ class BMIState extends State<BMI> {
                                           width: 100,
                                           child: Center(
                                             child: Text(
-                                              '${heightCM.toPrecision(1)} cm',
+                                              '${unit ==1 ? heightCM.toPrecision(1):_convertCmToFeetAndInches(heightCM)}',
                                               style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 20,
@@ -551,8 +582,8 @@ class BMIState extends State<BMI> {
                       setState(() {
                         isLoading = true;
                       });
-                      double x=  _calculateBMI(w: double.parse(weightController.text), h:heightCM.toPrecision(1) );
-                      _showDialog(x,isWideScreen,isNarrowScreen);
+                     _calculateBMI(w: double.parse(weightController.text), h: heightCM);
+
 
                     }
                   },

@@ -12,6 +12,7 @@ import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../../../dummy_datas/dummy_datas.dart';
+import 'medical_details.dart';
 
 class DocPatientProfile extends StatefulWidget {
   const DocPatientProfile({super.key});
@@ -49,37 +50,114 @@ class _DocPatientProfileState extends State<DocPatientProfile> {
             h20,
             _patientStat(),
             h20,
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 18.w),
-              padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h),
-              decoration: BoxDecoration(
-                color: ColorManager.dotGrey.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: ColorManager.black.withOpacity(0.5)
-                )
+            InkWell(
+              // onTap: ()=>Get.to(()=>PatientMedicalHistory()),
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 18.w),
+                padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h),
+                decoration: BoxDecoration(
+                  color: ColorManager.dotGrey.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: ColorManager.black.withOpacity(0.5)
+                  )
+              ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: ColorManager.white.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
+                          child: Center(
+                            child: FaIcon(CupertinoIcons.doc_chart,color: ColorManager.black,),
+                          ),
+                        ),
+                        w10,
+                        Text('Patient\'s report',style: getRegularStyle(color: ColorManager.black),)
+                      ],
+                    ),
+                    FaIcon(Icons.chevron_right,color: ColorManager.black,)
+                  ],
+                ),
+              ),
             ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: ColorManager.white.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(10)
+            h20,
+            InkWell(
+              // onTap: ()=>Get.to(()=>PatientMedicalHistory()),
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 18.w),
+                padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h),
+                decoration: BoxDecoration(
+                    color: ColorManager.dotGrey.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        color: ColorManager.black.withOpacity(0.5)
+                    )
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: ColorManager.white.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
+                          child: Center(
+                            child: FaIcon(CupertinoIcons.folder_solid,color: ColorManager.black,),
+                          ),
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                        child: Center(
-                          child: FaIcon(Icons.medical_information,color: ColorManager.black,),
+                        w10,
+                        Text('Patient\'s documents',style: getRegularStyle(color: ColorManager.black),)
+                      ],
+                    ),
+                    FaIcon(Icons.chevron_right,color: ColorManager.black,)
+                  ],
+                ),
+              ),
+            ),
+            h20,
+            InkWell(
+              onTap: ()=>Get.to(()=>PatientMedicalHistory()),
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 18.w),
+                padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h),
+                decoration: BoxDecoration(
+                    color: ColorManager.dotGrey.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        color: ColorManager.black.withOpacity(0.5)
+                    )
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: ColorManager.white.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
+                          child: Center(
+                            child: FaIcon(Icons.medical_information,color: ColorManager.black,),
+                          ),
                         ),
-                      ),
-                      w10,
-                      Text('Medical History',style: getRegularStyle(color: ColorManager.black),)
-                    ],
-                  ),
-                  FaIcon(Icons.chevron_right,color: ColorManager.black,)
-                ],
+                        w10,
+                        Text('Medical History',style: getRegularStyle(color: ColorManager.black),)
+                      ],
+                    ),
+                    FaIcon(Icons.chevron_right,color: ColorManager.black,)
+                  ],
+                ),
               ),
             ),
             h20,

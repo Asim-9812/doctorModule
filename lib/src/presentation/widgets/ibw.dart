@@ -30,6 +30,7 @@ class IBWState extends State<IBW> {
   double result = 0.0;
   List bmiList = bmiCategories;
   int category = 0;
+  int unit =1;
 
   double _calculateHeight(double y){
     double res = 10 - (y * 10).toPrecision(1);
@@ -101,6 +102,15 @@ class IBWState extends State<IBW> {
     }
 
   }
+
+  String _convertCmToFeetAndInches(double cm) {
+    final int totalInches = (cm * 0.393701).round();
+    final int feet = totalInches ~/ 12;
+    final int inches = totalInches % 12;
+
+    return '$feet\'$inches"';
+  }
+
 
 
 
@@ -290,81 +300,133 @@ class IBWState extends State<IBW> {
                               h20,
                               Text('Age',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
                               h20,
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Container(
-                                    width: 50.w,
-                                    child: TextFormField(
-                                      controller: ageController,
-                                      validator: (value){
-                                        if(value!.isEmpty){
-                                          return 'Field must not be empty';
-                                        }
-                                        else if(double.parse(value)<10 && double.parse(value)>100 ){
-                                          return 'Age must be above 10 and below 100';
-                                        }
-                                        else{
-                                          return null;
-                                        }
-                                      },
-                                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                                      style: getRegularStyle(color: ColorManager.black,fontSize: 18),
-                                      keyboardType: TextInputType.phone,
-                                      decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.only(left: 8.w,top: 24.h),
-                                          border: UnderlineInputBorder()
+                              Container(
+                                color: ColorManager.dotGrey.withOpacity(0.2),
+                                padding:EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h) ,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      width: 50.w,
+                                      child: TextFormField(
+                                        controller: ageController,
+                                        validator: (value){
+                                          if(value!.isEmpty){
+                                            return 'Field must not be empty';
+                                          }
+                                          else if(double.parse(value)<10 && double.parse(value)>100 ){
+                                            return 'Age must be above 10 and below 100';
+                                          }
+                                          else{
+                                            return null;
+                                          }
+                                        },
+                                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                                        style: getRegularStyle(color: ColorManager.black,fontSize: 18),
+                                        keyboardType: TextInputType.phone,
+                                        decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.only(left: 8.w,top: 24.h),
+                                            border: UnderlineInputBorder()
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    width: 70.w,
-                                    child: Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Text('yrs old',style: getRegularStyle(color: ColorManager.black,fontSize: 20),)),
-                                  ),
-                                ],
+                                    Container(
+                                      width: 70.w,
+                                      child: Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: Text('yrs old',style: getRegularStyle(color: ColorManager.black,fontSize: 20),)),
+                                    ),
+                                  ],
+                                ),
                               ),
                               h20,
                               h20,
                               h20,
                               Text('Weight',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
                               h20,
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Container(
-                                    width: 50.w,
-                                    child: TextFormField(
-                                      controller: weightController,
-                                      validator: (value){
-                                        if(value!.isEmpty){
-                                          return 'Field must not be empty';
-                                        }
-                                        else{
-                                          return null;
-                                        }
-                                      },
-                                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                                      style: getRegularStyle(color: ColorManager.black,fontSize: 18),
-                                      keyboardType: TextInputType.phone,
-                                      decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.only(left: 8.w,top: 24.h),
-                                          border: UnderlineInputBorder()
+                              Container(
+                                color: ColorManager.dotGrey.withOpacity(0.2),
+                                padding:EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h) ,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      width: 50.w,
+                                      child: TextFormField(
+                                        controller: weightController,
+                                        validator: (value){
+                                          if(value!.isEmpty){
+                                            return 'Field must not be empty';
+                                          }
+                                          else{
+                                            return null;
+                                          }
+                                        },
+                                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                                        style: getRegularStyle(color: ColorManager.black,fontSize: 18),
+                                        keyboardType: TextInputType.phone,
+                                        decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.only(left: 8.w,top: 24.h),
+                                            border: UnderlineInputBorder()
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    width: 70.w,
-                                    child: Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Text('in KG',style: getRegularStyle(color: ColorManager.black,fontSize: 20),)),
-                                  ),
-                                ],
+                                    Container(
+                                      width: 70.w,
+                                      child: Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: Text('in KG',style: getRegularStyle(color: ColorManager.black,fontSize: 20),)),
+                                    ),
+                                  ],
+                                ),
                               ),
                               h20,
+                              Container(
+                                color: ColorManager.dotGrey.withOpacity(0.2),
+                                padding:EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h) ,
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Container(
+                                          width: 50.w,
+                                          child: Radio<int>(
+                                            value: 1,
+                                            groupValue: unit,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                unit = value!;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        Text('In CM')
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        Container(
+                                          width: 50.w,
+                                          child: Radio<int>(
+                                            value: 2,
+                                            groupValue: unit,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                unit = value!;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        Text('In ft/inch')
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              )
                             ],
                           ),
                         ),
@@ -437,7 +499,7 @@ class IBWState extends State<IBW> {
                                           width: 100,
                                           child: Center(
                                             child: Text(
-                                              '${heightCM.toPrecision(1)} cm',
+                                              '${unit ==1 ? heightCM.toPrecision(1):_convertCmToFeetAndInches(heightCM)}',
                                               style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 20,
