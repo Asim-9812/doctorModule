@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:medical_app/src/presentation/doctor/patient_profile/presentation/patient_report_docs.dart';
 
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
@@ -51,7 +52,7 @@ class _DocPatientProfileState extends State<DocPatientProfile> {
             _patientStat(),
             h20,
             InkWell(
-              // onTap: ()=>Get.to(()=>PatientMedicalHistory()),
+              onTap: ()=>Get.to(()=>PatientDocs()),
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 18.w),
                 padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h),
@@ -79,43 +80,6 @@ class _DocPatientProfileState extends State<DocPatientProfile> {
                         ),
                         w10,
                         Text('Patient\'s report',style: getRegularStyle(color: ColorManager.black),)
-                      ],
-                    ),
-                    FaIcon(Icons.chevron_right,color: ColorManager.black,)
-                  ],
-                ),
-              ),
-            ),
-            h20,
-            InkWell(
-              // onTap: ()=>Get.to(()=>PatientMedicalHistory()),
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 18.w),
-                padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h),
-                decoration: BoxDecoration(
-                    color: ColorManager.dotGrey.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                        color: ColorManager.black.withOpacity(0.5)
-                    )
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              color: ColorManager.white.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(10)
-                          ),
-                          padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                          child: Center(
-                            child: FaIcon(CupertinoIcons.folder_solid,color: ColorManager.black,),
-                          ),
-                        ),
-                        w10,
-                        Text('Patient\'s documents',style: getRegularStyle(color: ColorManager.black),)
                       ],
                     ),
                     FaIcon(Icons.chevron_right,color: ColorManager.black,)
