@@ -6,6 +6,18 @@ List<Map<String, dynamic>> bmiCategories = [
     'Individuals with a BMI below 18.5 are classified as underweight. This suggests that their body weight is lower than what is considered healthy for their height. Underweight individuals may face risks of malnutrition and weakened immunity.',
   },
   {
+    'name': 'Underweight',
+    'bmiRange': 'BMI < 18.5',
+    'description':
+    'Individuals with a BMI below 18.5 are classified as underweight. This suggests that their body weight is lower than what is considered healthy for their height. Underweight individuals may face risks of malnutrition and weakened immunity.',
+  },
+  {
+    'name': 'Underweight',
+    'bmiRange': 'BMI < 18.5',
+    'description':
+    'Individuals with a BMI below 18.5 are classified as underweight. This suggests that their body weight is lower than what is considered healthy for their height. Underweight individuals may face risks of malnutrition and weakened immunity.',
+  },
+  {
     'name': 'Normal Weight',
     'bmiRange': 'BMI 18.5 - 24.9',
     'description':

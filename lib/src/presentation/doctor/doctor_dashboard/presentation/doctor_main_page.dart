@@ -20,7 +20,7 @@ import '../../../patient/scan/presentation/qr_scan.dart';
 import '../../../patient/settings/presentation/settings_page.dart';
 import '../../../patient/utilities/presentation/patient_utilities.dart';
 import '../../patient_reports/presentation/report_page_doctor.dart';
-import 'drawer/drawer_items.dart';
+import '../../settings_doctor/settings_doctor.dart';
 
 
 
@@ -116,18 +116,10 @@ class _AnimatedBarExampleState extends State<DoctorMainPage> {
         hasNotch: false,
         currentIndex: selected ?? 0,
         onTap: (index) {
-          if(index == 4){
-            _scaffoldKey.currentState!.openEndDrawer();
-            setState(() {
-              selected = index;
-            });
-          }
-          else{
-            controller.jumpToPage(index);
-            setState(() {
-              selected = index;
-            });
-          }
+          controller.jumpToPage(index);
+          setState(() {
+            selected = index;
+          });
 
         },
       ),
@@ -145,13 +137,8 @@ class _AnimatedBarExampleState extends State<DoctorMainPage> {
           DoctorDocumentPage(isWideScreen,isNarrowScreen),
           PatientReportPageDoctor(),
           DoctorUtilityPage(),
+          SettingsDoctor(isWideScreen, isNarrowScreen)
         ],
-      ),
-      endDrawer: SafeArea(
-        child: Drawer(
-          backgroundColor: ColorManager.white,
-          child: DrawerItems(isWideScreen,isNarrowScreen),
-        ),
       ),
     );
   }

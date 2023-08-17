@@ -11,6 +11,7 @@ import 'package:hive/hive.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/data/services/user_services.dart';
+import 'package:medical_app/src/presentation/common/shimmers.dart';
 import 'package:medical_app/src/presentation/doctor/profile/presentation/widgets/update_profile.dart';
 import 'package:medical_app/src/presentation/organization/org_profile/presentation/widgets/update_profile.dart';
 
@@ -113,7 +114,7 @@ class OrgProfilePage extends ConsumerWidget {
           );
         },
         error: (error,stack)=>Center(child: Text('$error')),
-        loading: ()=>Center(child: CircularProgressIndicator())
+        loading: ()=>ProfileShimmer()
     );
 
   }
@@ -209,7 +210,7 @@ class OrgProfilePage extends ConsumerWidget {
 
     // Check if width is greater than height
     bool isWideScreen = screenSize.width > 500;
-    bool isNarrowScreen = screenSize.width < 420;
+    bool isNarrowScreen = screenSize.width < 380;
     if(trailing == null){
       trailing = false;
     }

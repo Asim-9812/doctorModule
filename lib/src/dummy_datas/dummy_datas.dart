@@ -1086,3 +1086,26 @@ List<Map<String, dynamic>> patientMedications = [
   // Add more dummy data entries as needed
 ];
 
+
+final List<String> dummyTasks = [
+  'Review patient history for John Smith',
+  'Follow up on lab results for Jane Doe',
+  'Call Michael Brown for appointment reminder',
+  'Update prescription for Sarah Johnson',
+  'Complete progress notes for David Williams',
+  'Schedule MRI for Emily Anderson',
+  'Send referral to specialist for Robert Taylor',
+  'Review dietary recommendations for Maria Martinez',
+  'Confirm surgery details with James Wilson',
+  'Call back Susan Davis regarding test results',
+  'Write medical certificate for Jennifer Clark',
+  'Check insurance coverage for Mark Jackson',
+  'Discuss treatment options with Lisa Thompson',
+  'Update vaccination records for Brian Harris',
+  'Call back Anthony White for follow-up appointment',
+  'Review X-ray results for Patricia Garcia',
+  'Send prescription renewal to pharmacy for Richard Lee',
+  'Discuss physical therapy plan with Mary Miller',
+  'Order blood work for Elizabeth Robinson',
+  'Confirm next appointment with Daniel Young',
+];

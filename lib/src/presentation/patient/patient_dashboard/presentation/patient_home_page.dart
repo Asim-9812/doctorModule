@@ -148,6 +148,7 @@ class _PatientHomePageState extends State<PatientHomePage> {
   Widget buildBody(BuildContext context){
     return SliverToBoxAdapter(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           FadeInUp(
             duration: Duration(milliseconds: 500),
@@ -160,6 +161,10 @@ class _PatientHomePageState extends State<PatientHomePage> {
           FadeInUp(
               duration: Duration(milliseconds: 1000),
               child: buildPersonalServices(widget.isWideScreen)),
+
+          FadeInUp(
+              duration: Duration(milliseconds: 1200),
+              child: _buildHealthTips(widget.isWideScreen)),
 
           SizedBox(
             height: 300.h,
@@ -441,6 +446,99 @@ class _PatientHomePageState extends State<PatientHomePage> {
       ),
     );
   }
+
+  Widget _buildHealthTips(bool isWideScreen){
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 18.w),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Health Tips',style: getMediumStyle(color: ColorManager.black,fontSize:isWideScreen?20: 20.sp),),
+          h20,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
+            color: ColorManager.dotGrey.withOpacity(0.2),
+            child: Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Drink water everyday.', style: getMediumStyle(color: Colors.black)),
+                  h10,
+                  Text(
+                    'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
+                    style: getRegularStyle(color: Colors.black, fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          h10,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
+            color: ColorManager.dotGrey.withOpacity(0.2),
+            child: Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Drink water everyday.', style: getMediumStyle(color: Colors.black)),
+                  h10,
+                  Text(
+                    'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
+                    style: getRegularStyle(color: Colors.black, fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          h10,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
+            color: ColorManager.dotGrey.withOpacity(0.2),
+            child: Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Drink water everyday.', style: getMediumStyle(color: Colors.black)),
+                  h10,
+                  Text(
+                    'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
+                    style: getRegularStyle(color: Colors.black, fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          h10,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
+            color: ColorManager.dotGrey.withOpacity(0.2),
+            child: Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Drink water everyday.', style: getMediumStyle(color: Colors.black)),
+                  h10,
+                  Text(
+                    'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
+                    style: getRegularStyle(color: Colors.black, fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          h10,
+
+        ],
+      ),
+    );
+  }
+
+
 }
 
 class CustomSliverAppBarDelegate extends SliverPersistentHeaderDelegate {
@@ -640,30 +738,32 @@ class FactCarousel extends StatelessWidget {
           ),
           padding: EdgeInsets.symmetric(horizontal: 24.w,vertical: 12.h),
           width: MediaQuery.of(context).size.width,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  FaIcon(Icons.lightbulb,color: ColorManager.white,),
-                  w10,
-                  Text('Did you know?',style: getHeadBoldStyle(color: ColorManager.white,fontSize: isWideScreen == true ? 26:26.sp),),
-                ],
-              ),
-              h12,
-              Text('In a day, an average human must drink upto 4L of water.',style: getRegularStyle(color: ColorManager.white,fontSize: fontSize),maxLines: 3,),
-              h12,
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: ColorManager.white,
-                  elevation: 5
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    FaIcon(Icons.lightbulb,color: ColorManager.white,),
+                    w10,
+                    Text('Did you know?',style: getHeadBoldStyle(color: ColorManager.white,fontSize: isWideScreen == true ? 26:26.sp),),
+                  ],
                 ),
-                  onPressed: (){},
-                  child: Text('Know More',style: getRegularStyle(color: ColorManager.black,fontSize: fontSize),)
-              )
+                h12,
+                Text('In a day, an average human must drink upto 4L of water.',style: getRegularStyle(color: ColorManager.white,fontSize: fontSize),maxLines: 3,),
+                h12,
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorManager.white,
+                    elevation: 5
+                  ),
+                    onPressed: (){},
+                    child: Text('Know More',style: getRegularStyle(color: ColorManager.black,fontSize: fontSize),)
+                )
 
-            ],
+              ],
+            ),
           ),
           
         );
