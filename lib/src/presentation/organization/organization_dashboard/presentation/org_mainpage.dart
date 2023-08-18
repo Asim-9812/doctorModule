@@ -10,6 +10,7 @@ import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/presentation/doctor/doctor_dashboard/presentation/doctor_home_page.dart';
 import 'package:medical_app/src/presentation/doctor/doctor_utilities/presentation/doctor_utilities.dart';
 import 'package:medical_app/src/presentation/doctor/documents/presentation/document_page.dart';
+import 'package:medical_app/src/presentation/organization/doctor_statistics/presentation/doctor_stat_page.dart';
 import 'package:medical_app/src/presentation/organization/org_settings/presentation/org_settings.dart';
 import 'package:medical_app/src/presentation/organization/organization_dashboard/presentation/org_homepage.dart';
 import 'package:medical_app/src/presentation/organization/patient_reports/presentation/report_page_org.dart';
@@ -52,7 +53,7 @@ class _AnimatedBarExampleState extends State<OrgMainPage> {
 
     // Check if width is greater than height
     bool isWideScreen = screenSize.width > 500;
-    bool isNarrowScreen = screenSize.width < 420;
+    bool isNarrowScreen = screenSize.width < 380;
 
     return Scaffold(
       extendBody: true, //to make floating action button notch transparent
@@ -78,6 +79,7 @@ class _AnimatedBarExampleState extends State<OrgMainPage> {
             // backgroundColor: Colors.orange,
             title:  Text('Home'),
           ),
+
           BottomBarItem(
             icon:  FaIcon(CupertinoIcons.doc_chart,size: isWideScreen?24:24.sp,),
             // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
@@ -85,6 +87,14 @@ class _AnimatedBarExampleState extends State<OrgMainPage> {
             // unSelectedColor: Colors.purple,
             // backgroundColor: Colors.orange,
             title:  Text('Reports'),
+          ),
+          BottomBarItem(
+            icon:  FaIcon(Icons.people_alt_outlined,size: isWideScreen?24:24.sp,),
+            // selectedIcon: const FaIcon(FontAwesomeIcons.folder),
+            selectedColor: ColorManager.primary,
+            // unSelectedColor: Colors.purple,
+            // backgroundColor: Colors.orange,
+            title:  Text('Doctors'),
           ),
           BottomBarItem(
             icon:  FaIcon(Icons.settings,size: isWideScreen?24:24.sp,),
@@ -110,6 +120,7 @@ class _AnimatedBarExampleState extends State<OrgMainPage> {
         children: [
           OrgHomePage(isWideScreen,isNarrowScreen),
           OrgPatientReports(),
+          DoctorReportsPage(isWideScreen, isNarrowScreen),
           OrgSettings(isWideScreen,isNarrowScreen),
         ],
       ),

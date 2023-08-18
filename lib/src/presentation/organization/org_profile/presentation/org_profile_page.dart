@@ -31,7 +31,7 @@ class OrgProfilePage extends ConsumerWidget {
 
     // Check if width is greater than height
     bool isWideScreen = screenSize.width > 500;
-    bool isNarrowScreen = screenSize.width < 420;
+    bool isNarrowScreen = screenSize.width < 380;
     return userInfo.when(
         data: (data){
           return  Scaffold(

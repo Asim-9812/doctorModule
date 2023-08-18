@@ -1,50 +1,50 @@
-
-
 class RegisteredPatientModel {
-  int id;
-  String patientID;
-  String firstName;
-  String lastName;
-  DateTime dob;
-  String imagePhoto;
-  int countryID;
-  String countryName;
-  int provinceID;
-  String provinceName;
-  int districtID;
-  String municipality;
-  int municipalityID;
-  String districtName;
-  int ward;
-  String localAddress;
-  int genderID;
-  String nid;
-  String uhid;
-  DateTime entryDate;
+  int? id;
+  String? patientID;
+  String? firstName;
+  String? lastName;
+  DateTime? dob;
+  String? contact;
+  String? imagePhoto;
+  int? countryID;
+  String? countryName;
+  int? provinceID;
+  String? provinceName;
+  int? districtID;
+  String? municipality;
+  int? municipalityID;
+  String? districtName;
+  int? ward;
+  String? localAddress;
+  int? genderID;
+  String? nid;
+  String? uhid;
+  DateTime? entryDate;
   dynamic flag;
 
   RegisteredPatientModel({
-    required this.id,
-    required this.patientID,
-    required this.firstName,
-    required this.lastName,
-    required this.dob,
-    required this.imagePhoto,
-    required this.countryID,
-    required this.countryName,
-    required this.provinceID,
-    required this.provinceName,
-    required this.districtID,
-    required this.municipality,
-    required this.municipalityID,
-    required this.districtName,
-    required this.ward,
-    required this.localAddress,
-    required this.genderID,
-    required this.nid,
-    required this.uhid,
-    required this.entryDate,
-    required this.flag,
+    this.id,
+    this.patientID,
+    this.firstName,
+    this.lastName,
+    this.dob,
+    this.contact,
+    this.imagePhoto,
+    this.countryID,
+    this.countryName,
+    this.provinceID,
+    this.provinceName,
+    this.districtID,
+    this.municipality,
+    this.municipalityID,
+    this.districtName,
+    this.ward,
+    this.localAddress,
+    this.genderID,
+    this.nid,
+    this.uhid,
+    this.entryDate,
+    this.flag,
   });
 
   factory RegisteredPatientModel.fromJson(Map<String, dynamic> json) {
@@ -53,7 +53,8 @@ class RegisteredPatientModel {
       patientID: json['patientID'],
       firstName: json['firstName'],
       lastName: json['lastName'],
-      dob: DateTime.parse(json['dob']),
+      contact: json['contact'],
+      dob: json['dob'] != null ? DateTime.parse(json['dob']) : null,
       imagePhoto: json['imagePhoto'],
       countryID: json['countryID'],
       countryName: json['countryName'],
@@ -68,7 +69,7 @@ class RegisteredPatientModel {
       genderID: json['genderID'],
       nid: json['nid'],
       uhid: json['uhid'],
-      entryDate: DateTime.parse(json['entryDate']),
+      entryDate: json['entryDate'] != null ? DateTime.parse(json['entryDate']) : null,
       flag: json['flag'],
     );
   }
@@ -79,7 +80,7 @@ class RegisteredPatientModel {
       'patientID': patientID,
       'firstName': firstName,
       'lastName': lastName,
-      'dob': dob.toIso8601String(),
+      'dob': dob?.toIso8601String(),
       'imagePhoto': imagePhoto,
       'countryID': countryID,
       'countryName': countryName,
@@ -94,7 +95,7 @@ class RegisteredPatientModel {
       'genderID': genderID,
       'nid': nid,
       'uhid': uhid,
-      'entryDate': entryDate.toIso8601String(),
+      'entryDate': entryDate?.toIso8601String(),
       'flag': flag,
     };
   }

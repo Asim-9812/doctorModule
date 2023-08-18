@@ -2,28 +2,32 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
+import 'package:medical_app/src/data/model/registered_patient_model.dart';
+import 'package:medical_app/src/data/services/registered_patient_services.dart';
 import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
 import 'package:medical_app/src/presentation/organization/patient_reports/presentation/patient_profile_org.dart';
+import 'package:medical_app/src/presentation/patient_registration/presentation/patient_registration.dart';
 import 'package:medical_app/src/test/test.dart';
 
 import '../../../../core/resources/value_manager.dart';
 import '../../charts_graphs/patient_groups.dart';
 import '../../charts_graphs/total_patients.dart';
 
-class OrgPatientReports extends StatefulWidget {
+class OrgPatientReports extends ConsumerStatefulWidget {
   const OrgPatientReports({super.key});
 
   @override
-  State<OrgPatientReports> createState() => _OrgPatientReportsState();
+  ConsumerState<OrgPatientReports> createState() => _OrgPatientReportsState();
 }
 
-class _OrgPatientReportsState extends State<OrgPatientReports> {
+class _OrgPatientReportsState extends ConsumerState<OrgPatientReports> {
 
 
   bool _isExpanded = false;
@@ -31,10 +35,13 @@ class _OrgPatientReportsState extends State<OrgPatientReports> {
   int currentPage = 0;
   int itemsPerPage = 5;
 
-  List<Map<String, dynamic>> getDisplayedPatients() {
+
+  List<RegisteredPatientModel> getDisplayedPatients({
+    required List<RegisteredPatientModel> patientList
+}) {
     final startIndex = currentPage * itemsPerPage;
     final endIndex = startIndex + itemsPerPage;
-    return patientData.sublist(startIndex, endIndex);
+    return patientList.sublist(startIndex, endIndex);
   }
 
   void nextPage() {
@@ -56,7 +63,10 @@ class _OrgPatientReportsState extends State<OrgPatientReports> {
 
   @override
   Widget build(BuildContext context) {
-    final displayedPatients = getDisplayedPatients();
+
+    final patientList = ref.watch(getPatientList);
+
+
     // Get the screen size
     final screenSize = MediaQuery.of(context).size;
 
@@ -328,6 +338,36 @@ class _OrgPatientReportsState extends State<OrgPatientReports> {
               ),
             ),
             h20,
+            InkWell(
+              onTap: ()=>Get.to(()=>PatientRegistrationForm(isWideScreen, isNarrowScreen)),
+              child: Container(
+                height: 60,
+                decoration: BoxDecoration(
+                    color: ColorManager.dotGrey.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        color: ColorManager.black.withOpacity(0.5)
+                    )
+                ),
+                margin: EdgeInsets.symmetric(horizontal: 18.w),
+                padding: EdgeInsets.symmetric(horizontal: 18.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        FaIcon(Icons.person_add,color: Colors.black,),
+                        w20,
+                        Text('Add a patient',style: getMediumStyle(color: ColorManager.black,fontSize: 22),),
+                      ],
+                    ),
+                    FaIcon(Icons.chevron_right,color: ColorManager.black,)
+                  ],
+                ),
+              ),
+            ),
+            h20,
             Container(
 
               padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
@@ -429,64 +469,115 @@ class _OrgPatientReportsState extends State<OrgPatientReports> {
               ),
             ),
             h20,
-            ListTile(
-              title: Text('Recent Patients',style: getMediumStyle(color: ColorManager.black,fontSize: 22),),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 18.w),
+              child: Text('Recent Patients',style: getMediumStyle(color: ColorManager.black,fontSize: 22),),
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                border: TableBorder.all(
-                  color: ColorManager.black.withOpacity(0.3),
-                ),
-                headingRowColor: MaterialStateColor.resolveWith((states) => ColorManager.primary),
-                headingTextStyle: getMediumStyle(color: ColorManager.white,fontSize: 18),
-                columns: [
-                  DataColumn(label: Text('S.N.')),
-                  DataColumn(label: Text('Name')),
-                  DataColumn(label: Text('Age')),
-                  DataColumn(label: Text('Gender')),
-                  DataColumn(label: Text('Contact')),
-                  DataColumn(label: Text('Address')),
-                  DataColumn(label: Text('Entry Date')),
-                  DataColumn(label: Text('Action')),
-                ],
-                rows: displayedPatients
-                    .asMap()
-                    .entries
-                    .map((entry) {
-                  final index = entry.key + 1 + currentPage * itemsPerPage;
-                  final patient = entry.value;
-                  final age = DateTime
-                      .now()
-                      .year - DateTime
-                      .parse(patient['dob'])
-                      .year;
-                  final gender = patient['genderID'] == 1
-                      ? 'M'
-                      : (patient['genderID'] == 2 ? 'F' : 'O');
+            h20,
 
-                  return DataRow(
-                    cells: [
-                      DataCell(Text(index.toString())),
-                      DataCell(
-                          Text('${patient['firstName']} ${patient['lastName']}')),
-                      DataCell(Text(age.toString())),
-                      DataCell(Text(gender)),
-                      DataCell(Text(patient['contact'])),
-                      DataCell(Text(patient['localAddress'])),
-                      DataCell(Text(patient['entryDate'].toString())),
-                      DataCell(
-                          IconButton(onPressed: (){
-                            print(patient["serviceCategory"]);
-                            _showDetails(patient: patient);
 
-                          },icon: FaIcon(CupertinoIcons.eye_fill,color: ColorManager.primaryOpacity80,))
+
+            patientList.when(
+                data: (data){
+                  final displayedPatients = getDisplayedPatients(patientList: data);
+                  return SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      border: TableBorder.all(
+                        color: ColorManager.black.withOpacity(0.3),
                       ),
-                    ],
+                      headingRowColor: MaterialStateColor.resolveWith((states) => ColorManager.primary),
+                      headingTextStyle: getMediumStyle(color: ColorManager.white,fontSize: 18),
+                      columns: [
+                        DataColumn(label: Text('S.N.')),
+                        DataColumn(label: Text('Name')),
+                        DataColumn(label: Text('Age')),
+                        DataColumn(label: Text('Gender')),
+                        DataColumn(label: Text('Contact')),
+                        DataColumn(label: Text('Address')),
+                        DataColumn(label: Text('Entry Date')),
+                        DataColumn(label: Text('Action')),
+                      ],
+                      rows: displayedPatients
+                          .asMap()
+                          .entries
+                          .map((entry) {
+                        final index = entry.key + 1 + currentPage * itemsPerPage;
+                        final patient = entry.value;
+                        final age = DateTime
+                            .now()
+                            .year - patient.dob!
+                            .year;
+                        final gender = patient.genderID == 1
+                            ? 'M'
+                            : (patient.genderID == 2 ? 'F' : 'O');
+
+                        return DataRow(
+                          cells: [
+                            DataCell(Text(index.toString())),
+                            DataCell(
+                                Text('${patient.firstName} ${patient.lastName}')),
+                            DataCell(Text(age.toString())),
+                            DataCell(Text(gender)),
+                            DataCell(Text(patient.contact ?? '-')),
+                            DataCell(Text(patient.localAddress ?? '-')),
+                            DataCell(Text(patient.entryDate.toString())),
+                            DataCell(
+                                IconButton(onPressed: (){
+
+                                  _showDetails(patient: patient);
+
+                                },icon: FaIcon(CupertinoIcons.eye_fill,color: ColorManager.primaryOpacity80,))
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
                   );
-                }).toList(),
-              ),
-            ),
+                },
+                error: (error,stack)=>Container(
+                  width: double.infinity,
+                  height: 400,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 50,
+                        width: double.infinity,
+                        color: ColorManager.primary,
+                      ),
+                      Container(
+                        height: 350,
+                        width: double.infinity,
+                        child: Center(
+                          child: Text('Something went wrong\n(${error})',textAlign: TextAlign.center,style: getRegularStyle(color: ColorManager.black),),
+                        ),
+                      ),
+
+                    ],
+                  ),
+                ),
+                loading: ()=>Container(
+                  width: double.infinity,
+                  height: 400,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 50,
+                        width: double.infinity,
+                        color: ColorManager.primary,
+                      ),
+                      Container(
+                        height: 350,
+                        width: double.infinity,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+
+                    ],
+                  ),
+                ),),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -513,7 +604,7 @@ class _OrgPatientReportsState extends State<OrgPatientReports> {
   }
 
   Future<void> _showDetails({
-    required Map<String,dynamic> patient
+    required RegisteredPatientModel patient
   }) async {
     final screenSize = MediaQuery.of(context).size;
 
@@ -542,7 +633,7 @@ class _OrgPatientReportsState extends State<OrgPatientReports> {
 
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),
-                    image: DecorationImage(image:patient["serviceCategory"]==1? AssetImage('assets/images/containers/Tip-Container-3.png'):AssetImage('assets/images/containers/Tip-Container-off.png'),fit: BoxFit.cover),
+                    image: DecorationImage(image:AssetImage('assets/images/containers/Tip-Container-3.png'),fit: BoxFit.cover),
                   ),
                   padding: EdgeInsets.symmetric(vertical: 30.h),
                   margin: EdgeInsets.symmetric(vertical: 1),
@@ -577,7 +668,7 @@ class _OrgPatientReportsState extends State<OrgPatientReports> {
                         children: [
                           Text('Name :',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
                           w10,
-                          Text('${patient['firstName']} ${patient['lastName']}',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                          Text('${patient.firstName} ${patient.lastName}',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
                         ],
                       ),
                       h10,
@@ -586,7 +677,7 @@ class _OrgPatientReportsState extends State<OrgPatientReports> {
                         children: [
                           Text('Contact :',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
                           w10,
-                          Text('${patient['contact']}',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                          Text('${patient.contact}',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
                         ],
                       ),
 
@@ -614,7 +705,10 @@ class _OrgPatientReportsState extends State<OrgPatientReports> {
                           style: ElevatedButton.styleFrom(
                               backgroundColor: ColorManager.primary
                           ),
-                          onPressed: ()=>Get.to(()=>PatientProfileOrg(isWideScreen,isNarrowScreen)),
+                          onPressed: (){
+                            Navigator.pop(context);
+                            Get.to(()=>PatientProfileOrg(isWideScreen,isNarrowScreen));
+                          },
                           child: Text('View More',style: getRegularStyle(color: ColorManager.white,fontSize: 16),),
                         ),
                       ),

@@ -9,12 +9,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:medical_app/src/presentation/patient/personal_services/lab_reports/lab_reports.dart';
 import 'package:medical_app/src/presentation/patient/quick_services/presentation/telemedicine.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../notification/presentation/notification_page.dart';
+import '../../personal_services/discharge_summary/discharge_summary.dart';
+import '../../personal_services/prescription/prescription.dart';
 import '../../profile/presentation/profile_page.dart';
 import '../../quick_services/presentation/e_ticket.dart';
 import '../../search-near-by/presentation/search_for_page.dart';
@@ -359,6 +362,7 @@ class _PatientHomePageState extends State<PatientHomePage> {
     required Color color,
     IconData? icon,
     String? img,
+    VoidCallback? onTap,
 }) {
 
 
@@ -378,9 +382,7 @@ class _PatientHomePageState extends State<PatientHomePage> {
       ),
       elevation: 0,
       child: InkWell(
-        onTap: () {
-          // Add your onTap logic here if needed
-        },
+        onTap: onTap,
         splashColor: ColorManager.primary.withOpacity(0.5),// Customize the splash color
         borderRadius: BorderRadius.circular(10),
         child: Container(
@@ -426,9 +428,18 @@ class _PatientHomePageState extends State<PatientHomePage> {
                 mainAxisSpacing: isWideScreen? 12: 12.h
             ),
             children: [
-              _personalServices(name: 'Prescription', icon: FontAwesomeIcons.filePrescription,color: ColorManager.accentRed.withOpacity(0.2)),
-              _personalServices(name: 'Discharge Summary', icon: Icons.sticky_note_2_rounded,color: ColorManager.accentBlue.withOpacity(0.2)),
-              _personalServices(name: 'Lab', icon: FontAwesomeIcons.microscope,color: ColorManager.accentYellow.withOpacity(0.2)),
+              _personalServices(
+                  onTap:()=>Get.to(()=>Prescriptions()),
+                  name: 'Prescription',
+                  icon: FontAwesomeIcons.filePrescription,
+                  color: ColorManager.accentRed.withOpacity(0.2)
+              ),
+              _personalServices(
+                  onTap: ()=>Get.to(()=>Discharge()),
+                  name: 'Discharge Summary', icon: Icons.sticky_note_2_rounded,color: ColorManager.accentBlue.withOpacity(0.2)),
+              _personalServices(
+                  onTap: ()=>Get.to(()=>LabReports()),
+                  name: 'Lab', icon: FontAwesomeIcons.microscope,color: ColorManager.accentYellow.withOpacity(0.2)),
               _personalServices(name: 'X-Ray', icon: FontAwesomeIcons.xRay,color: ColorManager.accentLightGreen.withOpacity(0.2)),
               _personalServices(name: 'USG', img: 'assets/icons/ultrasound.png',color: ColorManager.accentCream.withOpacity(0.2)),
               _personalServices(name: 'CT Scan', img: 'assets/icons/tomography.png',color: ColorManager.accentOrange.withOpacity(0.2)),

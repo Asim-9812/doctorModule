@@ -82,9 +82,11 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
     _fillForm();
 
     genderId = widget.user.genderID ;
+    print('gender $genderId');
 
-    selectedGender = genderId == '0' ? 'Select a Gender' : genderId == 1? 'Male' : genderId == 2 ? 'Female':'Others';
-
+    setState(() {
+      selectedGender = genderId == 0 ? 'Select Gender' : genderId == 1? 'Male' : genderId == 2 ? 'Female':'Others';
+    });
 
 
   }
@@ -571,11 +573,10 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                 height: 60,
                 width: 400.w,
                 child: DropdownButtonFormField<String>(
-
                   padding: EdgeInsets.zero,
                   value: selectedGender,
-                  validator: (value){
-                    if(selectedGender == genderType[0]){
+                  validator: (value) {
+                    if (selectedGender == genderType[0]) {
                       return 'Please select a Gender';
                     }
                     return null;
@@ -598,7 +599,10 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                       value: item,
                       child: Text(
                         item,
-                        style: getRegularStyle(color: Colors.black,fontSize: widget.isNarrowScreen?20.sp:20),
+                        style: getRegularStyle(
+                          color: Colors.black,
+                          fontSize: widget.isNarrowScreen ? 20.sp : 20,
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -612,6 +616,7 @@ class _UpdateDocProfileState extends ConsumerState<UpdateDocProfile> {
                   },
                 ),
               ),
+
               h20,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

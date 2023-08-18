@@ -126,70 +126,56 @@ class _DoctorsListState extends State<DoctorsList> {
             ),
             Container(
               height: MediaQuery.of(context).size.height*4/5,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    h20,
-                    Container(
-                      height: filteredDoctorsData.length*200,
-                      child: GridView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-                          itemCount: filteredDoctorsData.length,
-                          gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: _crossAxisCount(),
-                            childAspectRatio: 1/2,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10
-                          ) ,
-                          itemBuilder: (context,index){
-                            return Container(
-                              decoration: BoxDecoration(
-                                  color: _getDepartmentColor(filteredDoctorsData[index]['department_id']),
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                      color: ColorManager.black.withOpacity(0.5)
+              child: GridView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
+                  itemCount: filteredDoctorsData.length,
+                  gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: _crossAxisCount(),
+                      childAspectRatio: 1/2,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10
+                  ) ,
+                  itemBuilder: (context,index){
+                    return Container(
+                      decoration: BoxDecoration(
+                          color: _getDepartmentColor(filteredDoctorsData[index]['department_id']),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                              color: ColorManager.black.withOpacity(0.5)
+                          )
+                      ),
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 5.h),
+                        color: ColorManager.white,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Card(
+                              color: Colors.grey,
+                              shape: CircleBorder(
+                                  side: BorderSide(
+                                    width: 2,
+                                    color: ColorManager.black.withOpacity(0.5),
                                   )
                               ),
-                              child: Container(
-                               margin: EdgeInsets.symmetric(vertical: 5.h),
-                                color: ColorManager.white,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Card(
-                                      color: Colors.grey,
-                                      shape: CircleBorder(
-                                        side: BorderSide(
-                                          width: 2,
-                                          color: ColorManager.black.withOpacity(0.5),
-                                        )
-                                      ),
-                                      child: CircleAvatar(
-                                        radius: 40.r,
-                                        backgroundColor: ColorManager.white,
-                                        backgroundImage: profileImage ,
-                                      ),
-                                    ),
-                                    h20,
-                                    Text('${filteredDoctorsData[index]['name']}',style: getMediumStyle(color: ColorManager.black,fontSize: isWideScreen?16:16.sp),),
-                                    h10,
-                                    Text('${filteredDoctorsData[index]['department']}',style: getMediumStyle(color: ColorManager.black,fontSize: isWideScreen?16:16.sp),),
-
-                                  ],
-                                ),
-
+                              child: CircleAvatar(
+                                radius: 40.r,
+                                backgroundColor: ColorManager.white,
+                                backgroundImage: profileImage ,
                               ),
-                            );
-                          }
+                            ),
+                            h20,
+                            Text('${filteredDoctorsData[index]['name']}',style: getMediumStyle(color: ColorManager.black,fontSize: isWideScreen?16:16.sp),),
+                            h10,
+                            Text('${filteredDoctorsData[index]['department']}',style: getMediumStyle(color: ColorManager.black,fontSize: isWideScreen?16:16.sp),),
+
+                          ],
+                        ),
+
                       ),
-                    ),
-                    h100
-                  ],
-                ),
+                    );
+                  }
               ),
             ),
           ],

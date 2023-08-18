@@ -59,7 +59,6 @@ class _OrgHomePageState extends State<OrgHomePage> {
     super.initState();
     checkGeolocationStatus();
     _getDoctorsList();
-    _getPatientList();
 
   }
 
@@ -68,7 +67,6 @@ class _OrgHomePageState extends State<OrgHomePage> {
   Future<void> _refreshData() async {
     // Implement the logic to refresh the data here
     _getDoctorsList();
-    _getPatientList();
     // You can add more functions to update other data if needed
   }
 
@@ -111,44 +109,6 @@ class _OrgHomePageState extends State<OrgHomePage> {
   }
 
 
-  void _getPatientList() async {
-    final List<RegisteredPatientModel> patientList = await RegisteredPatientService().getRegisteredPatients();
-    setState(() {
-      patients = patientList;
-    });
-    _getTotalPatientsRegisteredToday();
-  }
-
-  int _getTotalPatientsRegisteredToday() {
-    // Get the current date in the format "yyyy-MM-dd"
-    String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-
-    // Filter the patients list based on the entryDate
-    List<RegisteredPatientModel> patientsRegisteredToday = patients
-        .where((patient) =>
-    DateFormat('yyyy-MM-dd').format(patient.entryDate) == currentDate)
-        .toList();
-    print(patientsRegisteredToday);
-
-    return patientsRegisteredToday.length;
-  }
-
-  int _getPatientsRegisteredYesterday() {
-    // Get the date for yesterday
-    DateTime yesterday = DateTime.now().subtract(Duration(days: 1));
-    String yesterdayDate = DateFormat('yyyy-MM-dd').format(yesterday);
-
-    // Filter the patients list based on the entryDate
-    List<RegisteredPatientModel> patientsRegisteredYesterday = patients
-        .where((patient) =>
-    DateFormat('yyyy-MM-dd').format(patient.entryDate) == yesterdayDate)
-        .toList();
-
-    // Return the total number of patients registered yesterday
-    return patientsRegisteredYesterday.length;
-  }
-
-
 
 
 
@@ -161,60 +121,57 @@ class _OrgHomePageState extends State<OrgHomePage> {
 
 
 
-    return FadeIn(
-      duration: Duration(milliseconds: 700),
-      child: Scaffold(
-        key: scaffoldKey,
+    return Scaffold(
+      key: scaffoldKey,
+      backgroundColor: ColorManager.white,
+      appBar: AppBar(
+        elevation: 0,
+        iconTheme: IconThemeData(color: ColorManager.black),
         backgroundColor: ColorManager.white,
-        appBar: AppBar(
-          elevation: 0,
-          iconTheme: IconThemeData(color: ColorManager.black),
-          backgroundColor: ColorManager.white,
-          toolbarHeight: 80,
-          leadingWidth: 70,
-          leading: Padding(
-            padding: EdgeInsets.only(left: 18),
-            child: InkWell(
-              onTap: ()=>Get.to(()=>OrgProfilePage()),
-              child: CircleAvatar(
-                backgroundColor: ColorManager.black,
-                radius: widget.isNarrowScreen? 40 : 40.r,
-                child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
-              ),
+        toolbarHeight: 80,
+        leadingWidth: 70,
+        leading: Padding(
+          padding: EdgeInsets.only(left: 18),
+          child: InkWell(
+            onTap: ()=>Get.to(()=>OrgProfilePage()),
+            child: CircleAvatar(
+              backgroundColor: ColorManager.black,
+              radius: widget.isNarrowScreen? 40 : 40.r,
+              child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
             ),
           ),
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Good Morning',style: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen? 14.sp:14 ),),
-              Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?32.sp:32),),
-            ],
-          ),
-          actions: [
-            IconButton(
-                onPressed: ()=>Get.to(()=>NotificationPage()),
-                icon: FaIcon(Icons.search,color: ColorManager.black,)),
-
-            IconButton(
-                onPressed: ()=>Get.to(()=>NotificationPage()),
-                icon: FaIcon(Icons.notifications_none_outlined,color: ColorManager.black,)),
-
+        ),
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Good Morning',style: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen? 14.sp:14 ),),
+            Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?32.sp:32),),
           ],
         ),
-        body: RefreshIndicator(
-          onRefresh: _refreshData,
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                buildBody(context)
-              ],
-            ),
+        actions: [
+          IconButton(
+              onPressed: ()=>Get.to(()=>NotificationPage()),
+              icon: FaIcon(Icons.search,color: ColorManager.black,)),
+
+          IconButton(
+              onPressed: ()=>Get.to(()=>NotificationPage()),
+              icon: FaIcon(Icons.notifications_none_outlined,color: ColorManager.black,)),
+
+        ],
+      ),
+      body: RefreshIndicator(
+        onRefresh: _refreshData,
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              buildBody(context)
+            ],
           ),
         ),
-        extendBody: true,
       ),
+      extendBody: true,
     );
   }
 
@@ -230,10 +187,9 @@ class _OrgHomePageState extends State<OrgHomePage> {
         h10,
         _overallStat(),
         h20,
-        _surveyStat(),
-        h20,
         _financialReport(),
         h20,
+        _notices(),
         h100,
         h100, h100, h100, h100
 
@@ -243,13 +199,9 @@ class _OrgHomePageState extends State<OrgHomePage> {
 
 
   Widget _overallStat() {
-    int todayRegisters = _getTotalPatientsRegisteredToday();
-    int yesterdayRegisters = _getPatientsRegisteredYesterday();
 
 
-    double percentageChange = ((todayRegisters - yesterdayRegisters) / yesterdayRegisters) * 100;
 
-    bool isIncrease = percentageChange > 0;
     return Container(
       height: widget.isWideScreen? 220:180,
       width: double.infinity,
@@ -493,191 +445,16 @@ class _OrgHomePageState extends State<OrgHomePage> {
     );
   }
 
-  Column _surveyStat(){
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 18.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Hospital Survey',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 24:24.sp),),
-              Container(
-                width: widget.isWideScreen?200:200.w,
-                child: Divider(
-                  color: ColorManager.black.withOpacity(0.5),
-                  thickness: 0.5,
-                ),
-              )
-            ],
-          ),
-        ),
-        h20,
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: widget.isNarrowScreen?0:18.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                height: 200.h,
-                width: 180.w,
-                margin: EdgeInsets.only(left: 18),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      color: ColorManager.black.withOpacity(0.5),
-                      width: 0.5
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Available Beds ',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 16:16.sp),),
-                        h10,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text('12',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen?18:widget.isNarrowScreen?16.sp:18.sp),),
-                            FaIcon(CupertinoIcons.bed_double,color: ColorManager.primary,size:widget.isWideScreen? 24:24.sp,)
-                          ],
-                        ),
-                      ],
-                    ),
-                    h10,
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Total Beds ',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen?16:widget.isNarrowScreen?16.sp:16.sp),),
-                        h10,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text('100',style: getMediumStyle(color: ColorManager.black,fontSize:widget.isWideScreen?18:widget.isNarrowScreen?16.sp:18.sp),),
-                            FaIcon(CupertinoIcons.bed_double_fill,color: ColorManager.blue,size:widget.isWideScreen? 24:24.sp,)
-                          ],
-                        ),
-                      ],
-                    ),
-                    h20,
-                    LinearProgressBar(
-                      maxSteps: 100,
-                      currentStep: 88,
-                      progressColor: ColorManager.primaryOpacity80,
-                      backgroundColor: ColorManager.iconGrey.withOpacity(0.2),
-                    )
-
-                  ],
-                ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InkWell(
-                    onTap: ()=>Get.to(()=>DoctorReportsPage(widget.isWideScreen, widget.isNarrowScreen)),
-                    child: Container(
-                      height: 90.h,
-                      width: 180.w,
-                      margin: EdgeInsets.only(right: 18),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: ColorManager.black.withOpacity(0.5),
-                            width: 0.5
-                        ),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Available Doctors',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen?16:widget.isNarrowScreen?16.sp:16.sp),),
-                          h10,
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text('${doctors.length}',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen?18:widget.isNarrowScreen?16.sp:18.sp),),
-                              FaIcon(CupertinoIcons.person,color: ColorManager.primary,size:widget.isWideScreen?24:widget.isNarrowScreen?18.sp: 24.sp,)
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  h20,
-                  Container(
-                    height: 90.h,
-                    width: 180.w,
-                    margin: EdgeInsets.only(right: 18),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: ColorManager.black.withOpacity(0.5),
-                          width: 0.5
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Total Ambulance',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen?16:widget.isNarrowScreen?16.sp:16.sp),),
-                        h10,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text('12',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen?16:widget.isNarrowScreen?16.sp:16.sp),),
-                            FaIcon(FontAwesomeIcons.ambulance,color: ColorManager.red.withOpacity(0.5),size:widget.isWideScreen? 20:20.sp,)
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
 
 
   Widget _financialReport(){
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 18.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Financial Reports',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 24:24.sp),),
-              Container(
-                width: widget.isWideScreen?200:200.w,
-                child: Divider(
-                  color: ColorManager.black.withOpacity(0.5),
-                  thickness: 0.5,
-                ),
-              )
-            ],
-          ),
+        Padding(
+          padding:EdgeInsets.symmetric(horizontal: 18.w),
+          child: Text('Financial Reports',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isWideScreen? 24:24.sp),),
         ),
         h20,
         Container(
@@ -792,6 +569,97 @@ class _OrgHomePageState extends State<OrgHomePage> {
 
 
       ],
+    );
+  }
+
+
+  Widget _notices(){
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 18.w),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Notices & Updates',style: getMediumStyle(color: ColorManager.black,fontSize: 20),),
+          h20,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
+            color: ColorManager.dotGrey.withOpacity(0.2),
+            child: Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Drink water everyday.', style: getMediumStyle(color: Colors.black,fontSize: 20)),
+                  h10,
+                  Text(
+                    'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
+                    style: getRegularStyle(color: Colors.black, fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          h10,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
+            color: ColorManager.dotGrey.withOpacity(0.2),
+            child: Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Drink water everyday.', style: getMediumStyle(color: Colors.black,fontSize: 20)),
+                  h10,
+                  Text(
+                    'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
+                    style: getRegularStyle(color: Colors.black, fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          h10,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
+            color: ColorManager.dotGrey.withOpacity(0.2),
+            child: Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Drink water everyday.', style: getMediumStyle(color: Colors.black,fontSize: 20)),
+                  h10,
+                  Text(
+                    'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
+                    style: getRegularStyle(color: Colors.black, fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          h10,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 12.h),
+            color: ColorManager.dotGrey.withOpacity(0.2),
+            child: Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Drink water everyday.', style: getMediumStyle(color: Colors.black,fontSize: 20)),
+                  h10,
+                  Text(
+                    'Drink water everyday for everytime you get dehydrated there will be mny problems to suffer through. If you read it this point click it to know more about more health tips.',
+                    style: getRegularStyle(color: Colors.black, fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          h10,
+        ],
+      ),
     );
   }
 
