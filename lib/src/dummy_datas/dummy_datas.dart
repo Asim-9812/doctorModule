@@ -1109,3 +1109,26 @@ final List<String> dummyTasks = [
   'Order blood work for Elizabeth Robinson',
   'Confirm next appointment with Daniel Young',
 ];
+
+
+class GlucoseInsulinData {
+  final DateTime date;
+  final double glucoseLevel; // mg/dL
+  final double insulinLevel; // μU/mL
+
+  GlucoseInsulinData(this.date, this.glucoseLevel, this.insulinLevel);
+}
+
+List<GlucoseInsulinData> dummyGlucoseInsulinData = [
+  GlucoseInsulinData(DateTime(2023, 8, 1), 120.0, 8.0),
+  GlucoseInsulinData(DateTime(2023, 8, 2), 135.0, 7.5),
+  GlucoseInsulinData(DateTime(2023, 8, 3), 110.0, 9.0),
+  GlucoseInsulinData(DateTime(2023, 8, 4), 140.0, 10.0),
+  GlucoseInsulinData(DateTime(2023, 8, 5), 125.0, 8.5),
+  GlucoseInsulinData(DateTime(2023, 8, 6), 115.0, 7.0),
+  GlucoseInsulinData(DateTime(2023, 8, 7), 130.0, 8.0),
+  GlucoseInsulinData(DateTime(2023, 8, 8), 150.0, 11.0),
+  GlucoseInsulinData(DateTime(2023, 8, 9), 115.0, 7.5),
+  GlucoseInsulinData(DateTime(2023, 8, 10), 125.0, 8.0),
+  // Add more data as needed
+];

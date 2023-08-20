@@ -287,7 +287,7 @@ class IBWState extends State<IBW> {
                                           ),
                                           h10,
                                           Text(
-                                            'Doctor',
+                                            'Female',
                                             style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
                                           )
                                         ],

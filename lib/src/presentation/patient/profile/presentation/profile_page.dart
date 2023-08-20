@@ -2,6 +2,7 @@
 
 
 import 'package:animate_do/animate_do.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -51,7 +52,8 @@ class ProfilePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
+                    h20,
+                    _patientStat(context),
                     h16,
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -154,7 +156,149 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
-  
+
+  _patientStat(BuildContext context){
+    final screenSize = MediaQuery.of(context).size;
+
+    // Check if width is greater than height
+    bool isWideScreen = screenSize.width > 500;
+    bool isNarrowScreen = screenSize.width < 380;
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 18.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width*0.45,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+
+                    color: ColorManager.red.withOpacity(0.15)
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        FaIcon(FontAwesomeIcons.heartPulse,color: ColorManager.red.withOpacity(0.5),size: isNarrowScreen? 20.sp:24,),
+                        w10,
+                        Text('Heart Rate',style: getRegularStyle(color: ColorManager.black,fontSize: isNarrowScreen? 18.sp:20),)
+                      ],
+                    ),
+                    h10,
+                    Text('120 bpm',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 20.sp:24),),
+                    h20,
+                    Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize:  isNarrowScreen? 16.sp:16),)
+                  ],
+
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width*.45,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+
+                    color: ColorManager.primary.withOpacity(0.15)
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        FaIcon(FontAwesomeIcons.heartCircleBolt,color: ColorManager.primaryDark.withOpacity(0.5),size: isNarrowScreen? 20.sp:24,),
+                        w10,
+                        Text('Blood Pressure',style: getRegularStyle(color: ColorManager.black,fontSize: isNarrowScreen? 18.sp:20),)
+                      ],
+                    ),
+                    h10,
+                    Text('120/80 mmHg',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 20.sp:24),),
+                    h20,
+                    Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: isNarrowScreen? 16.sp:16),)
+                  ],
+
+                ),
+              ),
+            ],
+          ),
+        ),
+        h20,
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 18.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width*.45,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+
+                    color: ColorManager.blue.withOpacity(0.15)
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        FaIcon(CupertinoIcons.graph_circle_fill,color: ColorManager.blue.withOpacity(0.5),size: isNarrowScreen? 20.sp:24,),
+                        w10,
+                        Text('Cholesterol',style: getRegularStyle(color: ColorManager.black,fontSize: isNarrowScreen? 18.sp:20),)
+                      ],
+                    ),
+                    h10,
+                    Text('97 mg/dl',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 20.sp:24),),
+                    h20,
+                    Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize:  isNarrowScreen? 16.sp:16),)
+                  ],
+
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width*.45,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+
+                    color: ColorManager.orange.withOpacity(0.15)
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 18.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        FaIcon(FontAwesomeIcons.heartCircleCheck,color: ColorManager.orange.withOpacity(0.5),size: isNarrowScreen? 20.sp:24,),
+                        w10,
+                        Text('Sugar',style: getRegularStyle(color: ColorManager.black,fontSize: isNarrowScreen? 18.sp:20),)
+                      ],
+                    ),
+                    h10,
+                    Text('90 mg/dl',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen? 20.sp:24),),
+                    h20,
+                    Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: isNarrowScreen? 16.sp:16),)
+                  ],
+
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+
   /// Profile...
   
   Widget profileBanner(BuildContext context) {

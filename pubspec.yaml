@@ -234,6 +234,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/containers/
+    - assets/images/xrays/
     - assets/icons/
     - assets/images/Splash-logo.png
     - assets/images/splash.gif

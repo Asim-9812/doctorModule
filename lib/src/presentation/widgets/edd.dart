@@ -72,6 +72,7 @@ class _EDDState extends State<EDD> {
                           width: 50,
                           child: TextFormField(
                             controller: _dayController,
+                            keyboardType: TextInputType.phone,
                             autovalidateMode: AutovalidateMode.onUserInteraction,
                             validator: (value){
                               if(value!.isEmpty){
@@ -101,6 +102,7 @@ class _EDDState extends State<EDD> {
                           width: 50,
                           child: TextFormField(
                             controller: _monthController,
+                            keyboardType: TextInputType.phone,
                             autovalidateMode: AutovalidateMode.onUserInteraction,
                             validator: (value){
                               if(value!.isEmpty){
@@ -130,6 +132,7 @@ class _EDDState extends State<EDD> {
                           width: 75,
                           child: TextFormField(
                             controller: _yearController,
+                            keyboardType: TextInputType.phone,
                             autovalidateMode: AutovalidateMode.onUserInteraction,
                             validator: (value){
                               if(value!.isEmpty){

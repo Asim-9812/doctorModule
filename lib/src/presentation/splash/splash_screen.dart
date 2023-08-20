@@ -45,15 +45,15 @@ class _SplashViewState extends ConsumerState<SplashView> {
     );
 
     return AnimatedSplashScreen(
-      backgroundColor: ColorManager.primaryDark,
-      splash: 'assets/images/splash.gif',
+      backgroundColor: ColorManager.white,
+      splash: 'assets/images/cure_connect.jpg',
       nextScreen: StatusPage(accountId:accountId),
       splashIconSize: 360.h,
       centered: true,
       curve: Curves.easeInOut,
       splashTransition: SplashTransition.fadeTransition,
       pageTransitionType: PageTransitionType.fade,
-      duration: 3000,
+      duration: 2000,
 
     );
   }

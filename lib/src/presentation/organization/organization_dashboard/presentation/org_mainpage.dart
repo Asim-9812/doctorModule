@@ -14,6 +14,7 @@ import 'package:medical_app/src/presentation/organization/doctor_statistics/pres
 import 'package:medical_app/src/presentation/organization/org_settings/presentation/org_settings.dart';
 import 'package:medical_app/src/presentation/organization/organization_dashboard/presentation/org_homepage.dart';
 import 'package:medical_app/src/presentation/organization/patient_reports/presentation/report_page_org.dart';
+import 'package:medical_app/src/presentation/patient_registration/presentation/patient_registration.dart';
 import 'package:medical_app/src/test/test1.dart';
 import 'package:medical_app/src/test/testpage.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
@@ -61,6 +62,12 @@ class _AnimatedBarExampleState extends State<OrgMainPage> {
       //to avoid the floating action button overlapping behavior,
       // when a soft keyboard is displayed
       // resizeToAvoidBottomInset: false,
+
+      floatingActionButton: selected == 1? FloatingActionButton(
+          onPressed: ()=>Get.to(()=>PatientRegistrationForm(isWideScreen, isNarrowScreen)),
+        backgroundColor: ColorManager.blue,
+        child: FaIcon(Icons.person_add,color: ColorManager.white,),
+      ):null,
 
       bottomNavigationBar: StylishBottomBar(
         option: AnimatedBarOptions(

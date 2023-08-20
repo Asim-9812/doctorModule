@@ -10,12 +10,18 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:medical_app/src/presentation/patient/personal_services/lab_reports/lab_reports.dart';
+import 'package:medical_app/src/presentation/patient/personal_services/mri/mri.dart';
+import 'package:medical_app/src/presentation/patient/personal_services/sugar/sugar.dart';
+import 'package:medical_app/src/presentation/patient/personal_services/usg/usg.dart';
+import 'package:medical_app/src/presentation/patient/personal_services/xray/xray.dart';
 import 'package:medical_app/src/presentation/patient/quick_services/presentation/telemedicine.dart';
 import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/style_manager.dart';
 import '../../../../core/resources/value_manager.dart';
 import '../../../login/domain/model/user.dart';
 import '../../../notification/presentation/notification_page.dart';
+import '../../personal_services/bloodpressure/bp.dart';
+import '../../personal_services/ct_scan/ct_scan.dart';
 import '../../personal_services/discharge_summary/discharge_summary.dart';
 import '../../personal_services/prescription/prescription.dart';
 import '../../profile/presentation/profile_page.dart';
@@ -440,12 +446,24 @@ class _PatientHomePageState extends State<PatientHomePage> {
               _personalServices(
                   onTap: ()=>Get.to(()=>LabReports()),
                   name: 'Lab', icon: FontAwesomeIcons.microscope,color: ColorManager.accentYellow.withOpacity(0.2)),
-              _personalServices(name: 'X-Ray', icon: FontAwesomeIcons.xRay,color: ColorManager.accentLightGreen.withOpacity(0.2)),
-              _personalServices(name: 'USG', img: 'assets/icons/ultrasound.png',color: ColorManager.accentCream.withOpacity(0.2)),
-              _personalServices(name: 'CT Scan', img: 'assets/icons/tomography.png',color: ColorManager.accentOrange.withOpacity(0.2)),
-              _personalServices(name: 'MRI', img:'assets/icons/ct-scan.png',color: ColorManager.accentPurple.withOpacity(0.2)),
-              _personalServices(name: 'Sugar', img:'assets/icons/sugar.png',color: ColorManager.accentGreen.withOpacity(0.2)),
-              _personalServices(name: 'Blood Pressure', img:'assets/icons/bp.png',color: ColorManager.accentPink.withOpacity(0.2)),
+              _personalServices(
+                  onTap: ()=>Get.to(()=>Xray()),
+                  name: 'X-Ray', icon: FontAwesomeIcons.xRay,color: ColorManager.accentLightGreen.withOpacity(0.2)),
+              _personalServices(
+                  onTap: ()=>Get.to(()=>USG()),
+                  name: 'USG', img: 'assets/icons/ultrasound.png',color: ColorManager.accentCream.withOpacity(0.2)),
+              _personalServices(
+                  onTap: ()=>Get.to(()=>CTScan()),
+                  name: 'CT Scan', img: 'assets/icons/tomography.png',color: ColorManager.accentOrange.withOpacity(0.2)),
+              _personalServices(
+                  onTap: ()=>Get.to(()=>MRI()),
+                  name: 'MRI', img:'assets/icons/ct-scan.png',color: ColorManager.accentPurple.withOpacity(0.2)),
+              _personalServices(
+                  onTap: ()=>Get.to(()=>Sugar()),
+                  name: 'Sugar', img:'assets/icons/sugar.png',color: ColorManager.accentGreen.withOpacity(0.2)),
+              _personalServices(
+                  onTap: ()=>Get.to(()=>BP()),
+                  name: 'Blood Pressure', img:'assets/icons/bp.png',color: ColorManager.accentPink.withOpacity(0.2)),
 
 
 

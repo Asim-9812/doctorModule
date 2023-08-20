@@ -135,6 +135,11 @@ class _DocPatientProfileState extends State<DocPatientProfile> {
 
 
   _patientStat(){
+    final screenSize = MediaQuery.of(context).size;
+
+    // Check if width is greater than height
+    bool isWideScreen = screenSize.width > 500;
+    bool isNarrowScreen = screenSize.width < 380;
     return Column(
       children: [
         Container(
@@ -143,6 +148,7 @@ class _DocPatientProfileState extends State<DocPatientProfile> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
+                width: MediaQuery.of(context).size.width*0.45,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
 
@@ -156,20 +162,21 @@ class _DocPatientProfileState extends State<DocPatientProfile> {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        FaIcon(FontAwesomeIcons.heartPulse,color: ColorManager.red.withOpacity(0.5),),
+                        FaIcon(FontAwesomeIcons.heartPulse,color: ColorManager.red.withOpacity(0.5),size: isNarrowScreen? 20.sp:24,),
                         w10,
-                        Text('Heart Rate',style: getRegularStyle(color: ColorManager.black),)
+                        Text('Heart Rate',style: getRegularStyle(color: ColorManager.black,fontSize: isNarrowScreen? 18.sp:20),)
                       ],
                     ),
                     h10,
-                    Text('120 bpm',style: getMediumStyle(color: ColorManager.black),),
+                    Text('120 bpm',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 20.sp:24),),
                     h20,
-                    Text('Recorded date: 2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize:  16),)
+                    Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize:  isNarrowScreen? 16.sp:16),)
                   ],
 
                 ),
               ),
               Container(
+                width: MediaQuery.of(context).size.width*.45,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
 
@@ -183,15 +190,15 @@ class _DocPatientProfileState extends State<DocPatientProfile> {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        FaIcon(FontAwesomeIcons.heartCircleBolt,color: ColorManager.primaryDark.withOpacity(0.5),),
+                        FaIcon(FontAwesomeIcons.heartCircleBolt,color: ColorManager.primaryDark.withOpacity(0.5),size: isNarrowScreen? 20.sp:24,),
                         w10,
-                        Text('Blood Pressure',style: getRegularStyle(color: ColorManager.black),)
+                        Text('Blood Pressure',style: getRegularStyle(color: ColorManager.black,fontSize: isNarrowScreen? 18.sp:20),)
                       ],
                     ),
                     h10,
-                    Text('120/80 mm Hg',style: getMediumStyle(color: ColorManager.black),),
+                    Text('120/80 mmHg',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 20.sp:24),),
                     h20,
-                    Text('Recorded Date: 2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: 16),)
+                    Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: isNarrowScreen? 16.sp:16),)
                   ],
 
                 ),
@@ -206,6 +213,7 @@ class _DocPatientProfileState extends State<DocPatientProfile> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
+                width: MediaQuery.of(context).size.width*.45,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
 
@@ -219,20 +227,21 @@ class _DocPatientProfileState extends State<DocPatientProfile> {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        FaIcon(CupertinoIcons.graph_circle_fill,color: ColorManager.blue.withOpacity(0.5),),
+                        FaIcon(CupertinoIcons.graph_circle_fill,color: ColorManager.blue.withOpacity(0.5),size: isNarrowScreen? 20.sp:24,),
                         w10,
-                        Text('Cholesterol',style: getRegularStyle(color: ColorManager.black),)
+                        Text('Cholesterol',style: getRegularStyle(color: ColorManager.black,fontSize: isNarrowScreen? 18.sp:20),)
                       ],
                     ),
                     h10,
-                    Text('97 mg/dl',style: getMediumStyle(color: ColorManager.black),),
+                    Text('97 mg/dl',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 20.sp:24),),
                     h20,
-                    Text('Recorded date: 2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize:  16),)
+                    Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize:  isNarrowScreen? 16.sp:16),)
                   ],
 
                 ),
               ),
               Container(
+                width: MediaQuery.of(context).size.width*.45,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
 
@@ -246,15 +255,15 @@ class _DocPatientProfileState extends State<DocPatientProfile> {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        FaIcon(FontAwesomeIcons.heartCircleCheck,color: ColorManager.orange.withOpacity(0.5),),
+                        FaIcon(FontAwesomeIcons.heartCircleCheck,color: ColorManager.orange.withOpacity(0.5),size: isNarrowScreen? 20.sp:24,),
                         w10,
-                        Text('Sugar',style: getRegularStyle(color: ColorManager.black),)
+                        Text('Sugar',style: getRegularStyle(color: ColorManager.black,fontSize: isNarrowScreen? 18.sp:20),)
                       ],
                     ),
                     h10,
-                    Text('90 mg/dl',style: getMediumStyle(color: ColorManager.black),),
+                    Text('90 mg/dl',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen? 20.sp:24),),
                     h20,
-                    Text('Recorded Date: 2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: 16),)
+                    Text('2023-08-09',style: getRegularStyle(color: ColorManager.black,fontSize: isNarrowScreen? 16.sp:16),)
                   ],
 
                 ),
@@ -268,7 +277,7 @@ class _DocPatientProfileState extends State<DocPatientProfile> {
 
   _patientVisit(){
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         h20,
         Padding(

@@ -85,7 +85,9 @@ class UpdateProfile{
       };
 
       FormData formData = FormData.fromMap(data);
+      print(data);
       final response = await dio.put('${Api.userUpdate}', data: formData);
+
 
       if (response.statusCode == 200) {
         String? profileImg = response.data['result']['profileImage'];
@@ -107,11 +109,11 @@ class UpdateProfile{
 
         return Right(response.data);
       } else {
-        print(response);
+        print('print error : ${response.data}');
         return Left('Unable to register.');
       }
     } on DioException catch (e) {
-      print('${e}');
+      print('${e.response}');
       return Left('Something went wrong');
     }
   }

@@ -65,7 +65,7 @@ class _DoctorReportsPageState extends State<DoctorReportsPage> with TickerProvid
   Widget _overallStat() {
 
     return Container(
-      height: widget.isWideScreen? 220:180,
+      height: widget.isWideScreen? 220:200,
       width: double.infinity,
       child: ListView(
         scrollDirection: Axis.horizontal,

@@ -142,7 +142,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
               }
 
               if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                return 'Please enter a valid Mobile Number';
+                return 'Please enter a valid License Number';
               }
               return null;
             },

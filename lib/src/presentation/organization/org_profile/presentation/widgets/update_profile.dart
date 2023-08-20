@@ -197,7 +197,7 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
               final response = await ref.read(userUpdateProvider).updateUser(
                   ID: widget.user.id!,
                   userID: widget.user.userID!,
-                  typeID: 3,
+                  typeID: 1,
                   referredID: 0,
                   parentID: 0,
                   firstName: _firstNameController.text.trim(),
@@ -399,34 +399,6 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                       decoration: InputDecoration(
                           floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
                           hintText:'Enter first name',
-                          hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: ColorManager.black
-                              )
-                          )
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 60,
-                    width: 180.w,
-                    child: TextFormField(
-                      controller: _lastNameController,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: (value){
-                        if (value!.isEmpty) {
-                          return 'Last Name is required';
-                        }
-                        if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
-                          return 'Invalid Name. Only use letters';
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                          floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                          hintText:'Enter last name',
                           hintStyle: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?20.sp:20),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),

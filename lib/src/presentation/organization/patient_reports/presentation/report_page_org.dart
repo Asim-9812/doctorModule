@@ -338,36 +338,6 @@ class _OrgPatientReportsState extends ConsumerState<OrgPatientReports> {
               ),
             ),
             h20,
-            InkWell(
-              onTap: ()=>Get.to(()=>PatientRegistrationForm(isWideScreen, isNarrowScreen)),
-              child: Container(
-                height: 60,
-                decoration: BoxDecoration(
-                    color: ColorManager.dotGrey.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                        color: ColorManager.black.withOpacity(0.5)
-                    )
-                ),
-                margin: EdgeInsets.symmetric(horizontal: 18.w),
-                padding: EdgeInsets.symmetric(horizontal: 18.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        FaIcon(Icons.person_add,color: Colors.black,),
-                        w20,
-                        Text('Add a patient',style: getMediumStyle(color: ColorManager.black,fontSize: 22),),
-                      ],
-                    ),
-                    FaIcon(Icons.chevron_right,color: ColorManager.black,)
-                  ],
-                ),
-              ),
-            ),
-            h20,
             Container(
 
               padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
