@@ -182,7 +182,7 @@ class OrgProfilePage extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${user.firstName} ${user.lastName}',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 32.sp:32),),
+                      Text('${user.firstName}',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 32.sp:32),),
                       h10,
                       Text('${user.localAddress}',style: getRegularStyle(color: ColorManager.textGrey,fontSize: isNarrowScreen?16.sp:16),)
                     ],

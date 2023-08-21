@@ -215,7 +215,7 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                   roleID: 2,
                   designation: 'A',
                   joinedDate: DateFormat('yyyy-MM-dd').format(DateTime.parse(widget.user.joinedDate!)),
-                  validDate: DateFormat('yyyy-MM-dd').format(DateTime.parse(widget.user.validDate!)),
+                  validDate: DateFormat('yyyy-MM-dd').format(DateTime.now()),
                   signatureImage: 'signatureImage',
                   profileImage: 'profileImage',
                   isActive: true,

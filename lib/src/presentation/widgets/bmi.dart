@@ -86,12 +86,17 @@ class BMIState extends State<BMI> {
 
 
   }
-  String _convertCmToFeetAndInches(double cm) {
+  (String,int,int) _convertCmToFeetAndInches(double cm) {
     final int totalInches = (cm * 0.393701).round();
     final int feet = totalInches ~/ 12;
     final int inches = totalInches % 12;
 
-    return '$feet\'$inches"';
+    return ('$feet\'$inches"',feet,inches);
+  }
+
+  double convertFeetAndInchesToCm(int feet, int inches) {
+    double totalCm = (feet * 30.48) + (inches * 2.54);
+    return totalCm;
   }
 
 
@@ -210,12 +215,13 @@ class BMIState extends State<BMI> {
 
     // Check if width is greater than height
     bool isWideScreen = screenSize.width > 500;
-    bool isNarrowScreen = screenSize.width < 420;
+    bool isNarrowScreen = screenSize.width < 380;
 
     double fontSize = isWideScreen?14: 14.sp;
     double height = _calculateHeight(y);
     double heightCM = _convertCM(height);
     double size = isWideScreen? ((_calculateHeight(y).toPrecision(1) * 25)+40):((_calculateHeight(y).toPrecision(1) * 25)+40).sp;
+    double convertToCm = convertFeetAndInchesToCm(_convertCmToFeetAndInches(heightCM).$2,_convertCmToFeetAndInches(heightCM).$3);
     print(size);
     // Get the screen size
 
@@ -236,13 +242,13 @@ class BMIState extends State<BMI> {
                 child: GestureDetector(
                   onVerticalDragUpdate: (value) {
                     double yValue = value.delta.dy;
-                    if ((y > -0.5 && y <= 0.7) || (yValue > 0 && y <= 0.7)) {
+                    if ((y > -0.8 && y <= 0.7) || (yValue > 0 && y <= 0.7)) {
                       // Only allow dragging if y is in the range of -0.1 to 0.5
                       setState(() {
                         y += yValue * 0.004;
 
                         // Limit y within the range of -0.1 to 0.5
-                        y = y.clamp(-0.5, 0.7);
+                        y = y.clamp(-0.8, 0.7);
 
 
                       });
@@ -496,6 +502,10 @@ class BMIState extends State<BMI> {
                           child: Stack(
                             children: [
                               Align(
+                                alignment: Alignment.topRight,
+                                child: Text(unit == 1 ?'In CM   ' : 'In ft/inch   ',style: getMediumStyle(color: ColorManager.black),),
+                              ),
+                              Align(
                                 alignment: Alignment.bottomLeft,
                                 child:  Container(
                                   width: 50,
@@ -544,7 +554,7 @@ class BMIState extends State<BMI> {
                                           width: 100,
                                           child: Center(
                                             child: Text(
-                                              '${unit ==1 ? heightCM.toPrecision(1):_convertCmToFeetAndInches(heightCM)}',
+                                              '${unit ==1 ? heightCM.toPrecision(1):_convertCmToFeetAndInches(heightCM).$1}',
                                               style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 20,
@@ -582,7 +592,13 @@ class BMIState extends State<BMI> {
                       setState(() {
                         isLoading = true;
                       });
-                     _calculateBMI(w: double.parse(weightController.text), h: heightCM);
+                      if(unit == 1 ){
+                        _calculateBMI(w: double.parse(weightController.text), h: heightCM);
+                      }
+                      else{
+                        _calculateBMI(w: double.parse(weightController.text), h: convertToCm);
+                      }
+
 
 
                     }
