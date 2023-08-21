@@ -34,10 +34,11 @@ class _WBDState extends State<WBD> {
       child: Scaffold(
         backgroundColor: ColorManager.white.withOpacity(0.99),
         appBar: AppBar(
-          elevation: 1,
-          backgroundColor: ColorManager.white,
-          leading: IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.chevron_left,color: Colors.black,)),
-          title: Text('Weight-Based Dosage',style: getMediumStyle(color: ColorManager.black,fontSize: isNarrowScreen? 24.sp:28),),
+          elevation: 3,
+          backgroundColor: ColorManager.primary,
+          title: Text('Weight Based Dosage'),
+          titleTextStyle: getMediumStyle(color: ColorManager.white),
+          centerTitle: true,
         ),
         body: Container(
           padding: EdgeInsets.symmetric(horizontal: 18.w),
@@ -177,6 +178,7 @@ class _WBDState extends State<WBD> {
                   Center(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
+                        backgroundColor: ColorManager.primaryDark,
                         fixedSize: Size.fromWidth(300)
                       ),
                         onPressed: ()=>_calculateDose(w: double.parse(_weightController.text), d: double.parse(_dosageController.text), f: frequency),

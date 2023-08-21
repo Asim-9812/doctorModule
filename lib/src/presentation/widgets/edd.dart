@@ -37,6 +37,7 @@ class _EDDState extends State<EDD> {
     return DateFormat('MMMM dd, yyyy').format(edd); // Format EDD date
   }
 
+  bool invalid = false;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -46,7 +47,10 @@ class _EDDState extends State<EDD> {
         appBar: AppBar(
           elevation: 3,
           backgroundColor: ColorManager.primary,
-          title: Text('Expected Due Date'),
+          title: Text('EDD Calculator'),
+          centerTitle: true,
+          titleTextStyle: getMediumStyle(color: ColorManager.white),
+          
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 18.w),
@@ -57,7 +61,10 @@ class _EDDState extends State<EDD> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 h20,
-                Text('When was the first day of your last period?',style: getMediumStyle(color: ColorManager.black,fontSize: 20.sp),),
+                Text(
+                  'When was the first day of your last period?',
+                  style: getMediumStyle(color: ColorManager.black, fontSize: 20.sp),
+                ),
                 h20,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -66,61 +73,72 @@ class _EDDState extends State<EDD> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text('Day',style: getRegularStyle(color: ColorManager.black),),
+                        Text('Day', style: getRegularStyle(color: ColorManager.black)),
                         h10,
-                        SizedBox(
-                          width: 50,
-                          child: TextFormField(
-                            controller: _dayController,
-                            keyboardType: TextInputType.phone,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                            validator: (value){
-                              if(value!.isEmpty){
-                                return 'Day';
-                              }else if(int.parse(value)>31){
-                                return 'Valid day';
-                              }else{
-                                return null;
+                        Container(
+                          decoration:BoxDecoration(
+                            border: Border.all(
+                              color: ColorManager.black.withOpacity(0.5)
+                            ),
+                            borderRadius: BorderRadius.circular(5)
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 12.w),
+                          child: DropdownButton<int>(
+                            menuMaxHeight: 400,
+                            value: _dayController.text.isNotEmpty ? int.tryParse(_dayController.text) : null,
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  _dayController.text = value.toString();
+                                });
                               }
                             },
-                            style: getRegularStyle(color: ColorManager.black,fontSize: 20),
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(horizontal: 14.w),
-                              border: OutlineInputBorder()
-                            ),
-                            inputFormatters: [LengthLimitingTextInputFormatter(2)],
+                            items: List.generate(32, (index) => index + 1)
+                                .map<DropdownMenuItem<int>>(
+                                  (value) => DropdownMenuItem<int>(
+                                value: value,
+                                child: Text(value.toString()),
+                              ),
+                            )
+                                .toList(),
                           ),
-                        )
+                        ),
                       ],
                     ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text('Month',style: getRegularStyle(color: ColorManager.black),),
+                        Text('Month', style: getRegularStyle(color: ColorManager.black)),
                         h10,
-                        SizedBox(
-                          width: 50,
-                          child: TextFormField(
-                            controller: _monthController,
-                            keyboardType: TextInputType.phone,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                            validator: (value){
-                              if(value!.isEmpty){
-                                return 'Month';
-                              }else if(int.parse(value)>12){
-                                return 'Valid Month';
-                              }else{
-                                return null;
+                        Container(
+                          decoration:BoxDecoration(
+                              border: Border.all(
+                                  color: ColorManager.black.withOpacity(0.5)
+                              ),
+                              borderRadius: BorderRadius.circular(5)
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 12.w),
+                          child: DropdownButton<int>(
+
+                            menuMaxHeight: 400,
+                            value: _monthController.text.isNotEmpty ? int.tryParse(_monthController.text) : null,
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  _monthController.text = value.toString();
+                                });
                               }
                             },
-                            style: getRegularStyle(color: ColorManager.black,fontSize: 20),
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(horizontal: 14.w),
-                                border: OutlineInputBorder()
-                            ),
-                            inputFormatters: [LengthLimitingTextInputFormatter(2)],
+                            items: List.generate(12, (index) => index + 1)
+                                .map<DropdownMenuItem<int>>(
+                                  (value) => DropdownMenuItem<int>(
+                                value: value,
+                                child: Text(DateFormat('MMMM').format(DateTime(2000, value))),
+                              ),
+                            )
+                                .toList(),
                           ),
-                        )
+                        ),
                       ],
                     ),
                     Column(
@@ -133,7 +151,6 @@ class _EDDState extends State<EDD> {
                           child: TextFormField(
                             controller: _yearController,
                             keyboardType: TextInputType.phone,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
                             validator: (value){
                               if(value!.isEmpty){
                                 return 'Year';
@@ -158,20 +175,58 @@ class _EDDState extends State<EDD> {
                 h20,
                 h20,
                 Center(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ColorManager.primaryDark
-                      ),
-                        onPressed: (){
-                          if (_formKey.currentState!.validate()) {
-                            setState(() {
-                              calculatedEDD = calculateEDD();
-                            });
-                          }
-                        },
-                        child: Text('Calculate')
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorManager.primaryDark
+                          ),
+                            onPressed: (){
+                            
+                            final DateTime date = DateTime.parse(DateFormat('yyyy-MM-dd').format(DateTime(int.parse(_yearController.text),int.parse(_monthController.text),int.parse(_dayController.text))));
+                            final now = DateTime.parse(DateFormat('yyyy-MM-dd').format(DateTime.now()));
+                            
+                            if(date.isAfter(now)){
+                              setState(() {
+                                invalid = true;
+                                calculatedEDD = null;
+                              });
+                            }
+                              else {
+                              if (_formKey.currentState!.validate()) {
+                                setState(() {
+                                  invalid = false;
+                                  calculatedEDD = calculateEDD();
+                                });
+                              }
+                            }
+                            },
+                            child: Text('Calculate')
+                        ),
+                        w10,
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: ColorManager.dotGrey
+                          ),
+                            onPressed: (){
+                              setState(() {
+                                _dayController.clear();
+                                _monthController.clear();
+                                _yearController.clear();
+                                calculatedEDD = null;
+                                invalid=false;
+                              });
+                            },
+                            child: Text('Clear',style: getRegularStyle(color: ColorManager.black),)
+                        ),
+                      ],
                     )
                 ),
+                h10,
+                if(invalid)
+                  Center(child: Text('Date cannot be after current date',style: getRegularStyle(color: ColorManager.red),)),
                 h20,
                 if (calculatedEDD != null)
                   Padding(

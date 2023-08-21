@@ -22,10 +22,11 @@ class _GcsTestScreenState extends State<GCS> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: ColorManager.white,
-        elevation: 1,
-        title: Text('GCS Glasgow Coma Scale Test',style: getMediumStyle(color: ColorManager.black,fontSize: 16),),
-        iconTheme: IconThemeData(color: ColorManager.black),
+        elevation: 3,
+        backgroundColor: ColorManager.primary,
+        title: Text('GCS Score'),
+        titleTextStyle: getMediumStyle(color: ColorManager.white),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -258,43 +259,48 @@ class _GcsTestScreenState extends State<GCS> {
                 ],
               ),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // Calculate and display GCS score based on user selections
-                  int gcsScore = eyeResponse + verbalResponse + motorResponse;
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text('GCS Score'),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Total GCS Score: $gcsScore [E$eyeResponse, V$verbalResponse, M$motorResponse]',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
-                            h20,
-                            Text('Here\'s a breakdown of what each total GCS score typically indicates:'),
-                            h10,
-                            Text('1. GCS Score 3-8 (Severe Injury): A low GCS score in this range indicates severe brain injury or impairment of consciousness. Patients may be unresponsive or only show minimal responses to stimuli.'),
-                            h10,
-                            Text('2. GCS Score 9-12 (Moderate Injury): Patients with GCS scores in this range have a moderate level of impairment but are still able to respond to stimuli and communicate to some extent.'),
-                            h10,
-                            Text('3. GCS Score 13-15 (Mild Injury): Patients with GCS scores in this range have a mild impairment of consciousness or neurological functioning. They are typically alert and oriented, and their responses are relatively normal.')
-                          ],
-                        ),
-                        actions: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text('OK'),
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorManager.primaryDark
+                  ),
+                  onPressed: () {
+                    // Calculate and display GCS score based on user selections
+                    int gcsScore = eyeResponse + verbalResponse + motorResponse;
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('GCS Score'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Total GCS Score: $gcsScore [E$eyeResponse, V$verbalResponse, M$motorResponse]',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                              h20,
+                              Text('Here\'s a breakdown of what each total GCS score typically indicates:'),
+                              h10,
+                              Text('1. GCS Score 3-8 (Severe Injury): A low GCS score in this range indicates severe brain injury or impairment of consciousness. Patients may be unresponsive or only show minimal responses to stimuli.'),
+                              h10,
+                              Text('2. GCS Score 9-12 (Moderate Injury): Patients with GCS scores in this range have a moderate level of impairment but are still able to respond to stimuli and communicate to some extent.'),
+                              h10,
+                              Text('3. GCS Score 13-15 (Mild Injury): Patients with GCS scores in this range have a mild impairment of consciousness or neurological functioning. They are typically alert and oriented, and their responses are relatively normal.')
+                            ],
                           ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                child: Text('Calculate GCS Score', style: TextStyle(color: Colors.white)),
+                          actions: [
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: Text('Calculate', style: TextStyle(color: Colors.white)),
+                ),
               ),
             ],
           ),

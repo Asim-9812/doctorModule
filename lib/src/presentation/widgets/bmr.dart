@@ -176,6 +176,10 @@ class BMRState extends State<BMR> {
 
   }
 
+
+  bool weightValid = true;
+  bool ageValid = true;
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -198,7 +202,9 @@ class BMRState extends State<BMR> {
         appBar: AppBar(
           elevation: 3,
           backgroundColor: ColorManager.primary,
-          title: Text('BMR'),
+          title: Text('BMR Calculator'),
+          titleTextStyle: getMediumStyle(color: ColorManager.white),
+          centerTitle: true,
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -317,9 +323,19 @@ class BMRState extends State<BMR> {
                               ),
                               h20,
                               Text('Age',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
-                              h20,
+                              h10,
                               Container(
-                                color: ColorManager.dotGrey.withOpacity(0.2),
+                                margin: EdgeInsets.symmetric(horizontal: 18.w),
+                                decoration: BoxDecoration(
+                                    color: ageValid
+                                        ? ColorManager.dotGrey.withOpacity(0.2)
+                                        : Colors.red.withOpacity(0.2),
+                                    border: Border.all(
+                                      color: ageValid
+                                          ? ColorManager.dotGrey.withOpacity(0.5)
+                                          : Colors.red.withOpacity(0.5),
+                                    )
+                                ),
                                 padding:EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h) ,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -331,19 +347,27 @@ class BMRState extends State<BMR> {
                                         controller: ageController,
                                         validator: (value){
                                           if(value!.isEmpty){
-                                            return 'Field must not be empty';
+                                            setState(() {
+                                              ageValid = false;
+                                            });
                                           }
                                           else if(double.parse(value)<10 && double.parse(value)>100 ){
-                                            return 'Age must be above 10 and below 100';
+                                            setState(() {
+                                              ageValid = false;
+                                            });
                                           }
                                           else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                                            return 'Please enter a valid age';
+                                            setState(() {
+                                              ageValid = false;
+                                            });
                                           }
                                           else{
+                                            setState(() {
+                                              ageValid= true;
+                                            });
                                             return null;
                                           }
                                         },
-                                        autovalidateMode: AutovalidateMode.onUserInteraction,
                                         style: getRegularStyle(color: ColorManager.black,fontSize: 18),
                                         keyboardType: TextInputType.phone,
                                         decoration: InputDecoration(
@@ -358,17 +382,34 @@ class BMRState extends State<BMR> {
                                           alignment: Alignment.bottomCenter,
                                           child: Text('yrs old',style: getRegularStyle(color: ColorManager.black,fontSize: 20),)),
                                     ),
+
                                   ],
                                 ),
                               ),
-                              h20,
-                              h20,
+                              if (!ageValid)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+                                  child: Text(
+                                    'Please enter a valid age',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
                               h20,
                               Text('Weight',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
-                              h20,
+                              h10,
                               Container(
-                                color: ColorManager.dotGrey.withOpacity(0.2),
-                                padding:EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h) ,
+                                margin: EdgeInsets.symmetric(horizontal: 18.w),
+                                decoration: BoxDecoration(
+                                    color: weightValid
+                                        ? ColorManager.dotGrey.withOpacity(0.2)
+                                        : Colors.red.withOpacity(0.2),
+                                    border: Border.all(
+                                      color: weightValid
+                                          ? ColorManager.dotGrey.withOpacity(0.5)
+                                          : Colors.red.withOpacity(0.5),
+                                    )
+                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -379,74 +420,96 @@ class BMRState extends State<BMR> {
                                         controller: weightController,
                                         validator: (value){
                                           if(value!.isEmpty){
-                                            return 'Field must not be empty';
+                                            setState(() {
+                                              weightValid = false;
+                                            });
                                           }
                                           else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                                            return 'Please enter a valid weight';
+                                            setState(() {
+                                              weightValid = false;
+                                            });
                                           }
                                           else{
+                                            setState(() {
+                                              weightValid = true;
+                                            });
                                             return null;
                                           }
                                         },
-                                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                                        style: getRegularStyle(color: ColorManager.black,fontSize: 18),
+                                        style: getRegularStyle(color: ColorManager.black, fontSize: 18),
                                         keyboardType: TextInputType.phone,
                                         decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.only(left: 8.w,top: 24.h),
-                                            border: UnderlineInputBorder()
+                                          contentPadding: EdgeInsets.only(left: 8.w, top: 24.h),
+                                          border: UnderlineInputBorder(),
                                         ),
                                       ),
                                     ),
                                     Container(
                                       width: 70.w,
                                       child: Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: Text('in KG',style: getRegularStyle(color: ColorManager.black,fontSize: 20),)),
+                                        alignment: Alignment.bottomCenter,
+                                        child: Text(
+                                          'in KG',
+                                          style: getRegularStyle(
+                                              color: ColorManager.black, fontSize: 20),
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
+                              if (!weightValid)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+                                  child: Text(
+                                    'Please enter a valid weight',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
                               h20,
+                              Text('Height',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                              h10,
                               Container(
+                                margin: EdgeInsets.symmetric(horizontal: 18.w),
                                 color: ColorManager.dotGrey.withOpacity(0.2),
                                 padding:EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h) ,
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Column(
-                                      children: [
-                                        Container(
-                                          width: 50.w,
-                                          child: Radio<int>(
-                                            value: 1,
-                                            groupValue: unit,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                unit = value!;
-                                              });
-                                            },
-                                          ),
+                                    InkWell(
+                                      onTap: (){
+                                        setState(() {
+                                          unit =1;
+                                        });
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: unit == 1? ColorManager.primary : ColorManager.white,
+                                            border: unit !=1 ?Border.all(
+                                                color: ColorManager.black.withOpacity(0.5)
+                                            ):null
                                         ),
-                                        Text('In CM')
-                                      ],
+                                        padding: EdgeInsets.symmetric(horizontal: 20.w,vertical: 20.h),
+                                        child: Text('CM',style: getMediumStyle(color:unit ==1 ? ColorManager.white: ColorManager.black,fontSize: 20),),
+                                      ),
                                     ),
-                                    Column(
-                                      children: [
-                                        Container(
-                                          width: 50.w,
-                                          child: Radio<int>(
-                                            value: 2,
-                                            groupValue: unit,
-                                            onChanged: (value) {
-                                              setState(() {
-                                                unit = value!;
-                                              });
-                                            },
-                                          ),
+                                    InkWell(
+                                      onTap: (){
+                                        setState(() {
+                                          unit =2 ;
+                                        });
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: unit == 2? ColorManager.primary : ColorManager.white,
+                                            border: unit !=2 ?Border.all(
+                                                color: ColorManager.black.withOpacity(0.5)
+                                            ):null
                                         ),
-                                        Text('In ft/inch')
-                                      ],
+                                        padding: EdgeInsets.symmetric(horizontal: 20.w,vertical: 20.h),
+                                        child: Text('FT',style: getMediumStyle(color:unit==2?ColorManager.white: ColorManager.black,fontSize: 20),),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -558,21 +621,21 @@ class BMRState extends State<BMR> {
                   ),
                   onPressed: () async {
                     if(_formKey.currentState!.validate()){
-                      setState(() {
-                        isLoading = true;
-                      });
-                      if(unit == 1){
-                        double x=  _calculateBMR(a:double.parse(ageController.text),w: double.parse(weightController.text), h:heightCM.toPrecision(1) );
-                        _showDialog(x,isWideScreen,isNarrowScreen);
-                        weightController.clear();
-                        ageController.clear();
+                      if(ageValid == true && weightValid == true){
+                        if(unit == 1){
+                          double x=  _calculateBMR(a:double.parse(ageController.text),w: double.parse(weightController.text), h:heightCM.toPrecision(1) );
+                          _showDialog(x,isWideScreen,isNarrowScreen);
+                          weightController.clear();
+                          ageController.clear();
+                        }
+                        else{
+                          double x=  _calculateBMR(a:double.parse(ageController.text),w: double.parse(weightController.text), h:convertToCm.toPrecision(1) );
+                          _showDialog(x,isWideScreen,isNarrowScreen);
+                          weightController.clear();
+                          ageController.clear();
+                        }
                       }
-                      else{
-                        double x=  _calculateBMR(a:double.parse(ageController.text),w: double.parse(weightController.text), h:convertToCm.toPrecision(1) );
-                        _showDialog(x,isWideScreen,isNarrowScreen);
-                        weightController.clear();
-                        ageController.clear();
-                      }
+
 
 
                     }
