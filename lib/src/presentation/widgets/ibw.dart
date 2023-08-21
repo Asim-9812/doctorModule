@@ -103,13 +103,19 @@ class IBWState extends State<IBW> {
 
   }
 
-  String _convertCmToFeetAndInches(double cm) {
+  (String,int,int) _convertCmToFeetAndInches(double cm) {
     final int totalInches = (cm * 0.393701).round();
     final int feet = totalInches ~/ 12;
     final int inches = totalInches % 12;
 
-    return '$feet\'$inches"';
+    return ('$feet\'$inches"',feet,inches);
   }
+
+  double convertFeetAndInchesToCm(int feet, int inches) {
+    double totalCm = (feet * 30.48) + (inches * 2.54);
+    return totalCm;
+  }
+
 
 
 
@@ -170,6 +176,7 @@ class IBWState extends State<IBW> {
     double fontSize = isWideScreen?14: 14.sp;
     double height = _calculateHeight(y);
     double heightCM = _convertCM(height);
+    double convertToCm = convertFeetAndInchesToCm(_convertCmToFeetAndInches(heightCM).$2,_convertCmToFeetAndInches(heightCM).$3);
     double size = isWideScreen? ((_calculateHeight(y).toPrecision(1) * 25)+40):((_calculateHeight(y).toPrecision(1) * 25)+40).sp;
     print(size);
     // Get the screen size
@@ -191,13 +198,13 @@ class IBWState extends State<IBW> {
                 child: GestureDetector(
                   onVerticalDragUpdate: (value) {
                     double yValue = value.delta.dy;
-                    if ((y > -0.5 && y <= 0.7) || (yValue > 0 && y <= 0.7)) {
+                    if ((y > -0.8 && y <= 0.7) || (yValue > 0 && y <= 0.7)) {
                       // Only allow dragging if y is in the range of -0.1 to 0.5
                       setState(() {
                         y += yValue * 0.004;
 
                         // Limit y within the range of -0.1 to 0.5
-                        y = y.clamp(-0.5, 0.7);
+                        y = y.clamp(-0.8, 0.7);
 
 
                       });
@@ -318,6 +325,9 @@ class IBWState extends State<IBW> {
                                           else if(double.parse(value)<10 && double.parse(value)>100 ){
                                             return 'Age must be above 10 and below 100';
                                           }
+                                          else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                                            return 'Please enter a valid age';
+                                          }
                                           else{
                                             return null;
                                           }
@@ -359,6 +369,9 @@ class IBWState extends State<IBW> {
                                         validator: (value){
                                           if(value!.isEmpty){
                                             return 'Field must not be empty';
+                                          }
+                                          else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                                            return 'Please enter a valid weight';
                                           }
                                           else{
                                             return null;
@@ -538,11 +551,32 @@ class IBWState extends State<IBW> {
                         isLoading = true;
                       });
                       if(selectedOption == 1){
-                        int x=  _calculateIBW(w: double.parse(weightController.text), h:heightCM.toPrecision(1),g: 50 );
-                        _showDialog(x,isWideScreen,isNarrowScreen);
+                        if(unit == 1){
+                          int x=  _calculateIBW(w: double.parse(weightController.text), h:heightCM.toPrecision(1),g: 50 );
+                          _showDialog(x,isWideScreen,isNarrowScreen);
+                          weightController.clear();
+                          ageController.clear();
+                        }
+                        else{
+                          int x=  _calculateIBW(w: double.parse(weightController.text), h:convertToCm.toPrecision(1),g: 50 );
+                          _showDialog(x,isWideScreen,isNarrowScreen);
+                          weightController.clear();
+                          ageController.clear();
+                        }
+
                       } else {
-                        int x=  _calculateIBW(w: double.parse(weightController.text), h:heightCM.toPrecision(1),g: 45.5 );
-                        _showDialog(x,isWideScreen,isNarrowScreen);
+                        if(unit == 1){
+                          int x=  _calculateIBW(w: double.parse(weightController.text), h:heightCM.toPrecision(1),g: 45.5 );
+                          _showDialog(x,isWideScreen,isNarrowScreen);
+                          weightController.clear();
+                          ageController.clear();
+                        }
+                        else{
+                          int x=  _calculateIBW(w: double.parse(weightController.text), h:convertToCm.toPrecision(1),g: 45.5 );
+                          _showDialog(x,isWideScreen,isNarrowScreen);
+                          weightController.clear();
+                          ageController.clear();
+                        }
                       }
 
 

@@ -511,8 +511,11 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                     if (value!.isEmpty) {
                       return 'PAN number is required';
                     }
+                    else  if (value.length>9||value.length<9) {
+                      return 'Invalid PAN number';
+                    }
 
-                    if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                    else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
                       return 'Please enter a valid PAN Number';
                     }
                     return null;

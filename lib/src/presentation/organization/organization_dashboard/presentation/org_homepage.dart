@@ -253,7 +253,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
                         padding: EdgeInsets.symmetric(vertical: 5.w,horizontal: 10.w),
                         child: FaIcon(CupertinoIcons.person_2_fill,color: ColorManager.white,)),
                     w10,
-                    Text('Overall Patients Stat',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?24 :widget.isNarrowScreen?18.sp:24.sp),)
+                    Text('Overall Patients Stat',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?24 :widget.isNarrowScreen?16.sp:20.sp),)
                   ],
                 ),
                 h20,

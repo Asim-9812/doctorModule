@@ -369,6 +369,9 @@ class BMIState extends State<BMI> {
                                           else if(double.parse(value)<10 && double.parse(value)>100 ){
                                             return 'Age must be above 10 and below 100';
                                           }
+                                          else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                                            return 'Please enter a valid age';
+                                          }
                                           else{
                                             return null;
                                           }
@@ -410,6 +413,9 @@ class BMIState extends State<BMI> {
                                         validator: (value){
                                           if(value!.isEmpty){
                                             return 'Field must not be empty';
+                                          }
+                                          else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                                            return 'Please enter a valid weight';
                                           }
                                           else{
                                             return null;
@@ -591,12 +597,17 @@ class BMIState extends State<BMI> {
                     if(_formKey.currentState!.validate()){
                       setState(() {
                         isLoading = true;
+
                       });
                       if(unit == 1 ){
                         _calculateBMI(w: double.parse(weightController.text), h: heightCM);
+                        weightController.clear();
+                        ageController.clear();
                       }
                       else{
                         _calculateBMI(w: double.parse(weightController.text), h: convertToCm);
+                        weightController.clear();
+                        ageController.clear();
                       }
 
 
