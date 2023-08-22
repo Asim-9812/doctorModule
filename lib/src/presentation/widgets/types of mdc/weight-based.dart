@@ -21,12 +21,12 @@ class _WBDState extends State<WBD> {
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _dosageController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool weightValid = true;
+  bool doseValid = true;
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-
-    // Check if width is greater than height
     bool isWideScreen = screenSize.width > 500;
     bool isNarrowScreen = screenSize.width < 380;
     return GestureDetector(
@@ -54,8 +54,26 @@ class _WBDState extends State<WBD> {
                   h10,
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                    color: ColorManager.dotGrey.withOpacity(0.2),
+                    color:weightValid == true? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
                     child: TextFormField(
+                      validator: (value){
+                        if(value!.isEmpty){
+                          setState(() {
+                            weightValid = false;
+                          });
+                        }
+                        else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                          setState(() {
+                            weightValid = false;
+                          });
+                        }
+                        else{
+                          setState(() {
+                            weightValid = true;
+                          });
+                          return null;
+                        }
+                      },
                       controller: _weightController,
                       keyboardType: TextInputType.phone,
                       style: getMediumStyle(color: ColorManager.black),
@@ -64,13 +82,39 @@ class _WBDState extends State<WBD> {
                       ),
                     ),
                   ),
+                  if (!weightValid)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+                      child: Text(
+                        'Please enter a valid weight',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
                   h20,
                   Text('2. Recommended dosage per kg in mg/kg?',style: getRegularStyle(color: ColorManager.black),),
                   h10,
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                    color: ColorManager.dotGrey.withOpacity(0.2),
+                    color:doseValid == true? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
                     child: TextFormField(
+                      validator: (value){
+                        if(value!.isEmpty){
+                          setState(() {
+                            doseValid = false;
+                          });
+                        }
+                        else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                          setState(() {
+                            doseValid = false;
+                          });
+                        }
+                        else{
+                          setState(() {
+                            doseValid = true;
+                          });
+                          return null;
+                        }
+                      },
                       controller: _dosageController,
                       keyboardType: TextInputType.phone,
                       style: getMediumStyle(color: ColorManager.black),
@@ -79,6 +123,14 @@ class _WBDState extends State<WBD> {
                       ),
                     ),
                   ),
+                  if (!doseValid)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+                      child: Text(
+                        'Please enter a valid dosage',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
                   h20,
                   Text('3. Frequency of the dosage once/every ?',style: getRegularStyle(color: ColorManager.black),),
                   h10,
@@ -181,7 +233,16 @@ class _WBDState extends State<WBD> {
                         backgroundColor: ColorManager.primaryDark,
                         fixedSize: Size.fromWidth(300)
                       ),
-                        onPressed: ()=>_calculateDose(w: double.parse(_weightController.text), d: double.parse(_dosageController.text), f: frequency),
+                        onPressed: (){
+                        if(_formKey.currentState!.validate()){
+                          if(weightValid == true && doseValid == true){
+                            _calculateDose(w: double.parse(_weightController.text), d: double.parse(_dosageController.text), f: frequency);
+                            _weightController.clear();
+                            _dosageController.clear();
+                          }
+                        }
+
+                        },
                         child: Text('Calculate',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
                   ),
                   h100,

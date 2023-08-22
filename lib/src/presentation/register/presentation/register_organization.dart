@@ -95,7 +95,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
       print(err.response);
 
 
-      throw Exception('Dio error: ${err.message}');
+      throw Exception('${err.response!.data['message']}');
     }}
 
 
@@ -254,9 +254,9 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value){
               if (value!.isEmpty) {
-                return 'Mobile number is required';
+                return 'Contact number is required';
               }
-              if (value.length!=10) {
+              if (value.length != 7 && value.length != 9 && value.length != 10) {
                 return 'Enter a valid number';
               }
 
@@ -267,7 +267,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
             },
             decoration: InputDecoration(
               floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-              labelText: 'Mobile Number',
+              labelText: 'Contact Number',
               labelStyle: getRegularStyle(color: ColorManager.black),
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),

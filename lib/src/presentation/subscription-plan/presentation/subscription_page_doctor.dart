@@ -733,7 +733,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
 
                       h20,
                       Container(
-                        height: 300,
+                        height: 250.h,
                         child: ListView.builder(
                           scrollDirection: Axis.vertical,
                           itemCount: schemeMonth.length,
@@ -922,7 +922,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text('Rs. ',style: getMediumStyle(color: ColorManager.white,fontSize: 24),),
-                Text('$schemePrice',style: getMediumStyle(color: ColorManager.white,fontSize: 80),),
+                Text('$schemePrice',style: getMediumStyle(color: ColorManager.white,fontSize: 50),),
                 w10,
                 Text('for a $schemeDuration',style: getMediumStyle(color: ColorManager.white,fontSize: 24),),
               ],

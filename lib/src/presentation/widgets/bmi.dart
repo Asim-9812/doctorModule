@@ -5,6 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
+import 'package:medical_app/src/core/resources/string_manager.dart';
 import 'package:medical_app/src/test/test2.dart';
 
 import '../../core/resources/style_manager.dart';
@@ -31,6 +32,8 @@ class BMIState extends State<BMI> {
   List bmiList = bmiCategories;
   int category = 0;
   int unit =1;
+  int invalidType = 0;
+  int invalidType2 = 0;
 
   double _calculateHeight(double y){
     double res = 10 - (y * 10).toPrecision(1);
@@ -382,16 +385,19 @@ class BMIState extends State<BMI> {
                                         validator: (value){
                                           if(value!.isEmpty){
                                             setState(() {
+                                              invalidType = 1;
                                               ageValid = false;
                                             });
                                           }
                                           else if(double.parse(value)<10 && double.parse(value)>100 ){
                                             setState(() {
+                                              invalidType = 2;
                                               ageValid = false;
                                             });
                                           }
                                           else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
                                             setState(() {
+                                              invalidType = 2;
                                               ageValid = false;
                                             });
                                           }
@@ -424,7 +430,7 @@ class BMIState extends State<BMI> {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4.0, left: 8.0),
                                   child: Text(
-                                    'Please enter a valid age',
+                                    '${validationLists[invalidType]}',
                                     style: TextStyle(color: Colors.red),
                                   ),
                                 ),
@@ -455,16 +461,19 @@ class BMIState extends State<BMI> {
                                         validator: (value){
                                           if(value!.isEmpty){
                                             setState(() {
+                                              invalidType2 = 1;
                                               weightValid = false;
                                             });
                                           }
                                           else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
                                             setState(() {
+                                              invalidType2 = 2;
                                               weightValid = false;
                                             });
                                           }
                                           else{
                                             setState(() {
+                                              invalidType2 = 2;
                                               weightValid = true;
                                             });
                                             return null;
@@ -496,7 +505,7 @@ class BMIState extends State<BMI> {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4.0, left: 8.0),
                                   child: Text(
-                                    'Please enter a valid weight',
+                                    '${validationLists[invalidType2]}',
                                     style: TextStyle(color: Colors.red),
                                   ),
                                 ),

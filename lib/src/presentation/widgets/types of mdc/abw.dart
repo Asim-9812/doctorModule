@@ -30,6 +30,10 @@ class _BSAState extends State<ABW> {
   int format = 1;
   int gender = 1;
 
+  bool weightValid = true;
+  bool heightValid = true;
+  bool doseValid = true;
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -62,8 +66,26 @@ class _BSAState extends State<ABW> {
                   h10,
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                    color: ColorManager.dotGrey.withOpacity(0.2),
+                    color:weightValid == true? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
                     child: TextFormField(
+                      validator: (value){
+                        if(value!.isEmpty){
+                          setState(() {
+                            weightValid = false;
+                          });
+                        }
+                        else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                          setState(() {
+                            weightValid = false;
+                          });
+                        }
+                        else{
+                          setState(() {
+                            weightValid = true;
+                          });
+                          return null;
+                        }
+                      },
                       controller: _weightController,
                       keyboardType: TextInputType.phone,
                       style: getMediumStyle(color: ColorManager.black),
@@ -72,6 +94,14 @@ class _BSAState extends State<ABW> {
                       ),
                     ),
                   ),
+                  if (!weightValid)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+                      child: Text(
+                        'Please enter a valid weight',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
                   h20,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -122,11 +152,28 @@ class _BSAState extends State<ABW> {
                   ),
                   h10,
                   format ==1
-
                       ? Container(
                     padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                    color: ColorManager.dotGrey.withOpacity(0.2),
+                    color:heightValid == true? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
                     child: TextFormField(
+                      validator: (value){
+                        if(value!.isEmpty){
+                          setState(() {
+                            heightValid = false;
+                          });
+                        }
+                        else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                          setState(() {
+                            heightValid = false;
+                          });
+                        }
+                        else{
+                          setState(() {
+                            heightValid = true;
+                          });
+                          return null;
+                        }
+                      },
                       controller: _cmController,
                       keyboardType: TextInputType.phone,
                       style: getMediumStyle(color: ColorManager.black),
@@ -140,8 +187,26 @@ class _BSAState extends State<ABW> {
                       Container(
                         width: 50,
                         padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                        color: ColorManager.dotGrey.withOpacity(0.2),
+                        color:heightValid == true? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
                         child: TextFormField(
+                          validator: (value){
+                            if(value!.isEmpty){
+                              setState(() {
+                                heightValid = false;
+                              });
+                            }
+                            else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                              setState(() {
+                                heightValid = false;
+                              });
+                            }
+                            else{
+                              setState(() {
+                                heightValid = true;
+                              });
+                              return null;
+                            }
+                          },
                           controller: _ftController,
                           keyboardType: TextInputType.phone,
                           style: getMediumStyle(color: ColorManager.black),
@@ -158,8 +223,26 @@ class _BSAState extends State<ABW> {
                       Container(
                         width: 50,
                         padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                        color: ColorManager.dotGrey.withOpacity(0.2),
+                        color:heightValid == true? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
                         child: TextFormField(
+                          validator: (value){
+                            if(value!.isEmpty){
+                              setState(() {
+                                heightValid = false;
+                              });
+                            }
+                            else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                              setState(() {
+                                heightValid = false;
+                              });
+                            }
+                            else{
+                              setState(() {
+                                heightValid = true;
+                              });
+                              return null;
+                            }
+                          },
                           controller: _inchController,
                           keyboardType: TextInputType.phone,
                           style: getMediumStyle(color: ColorManager.black),
@@ -173,6 +256,15 @@ class _BSAState extends State<ABW> {
                       Text('in',style: getMediumStyle(color: ColorManager.black),),
                     ],
                   ),
+                  if (!heightValid)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+                      child: Text(
+                        'Please enter a valid height',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  h20,
                   h20,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -226,8 +318,26 @@ class _BSAState extends State<ABW> {
                   h10,
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                    color: ColorManager.dotGrey.withOpacity(0.2),
+                    color:doseValid == true? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
                     child: TextFormField(
+                      validator: (value){
+                        if(value!.isEmpty){
+                          setState(() {
+                            doseValid = false;
+                          });
+                        }
+                        else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                          setState(() {
+                            doseValid = false;
+                          });
+                        }
+                        else{
+                          setState(() {
+                            doseValid = true;
+                          });
+                          return null;
+                        }
+                      },
                       controller: _dosageController,
                       keyboardType: TextInputType.phone,
                       style: getMediumStyle(color: ColorManager.black),
@@ -236,6 +346,14 @@ class _BSAState extends State<ABW> {
                       ),
                     ),
                   ),
+                  if (!doseValid)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+                      child: Text(
+                        'Please enter a valid dosage',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
                   h20,
 
                   Center(
@@ -244,7 +362,30 @@ class _BSAState extends State<ABW> {
                           backgroundColor: ColorManager.primaryDark,
                             fixedSize: Size.fromWidth(300)
                         ),
-                        onPressed: ()=>_calculateDose(w: double.parse(_weightController.text), d: double.parse(_dosageController.text), c:format ==1 ?double.parse(_cmController.text):null,ft: format==2?int.parse(_ftController.text):null,inch: format==2?int.parse(_inchController.text):null),
+                        onPressed: (){
+                          if(_formKey.currentState!.validate()){
+                            if(weightValid && heightValid && doseValid){
+                              _calculateDose(
+                                  w: double.parse(_weightController.text),
+                                  d: double.parse(_dosageController.text),
+                                  c:format ==1
+                                      ?double.parse(_cmController.text)
+                                      :null,
+                                  ft: format==2
+                                      ?int.parse(_ftController.text)
+                                      :null,
+                                  inch: format== 2
+                                      ?int.parse(_inchController.text)
+                                      :null
+                              );
+                              _weightController.clear();
+                              _ftController.clear();
+                              _inchController.clear();
+                              _dosageController.clear();
+                            }
+                          }
+
+                          },
                         child: Text('Calculate',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
                   ),
                   h100,

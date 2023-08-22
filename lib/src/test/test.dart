@@ -1,905 +1,300 @@
 
 
-import 'package:animate_do/animate_do.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+
+import 'package:nepali_date_picker/nepali_date_picker.dart' as picker;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
-import 'package:medical_app/src/dummy_datas/dummy_datas.dart';
-import 'package:medical_app/src/presentation/doctor/profile/presentation/profile_page.dart';
-
+import 'package:nepali_date_picker/nepali_date_picker.dart';
 import '../core/resources/value_manager.dart';
-import '../presentation/doctor/patient_profile/presentation/doctor_patient_profile_page.dart';
-import '../presentation/notification/presentation/notification_page.dart';
 
-class TestPage extends StatefulWidget {
-  final bool isWideScreen;
-  final bool isNarrowScreen;
-  TestPage(this.isWideScreen,this.isNarrowScreen);
+class Test extends StatefulWidget {
+  const Test({super.key});
 
   @override
-  State<TestPage> createState() => _TestPageState();
+  State<Test> createState() => _TestState();
 }
 
-class _TestPageState extends State<TestPage> {
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+class _TestState extends State<Test> {
+  final TextEditingController _dayController = TextEditingController();
+  final TextEditingController _monthController = TextEditingController();
+  final TextEditingController _yearController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  String? calculatedEDD;
 
-  List<Map<String, dynamic>> myCircle = closeCircle;
+  // Function to calculate EDD
+  String calculateEDD() {
+    int day = int.tryParse(_dayController.text) ?? 1;
+    int month = int.tryParse(_monthController.text) ?? 1;
+    int year = int.tryParse(_yearController.text) ?? DateTime.now().year;
 
-  List<Map<String, dynamic>> myPatients = patientList;
+    DateTime lastPeriodDate = DateTime(year, month, day);
+    DateTime edd = lastPeriodDate.add(Duration(days: 280)); // Adding 280 days for EDD
 
-  int currentPage = 0;
-  final int rowsPerPage = 5;
+    return DateFormat('MMMM dd, yyyy').format(edd); // Format EDD date
+  }
 
 
+
+  bool invalid = false;
   @override
   Widget build(BuildContext context) {
-    // final userBox = Hive.box<User>('session').values.toList();
-    String firstName = 'User';//userBox[0].firstName!;
-    return FadeIn(
-      delay: Duration(milliseconds: 200),
-      duration: Duration(milliseconds: 500),
+
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-          key: _scaffoldKey,
-          backgroundColor: ColorManager.white,
-          endDrawerEnableOpenDragGesture: false,
+        backgroundColor: ColorManager.white,
+        appBar: AppBar(
+          elevation: 3,
+          backgroundColor: ColorManager.primary,
+          title: Text('EDD Calculator'),
+          centerTitle: true,
+          titleTextStyle: getMediumStyle(color: ColorManager.white),
 
-          appBar: AppBar(
-            elevation: 0,
-            iconTheme: IconThemeData(color: ColorManager.black),
-            backgroundColor: ColorManager.white,
-            toolbarHeight: 100,
-            leadingWidth: 70,
-            leading: Padding(
-              padding: EdgeInsets.only(left: 18),
-              child: InkWell(
-                onTap: ()=>Get.to(()=>DocProfilePage()),
-                child: CircleAvatar(
-                  backgroundColor: ColorManager.black,
-                  radius: widget.isNarrowScreen? 40 : 40.r,
-                  child: FaIcon(FontAwesomeIcons.person,color: ColorManager.white,),
-                ),
-              ),
-            ),
-            title: Column(
+        ),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 18.w),
+          child: Form(
+            key: _formKey,
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Good Morning',style: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen? 14.sp:14 ),),
-                Text('$firstName',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?32.sp:32),),
-              ],
-            ),
-            actions: [
-              IconButton(
-                  onPressed: ()=>Get.to(()=>NotificationPage()),
-                  icon: Icon(Icons.notifications_none_outlined,color: ColorManager.black,)),
-
-            ],
-          ),
-          body: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                InkWell(
-                  // onTap: ()=>Get.to(()=>SearchNearByPage(),transition: Transition.fadeIn),
-                  splashColor: ColorManager.primary.withOpacity(0.4),
-                  child: Center(
-                    child: Container(
-                        height: 50.h,
-                        width: 390.w,
-                        padding: EdgeInsets.symmetric(horizontal: 18.w),
-                        decoration: BoxDecoration(
-                            color: ColorManager.searchColor.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                                color:ColorManager.searchColor,
-                                width: 1
-                            )
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(Icons.search,color: ColorManager.iconGrey,),
-                                w10,
-                                Text('Search medical...',style: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isNarrowScreen?15.sp:15),),
-                              ],
-                            ),
-                            SizedBox()
-                          ],
-                        )
-                    ),
-                  ),
+                h20,
+                Text(
+                  'When was the first day of your last period?',
+                  style: getMediumStyle(color: ColorManager.black, fontSize: 20.sp),
                 ),
                 h20,
-                _overallStat(),
-                h20,
-                _myCircle(),
-                h20,
-                _myTasks(),
-
-                h20,
-                _myAppointments(),
-                h20,
-                h20,
-                h20,
-
-                // FadeInUp(
-                //     duration: Duration(milliseconds: 700),
-                //     child: _buildCircle()),
-                // h10,
-                _patientTable(),
-                h20,
-                h20,
-
-                h100,
-              ],
-
-            ),
-          )
-      ),
-    );
-  }
-
-
-  Widget _overallStat() {
-
-    return Container(
-      height: widget.isWideScreen? 260:200,
-      width: double.infinity,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        physics: BouncingScrollPhysics(),
-        shrinkWrap: true,
-        children: [
-          widget.isNarrowScreen?w10:w18,
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [
-                    ColorManager.blue,
-                    ColorManager.blue,
-                    ColorManager.blue.withOpacity(0.9),
-                    ColorManager.blue.withOpacity(0.9),
-                    ColorManager.blue.withOpacity(0.8),
-                    ColorManager.blue.withOpacity(0.8),
-                    ColorManager.blue.withOpacity(0.7)
-                  ],
-                  stops: [0.0,0.65,0.65,0.75,0.75, 0.85,0.85],
-                  transform: GradientRotation(5),
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  tileMode: TileMode.repeated
-              ),
-              borderRadius: BorderRadius.circular(20),
-
-            ),
-            margin: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
-            padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
-            height:widget.isWideScreen?240:160.h,
-            width: 280.w,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color:ColorManager.white.withOpacity(0.3),
-                        ),
-
-                        padding: EdgeInsets.symmetric(vertical: 5.w,horizontal: 10.w),
-                        child: FaIcon(Icons.person,color: ColorManager.white,)),
-                    w10,
-                    Text('Patients',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?24 :widget.isNarrowScreen?18.sp:24.sp),)
-                  ],
-                ),
-                h20,
-                Text('Total Patients:',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:widget.isNarrowScreen?16.sp:18.sp),),
-                h10,
-                Text('100',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?40:widget.isNarrowScreen?30.sp:40.sp),),
-                h10,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('New Patients :',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:widget.isNarrowScreen?16.sp:18.sp),),
-                    w10,
-                    Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?40:widget.isNarrowScreen?30.sp:40.sp),),
-                  ],
-                ),
-
-              ],
-            ),
-
-          ),
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [
-                    ColorManager.primary.withOpacity(0.8),
-                    ColorManager.primary.withOpacity(0.8),
-                    ColorManager.primary.withOpacity(0.7),
-                    ColorManager.primary.withOpacity(0.7),
-                    ColorManager.primary.withOpacity(0.6),
-                    ColorManager.primary.withOpacity(0.6),
-                    ColorManager.primary.withOpacity(0.5)
-                  ],
-                  stops: [0.0,0.6,0.6, 0.7,0.7,0.8,0.8],
-                  transform: GradientRotation(6),
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  tileMode: TileMode.mirror
-              ),
-              borderRadius: BorderRadius.circular(20),
-
-            ),
-            margin: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
-            padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
-            height:160.h,
-            width: 280.w,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color:ColorManager.white.withOpacity(0.3),
-                        ),
-
-                        padding: EdgeInsets.symmetric(vertical: 5.w,horizontal: 10.w),
-                        child: FaIcon(FontAwesomeIcons.notesMedical,color: ColorManager.white,)),
-                    w10,
-                    Text('Appointments',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?24 :widget.isNarrowScreen?18.sp:24.sp),)
-                  ],
-                ),
-                h20,
-                Text('Appointments :',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:widget.isNarrowScreen?16.sp:18.sp),),
-                h10,
-                Text('100',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?40:widget.isNarrowScreen?30.sp:40.sp),),
-                h10,
-                Text('Last 7 days',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:widget.isNarrowScreen?16.sp:18.sp),),
-
-              ],
-            ),
-
-          ),
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [
-                    ColorManager.orange,
-                    ColorManager.orange,
-                    ColorManager.orange.withOpacity(0.8),
-                    ColorManager.orange.withOpacity(0.8),
-                    ColorManager.orange.withOpacity(0.7),
-                    ColorManager.orange.withOpacity(0.7),
-                    ColorManager.orange.withOpacity(0.6)
-                  ],
-                  stops: [0.0,0.65,0.65,0.75,0.75, 0.85,0.85],
-                  transform: GradientRotation(1),
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  tileMode: TileMode.repeated
-              ),
-              borderRadius: BorderRadius.circular(20),
-
-            ),
-            margin: EdgeInsets.symmetric(horizontal: 12.w,vertical: 8.h),
-            padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
-            height:160.h,
-            width: 280.w,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color:ColorManager.white.withOpacity(0.3),
-                        ),
-
-                        padding: EdgeInsets.symmetric(vertical: 8.w,horizontal: 10.w),
-                        child: FaIcon(FontAwesomeIcons.bedPulse,color: ColorManager.white,size: 20,)),
-                    w10,
-                    Text('Surgical Stats',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?24 :widget.isNarrowScreen?18.sp:24.sp),)
-                  ],
-                ),
-                h20,
-                Text('Total Operations :',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:widget.isNarrowScreen?16.sp:18.sp),),
-                h10,
-                Text('10',style: getMediumStyle(color: ColorManager.white,fontSize: widget.isWideScreen?40:widget.isNarrowScreen?30.sp:40.sp),),
-                h10,
-                Text('Last 7 days',style: getRegularStyle(color: ColorManager.white,fontSize: widget.isWideScreen?18:widget.isNarrowScreen?16.sp:18.sp),),
-
-              ],
-            ),
-
-          ),
-
-
-        ],
-      ),
-    );
-  }
-
-
-  Widget _myCircle(){
-    return Container(
-
-      padding: EdgeInsets.symmetric(horizontal: 18.w),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18),
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: ColorManager.orange.withOpacity(0.4),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                ),
-                border:Border.all(
-                    color: ColorManager.black.withOpacity(0.4)
-                )
-            ),
-            child: Text('My Circle',style: getMediumStyle(color: ColorManager.black,fontSize: 24),),
-
-          ),
-          Container(
-              decoration: BoxDecoration(
-                  border: Border.symmetric(
-                      vertical: BorderSide(
-                          color: ColorManager.black.withOpacity(0.5)
-                      )
-                  )
-              ),
-              height: 210,
-              width: double.infinity,
-              child: ListView.builder(
-                itemCount:7,
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(vertical: 12.h),
-                itemBuilder: (context , i){
-                  return InkWell(
-                    onTap: ()=>Get.to(()=>DocProfilePage()),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: ColorManager.dotGrey.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                              color: ColorManager.black.withOpacity(0.5)
-                          )
-                      ),
-                      margin: EdgeInsets.symmetric(horizontal: 8.w),
-                      padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: ColorManager.black,
-                            radius: 30.r,
-                            child: Icon(Icons.person,color: ColorManager.white,),
-                          ),
-                          h20,
-                          Text('${myCircle[i]['name']}',style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
-                          h10,
-                          Text('${myCircle[i]['specializeIn']}',style: getRegularStyle(color: ColorManager.black,fontSize: 12),)
-
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              )
-
-          ),
-          InkWell(
-            onTap: (){},
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: ColorManager.orange.withOpacity(0.4),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                  border:Border.all(
-                      color: ColorManager.black.withOpacity(0.4)
-                  )
-              ),
-              child: Center(child: Text('See more',style: getMediumStyle(color: ColorManager.black,fontSize: 24),)),
-
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-
-  Widget _myTasks(){
-    return Container(
-
-      padding: EdgeInsets.symmetric(horizontal: 18.w),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18),
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: ColorManager.primary,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                )
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('My Tasks',style: getMediumStyle(color: ColorManager.white,fontSize: 24),),
-                FaIcon(Icons.add,color: ColorManager.white,),
-              ],
-            ),
-
-          ),
-          Container(
-              width: double.infinity,
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for(int i = 0; i < 3; i++)
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18.h),
-                      decoration:BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                                color: ColorManager.black.withOpacity(0.5),
-                                width: 0.5
-                            ),
-                            right: BorderSide(
-                                color: ColorManager.black.withOpacity(0.5),
-                                width: 0.5
-                            ),
-                            left: BorderSide(
-                                color: ColorManager.black.withOpacity(0.5),
-                                width: 0.5
-                            ),
-                          )
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text('${i+1}.',style: getRegularStyle(color: ColorManager.black),),
-                              w10,
-                              Container(
-                                  width: widget.isNarrowScreen?150: widget.isWideScreen? 275:200,
-                                  child: Text('${dummyTasks[i]}',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?16.sp:16),)),
-                              w10,
-                            ],
-                          ),
-                          Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                color: i%2==0?ColorManager.red.withOpacity(0.4):ColorManager.primary.withOpacity(0.4),
-                              ),
-                              padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 5.h),
-                              child: Text(i%2==0?'High':'Low',style: getRegularStyle(color: ColorManager.black,fontSize:  widget.isNarrowScreen?16.sp:16))),
-
-                        ],
-                      ),
-                    )
-                ],
-              )
-
-          ),
-          InkWell(
-            onTap: (){},
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: ColorManager.primary,
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(10),
-                    bottomLeft: Radius.circular(10),
-                  )
-              ),
-              child: Center(
-                  child: Text('See more',style: getMediumStyle(color: ColorManager.white,fontSize: 24),)),
-
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-
-  Widget _myAppointments(){
-    // Get the screen size
-    final screenSize = MediaQuery.of(context).size;
-
-    // Check if width is greater than height
-    bool isExtraWide = screenSize.width > 1000;
-    return Container(
-
-      padding: EdgeInsets.symmetric(horizontal: 18.w),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 18),
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: ColorManager.blue.withOpacity(0.8),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                )
-            ),
-            child: Text('My Appointments',style: getMediumStyle(color: ColorManager.white,fontSize: 24),),
-
-          ),
-          Container(
-              decoration: BoxDecoration(
-                  border: Border.symmetric(
-                      vertical: BorderSide(
-                          color: ColorManager.black.withOpacity(0.4)
-                      )
-                  )
-              ),
-              width: double.infinity,
-              child: Column(
-                children: [
-                  for(int i = 0; i< 5;i++)
                     Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        Text('Day', style: getRegularStyle(color: ColorManager.black)),
+                        h10,
                         Container(
-                          color: ColorManager.dotGrey.withOpacity(0.1),
-                          padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-                          height: 120.h,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                decoration:BoxDecoration(
-                                    color: ColorManager.white,
-                                    borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(
-                                        color: ColorManager.black.withOpacity(0.5),
-                                        width: 0.5
-                                    )
-                                ),
-                                padding: EdgeInsets.symmetric(horizontal: 20.w,vertical: 8.h),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text('25',style: getMediumStyle(color: ColorManager.black,fontSize: isExtraWide?18:widget.isNarrowScreen?18.sp:24),),
-                                    h10,
-                                    Text('wed',style: getMediumStyle(color: ColorManager.black,fontSize: isExtraWide?14:widget.isNarrowScreen?14.sp:18),)
-                                  ],
-                                ),
+                          decoration:BoxDecoration(
+                              border: Border.all(
+                                  color: ColorManager.black.withOpacity(0.5)
                               ),
-                              w10,
-                              Expanded(
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(50),
-                                              color: ColorManager.blue.withOpacity(0.4),
-                                            ),
-                                            padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 5.h),
-                                            child: Text('10:${40+(i*2)} am',style: getRegularStyle(color: ColorManager.blueText,fontSize: isExtraWide?12:widget.isNarrowScreen?14.sp:16),)),
-                                        h16,
-                                        Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text('${appointments[i]['appointmentTitle']}',style: getMediumStyle(color: ColorManager.black,fontSize: isExtraWide?16:widget.isNarrowScreen?18.sp:20),),
-                                            h10,
-                                            Text('${appointments[i]['patientName']}',style: getRegularStyle(color: ColorManager.black,fontSize: isExtraWide?12:widget.isNarrowScreen?16.sp:18),),
-                                          ],
-                                        ),
-
-                                      ],
-                                    ),
-                                    FaIcon(Icons.more_vert,color: ColorManager.black,size: isExtraWide?20:widget.isNarrowScreen?20.sp:24,)
-                                  ],
-                                ),
-                              )
-                            ],
+                              borderRadius: BorderRadius.circular(5)
                           ),
-                        ),
-                        Divider(
-                          color: ColorManager.black.withOpacity(0.4),
+                          padding: EdgeInsets.symmetric(horizontal: 12.w),
+                          child: DropdownButton<int>(
+                            menuMaxHeight: 400,
+                            value: _dayController.text.isNotEmpty ? int.tryParse(_dayController.text) : null,
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  _dayController.text = value.toString();
+                                });
+                              }
+                            },
+                            items: List.generate(32, (index) => index + 1)
+                                .map<DropdownMenuItem<int>>(
+                                  (value) => DropdownMenuItem<int>(
+                                value: value,
+                                child: Text(value.toString()),
+                              ),
+                            )
+                                .toList(),
+                          ),
                         ),
                       ],
                     ),
-
-                ],
-              )
-
-          ),
-          InkWell(
-            onTap: (){},
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: ColorManager.blue.withOpacity(0.8),
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(10),
-                    bottomLeft: Radius.circular(10),
-                  )
-              ),
-              child: Center(
-                  child: Text('See more',style: getMediumStyle(color: ColorManager.white,fontSize: 24),)),
-
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-
-  Widget _patientTable(){
-
-    int startIndex = currentPage * rowsPerPage;
-    int endIndex = (currentPage + 1) * rowsPerPage;
-
-    List<DataRow> rows = patientList.sublist(startIndex, endIndex).map((patient) {
-      return DataRow(cells: [
-        DataCell(Text((startIndex + patientList.indexOf(patient) + 1).toString())), // Serial Number (S.N.)
-        DataCell(Text(patient['name'])),
-        DataCell(Text(patient['address'])),
-        DataCell(Text(patient['contact'])),
-        DataCell(Text(patient['department'])),
-        DataCell(Text(patient['gender'])),
-        DataCell(IconButton(
-          icon: Icon(Icons.remove_red_eye),
-          onPressed: ()=>Get.to(()=>DocPatientProfile()),
-        )),
-      ]);
-    }).toList();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 18.w),
-          child: Text('My Patients',style: getMediumStyle(color: ColorManager.black),),
-        ),
-        h20,
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            headingTextStyle: getMediumStyle(color: ColorManager.white,fontSize: 20),
-            headingRowColor: MaterialStateColor.resolveWith((states) => ColorManager.primary),
-            columns: [
-              DataColumn(label: Text('S.N.')),
-              DataColumn(label: Text('Name')),
-              DataColumn(label: Text('Address')),
-              DataColumn(label: Text('Contact')),
-              DataColumn(label: Text('Department')),
-              DataColumn(label: Text('Gender')),
-              DataColumn(label: Text('Action')),
-            ],
-            rows: rows,
-          ),
-        ),
-        h10,
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              icon: Icon(Icons.navigate_before),
-              onPressed: () {
-                if (currentPage > 0) {
-                  setState(() {
-                    currentPage--;
-                  });
-                }
-              },
-            ),
-            Text('Page ${currentPage + 1}'),
-            IconButton(
-              icon: Icon(Icons.navigate_next),
-              onPressed: () {
-                if (endIndex < patientList.length) {
-                  setState(() {
-                    currentPage++;
-                  });
-                }
-              },
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-
-
-  ///my patient...
-  Widget _buildPatients() {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 18.w),
-      // color: Colors.red,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('My Patients',style: getMediumStyle(color: ColorManager.black,fontSize: widget.isNarrowScreen?20.sp:24),),
-              Container(
-                width: widget.isNarrowScreen?200.w:240.w,
-                child: Divider(
-                  color: ColorManager.black.withOpacity(0.5),
-                  thickness: 0.5,
-                ),
-              )
-            ],
-          ),
-          h20,
-          Container(
-            width: 390.w,
-            // padding: EdgeInsets.symmetric(horizontal: 8.w),
-            // decoration: BoxDecoration(
-            //     borderRadius: BorderRadius.circular(15),
-            //     color: ColorManager.white,
-            //     border: Border.all(
-            //         color: ColorManager.black.withOpacity(0.5),
-            //         width: 0.5
-            //     )
-            // ),
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: myPatients.length,
-                shrinkWrap: true,
-
-
-                itemBuilder: (context,index){
-                  return InkWell(
-                      onTap: ()=>Get.to(()=>DocPatientProfile()),
-                      child: Container(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                          child: ListTile(
-                              contentPadding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  side: BorderSide(
-                                      color: ColorManager.black.withOpacity(0.5)
-                                  )
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('Month', style: getRegularStyle(color: ColorManager.black)),
+                        h10,
+                        Container(
+                          decoration:BoxDecoration(
+                              border: Border.all(
+                                  color: ColorManager.black.withOpacity(0.5)
                               ),
-                              leading: Card(
-                                elevation: 0,
-                                shape: CircleBorder(
-                                    side: BorderSide(
-                                        color: ColorManager.black.withOpacity(0.5),
-                                        width: 0.5
-                                    )
-                                ),
-                                child:  CircleAvatar(
-                                  backgroundColor: ColorManager.white,
-                                  backgroundImage: myPatients[index]['picture']==null
-                                      ? AssetImage('assets/icons/user.png')
-                                      :AssetImage(myPatients[index]['picture']),
-                                  radius: 30,
-                                ),
+                              borderRadius: BorderRadius.circular(5)
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 12.w),
+                          child: DropdownButton<int>(
+
+                            menuMaxHeight: 400,
+                            value: _monthController.text.isNotEmpty ? int.tryParse(_monthController.text) : null,
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  _monthController.text = value.toString();
+                                });
+                              }
+                            },
+                            items: List.generate(12, (index) => index + 1)
+                                .map<DropdownMenuItem<int>>(
+                                  (value) => DropdownMenuItem<int>(
+                                value: value,
+                                child: Text(DateFormat('MMMM').format(DateTime(2000, value))),
                               ),
-                              title: Text('${myPatients[index]['name']}',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isWideScreen?20:20.sp),
-                              )
-                            // Container(
-                            //   width: 150.w,
-                            //   // padding: EdgeInsets.symmetric(horizontal: 2.w),
-                            //   margin: EdgeInsets.symmetric(horizontal: 12.w),
-                            //   decoration: BoxDecoration(
-                            //     color:ColorManager.lightBlueAccent.withOpacity(0.5),
-                            //     borderRadius: BorderRadius.circular(20),
-                            //     border: Border.all(
-                            //       color: ColorManager.black.withOpacity(0.7),
-                            //       width: 0.5
-                            //     )
-                            //   ),
-                            //   child: Column(
-                            //     mainAxisSize: MainAxisSize.min,
-                            //     mainAxisAlignment: MainAxisAlignment.center,
-                            //     crossAxisAlignment: CrossAxisAlignment.center,
-                            //     children: [
-                            //
-                            //       h10,
-                            //       Text('${myPatients[index]['name']}',style: getRegularStyle(color: ColorManager.black,fontSize: widget.isWideScreen?20:20.sp),),
-                            //       h10,
-                            //       if(myPatients[index]['department']!=null)Text('${myPatients[index]['department']}',style: getRegularStyle(color: ColorManager.textGrey,fontSize: widget.isWideScreen?14:14.sp),),
-                            //       h10,
-                            //       Card(
-                            //
-                            //        shape: CircleBorder(
-                            //          side: BorderSide(
-                            //            color: ColorManager.black.withOpacity(0.5),
-                            //            width: 0.5
-                            //          )
-                            //        ),
-                            //         child:Padding(
-                            //           padding: const EdgeInsets.all(5.0),
-                            //           child:FaIcon(Icons.chevron_right,color: ColorManager.black,),
-                            //         )
-                            //       )
-                            //
-                            //     ],
-                            //   ),
-                            // ),
+                            )
+                                .toList(),
                           ),
                         ),
-                      )
-                  );
-                }
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('Year',style: getRegularStyle(color: ColorManager.black),),
+                        h10,
+                        SizedBox(
+                          width: 75,
+                          child: TextFormField(
+                            controller: _yearController,
+                            keyboardType: TextInputType.phone,
+                            validator: (value){
+                              if(value!.isEmpty){
+                                return 'Year';
+                              }else if(DateTime(2023).isBefore(DateTime(int.parse(value)))||DateTime(2022).isAfter(DateTime(int.parse(value)))){
+                                return 'Valid Year';
+                              }else{
+                                return null;
+                              }
+                            },
+                            style: getRegularStyle(color: ColorManager.black,fontSize: 20),
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(horizontal: 14.w),
+                                border: OutlineInputBorder()
+                            ),
+                            inputFormatters: [LengthLimitingTextInputFormatter(4)],
+                          ),
+                        )
+                      ],
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.calendar_today),
+                      onPressed: () async {
+                        final DateTime currentDate = DateTime.now();
+                        final DateTime nineMonthsAgo = currentDate.subtract(Duration(days: 9 * 30)); // Subtract 9 months worth of days
+
+                        final selectedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: nineMonthsAgo,
+                          lastDate: DateTime.now(),
+                          initialDatePickerMode: DatePickerMode.day,
+                        );
+                        if (selectedDate != null) {
+                          setState(() {
+                            _dayController.text = selectedDate.day.toString();
+                            _monthController.text = selectedDate.month.toString();
+                            _yearController.text = selectedDate.year.toString();
+                          });
+                        }
+                      },
+                    ),
+                  ],
+                ),
+                h20,
+                h20,
+                Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: ColorManager.primaryDark
+                            ),
+                            onPressed: (){
+
+                              final DateTime date = DateTime.parse(DateFormat('yyyy-MM-dd').format(DateTime(int.parse(_yearController.text),int.parse(_monthController.text),int.parse(_dayController.text))));
+                              final now = DateTime.parse(DateFormat('yyyy-MM-dd').format(DateTime.now()));
+
+                              if(date.isAfter(now)){
+                                setState(() {
+                                  invalid = true;
+                                  calculatedEDD = null;
+                                });
+                              }
+                              else {
+                                if (_formKey.currentState!.validate()) {
+                                  setState(() {
+                                    invalid = false;
+                                    calculatedEDD = calculateEDD();
+                                  });
+                                }
+                              }
+                            },
+                            child: Text('Calculate')
+                        ),
+                        w10,
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                elevation: 0,
+                                backgroundColor: ColorManager.dotGrey
+                            ),
+                            onPressed: (){
+                              setState(() {
+                                _dayController.clear();
+                                _monthController.clear();
+                                _yearController.clear();
+                                calculatedEDD = null;
+                                invalid=false;
+                              });
+                            },
+                            child: Text('Clear',style: getRegularStyle(color: ColorManager.black),)
+                        ),
+                      ],
+                    )
+                ),
+                h10,
+                if(invalid)
+                  Center(child: Text('Date cannot be after current date',style: getRegularStyle(color: ColorManager.red),)),
+                h20,
+                if (calculatedEDD != null)
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20.h),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Text(
+                            'Estimated Due Date :',
+                            style: getMediumStyle(color: ColorManager.black, fontSize: 18),
+                          ),
+                          SizedBox(height: 10.h),
+                          Text(
+                            '$calculatedEDD',
+                            style: getMediumStyle(color: ColorManager.primaryDark, fontSize: 18),
+                          ),
+                          SizedBox(height: 30.h),
+                          Text(calculateEDDRange(),style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
+                          SizedBox(height: 10.h),
+                          Text(
+                            'Please note that due dates are estimates and can vary for each individual. Factors such as menstrual cycle length, ovulation, and other medical considerations can influence the actual delivery date. Consult with a healthcare professional for personalized guidance.',
+                            style: getRegularStyle(color: ColorManager.black, fontSize: 16),
+                            textAlign: TextAlign.justify,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 
+  // Function to calculate EDD range
+  String calculateEDDRange() {
+    DateTime edd = DateFormat('MMMM dd, yyyy').parse(calculatedEDD!); // Parse calculated EDD
+    DateTime eddMinus7 = edd.subtract(Duration(days: 7)); // Subtract 7 days
+    DateTime eddPlus7 = edd.add(Duration(days: 7)); // Add 7 days
 
-
-
+    return DateFormat('MMMM dd, yyyy').format(eddMinus7) + ' to ' + DateFormat('MMMM dd, yyyy').format(eddPlus7);
+  }
 }
-

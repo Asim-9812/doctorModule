@@ -134,15 +134,10 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
           ),
           TextFormField(
             controller: _licenseController,
-            keyboardType: TextInputType.phone,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value){
               if (value!.isEmpty) {
                 return 'License is required';
-              }
-
-              if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                return 'Please enter a valid License Number';
               }
               return null;
             },
@@ -175,7 +170,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
                       return 'First Name is required';
                     }
                     if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
-                      return 'Invalid Name. Only use letters';
+                      return 'Invalid Name';
                     }
                     return null;
                   },
@@ -203,7 +198,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
                       return 'Last Name is required';
                     }
                     if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
-                      return 'Invalid Name. Only use letters';
+                      return 'Invalid Name';
                     }
                     return null;
                   },
@@ -391,7 +386,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
               if(formKey.currentState!.validate()){
                 final scaffoldMessage = ScaffoldMessenger.of(context);
                 registerDoctorModel = RegisterDoctorModel(
-                    licenseNo:int.parse(_licenseController.text.trim()),
+                    licenseNo:_licenseController.text.trim(),
                     genderId: genderId,
                     contactNo: _mobileController.text.trim(),
                     password: _passController.text.trim(),

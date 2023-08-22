@@ -6,7 +6,7 @@ class RegisterDoctorModel {
   final String lastName;
   final String email;
   final String contactNo;
-  final int licenseNo;
+  final String licenseNo;
   final String password;
   final int genderId;
 

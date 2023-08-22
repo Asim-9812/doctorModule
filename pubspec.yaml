@@ -180,6 +180,9 @@ dependencies:
     path: ./external_sdk/esewa_sdk/esewa_flutter_sdk
 
 
+  nepali_date_picker: ^5.3.1
+
+
 
 
 
@@ -236,10 +239,6 @@ flutter:
     - assets/images/containers/
     - assets/images/xrays/
     - assets/icons/
-    - assets/images/Splash-logo.png
-    - assets/images/splash.gif
-    - assets/images/logo.png
-    - assets/images/eticket.png
     - assets/jsons/
 
   # An image asset can refer to one or more resolution-specific "variants", see

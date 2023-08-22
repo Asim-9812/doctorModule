@@ -27,6 +27,10 @@ class _CNDState extends State<CND> {
   final _formKey = GlobalKey<FormState>();
   int format = 1;
 
+  bool icValid = true;
+  bool fcValid = true;
+  bool fvValid = true;
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -65,8 +69,26 @@ class _CNDState extends State<CND> {
                           Container(
                             width: 75,
                             padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                            color: ColorManager.dotGrey.withOpacity(0.2),
+                            color: icValid == true ? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
                             child: TextFormField(
+                              validator: (value){
+                                if(value!.isEmpty){
+                                  setState(() {
+                                    icValid = false;
+                                  });
+                                }
+                                else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                                  setState(() {
+                                    icValid = false;
+                                  });
+                                }
+                                else{
+                                  setState(() {
+                                    icValid = true;
+                                  });
+                                  return null;
+                                }
+                              },
                               controller: _icController,
                               keyboardType: TextInputType.phone,
                               style: getMediumStyle(color: ColorManager.black),
@@ -92,8 +114,26 @@ class _CNDState extends State<CND> {
                           Container(
                             width: 75,
                             padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                            color: ColorManager.dotGrey.withOpacity(0.2),
+                            color: fcValid == true ? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
                             child: TextFormField(
+                              validator: (value){
+                                if(value!.isEmpty){
+                                  setState(() {
+                                    fcValid = false;
+                                  });
+                                }
+                                else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                                  setState(() {
+                                    fcValid = false;
+                                  });
+                                }
+                                else{
+                                  setState(() {
+                                    fcValid = true;
+                                  });
+                                  return null;
+                                }
+                              },
                               controller: _fcController,
                               keyboardType: TextInputType.phone,
                               style: getMediumStyle(color: ColorManager.black),
@@ -119,8 +159,26 @@ class _CNDState extends State<CND> {
                           Container(
                             width: 75,
                             padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                            color: ColorManager.dotGrey.withOpacity(0.2),
+                            color: fvValid == true ? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
                             child: TextFormField(
+                              validator: (value){
+                                if(value!.isEmpty){
+                                  setState(() {
+                                    fvValid = false;
+                                  });
+                                }
+                                else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                                  setState(() {
+                                    fvValid = false;
+                                  });
+                                }
+                                else{
+                                  setState(() {
+                                    fvValid = true;
+                                  });
+                                  return null;
+                                }
+                              },
                               controller: _fvController,
                               keyboardType: TextInputType.phone,
                               style: getMediumStyle(color: ColorManager.black),
@@ -143,9 +201,32 @@ class _CNDState extends State<CND> {
                           backgroundColor: ColorManager.primaryDark,
                             fixedSize: Size.fromWidth(300)
                         ),
-                        onPressed: ()=>_calculateDose(c1: double.parse(_icController.text), c2: double.parse(_fcController.text), v2:double.parse(_fvController.text)),
+                        onPressed: () {
+                          if(_formKey.currentState!.validate()){
+                            if(icValid && fcValid && fvValid){
+                              _calculateDose(c1: double.parse(_icController.text),
+                                  c2: double.parse(_fcController.text),
+                                  v2: double.parse(_fvController.text));
+                              _fcController.clear();
+                              _fvController.clear();
+                              _icController.clear();
+                            }
+                          }
+
+                        },
                         child: Text('Calculate',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
                   ),
+                  if(!icValid || !fcValid || !fvValid)
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+                        child: Text(
+                          'Please enter a valid numeric value',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ),
+
                   h100,
 
                 ],
