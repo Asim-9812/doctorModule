@@ -33,6 +33,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
   final TextEditingController _emailController = TextEditingController();
 
   final TextEditingController _passController = TextEditingController();
+  final TextEditingController _passConfirmController = TextEditingController();
   final TextEditingController _licenseController = TextEditingController();
 
   final TextEditingController _firstNameController = TextEditingController();
@@ -95,6 +96,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
               }
               return null;
             },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             value: selectedProfession,
             decoration: InputDecoration(
               labelText: 'Select Profession',
@@ -229,6 +231,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
               }
               return null;
             },
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             value: selectedGender,
             decoration: InputDecoration(
               labelText: 'Select Gender',
@@ -375,6 +378,41 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
             decoration: InputDecoration(
                 floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
                 labelText: 'Password',
+                labelStyle: getRegularStyle(color: ColorManager.black),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                        color: ColorManager.black
+                    )
+                ),
+                suffixIcon: IconButton(
+                  onPressed: (){
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                  icon: _obscureText? FaIcon(CupertinoIcons.eye,color: ColorManager.black,):FaIcon(CupertinoIcons.eye_slash,color: ColorManager.black,),
+                )
+            ),
+          ),
+          SizedBox(
+            height: 18.h,
+          ),
+          TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Confirm Password is required';
+              } else if(value != _passController.text.trim()){
+                return 'Password doesnt match';
+              }
+              return null;
+            },
+            controller: _passConfirmController,
+            obscureText: _obscureText,
+            decoration: InputDecoration(
+                floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                labelText: 'Confirm Password',
                 labelStyle: getRegularStyle(color: ColorManager.black),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),

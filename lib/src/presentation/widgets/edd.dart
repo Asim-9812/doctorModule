@@ -110,68 +110,64 @@ class _EDDState extends State<EDD> {
                 ),
                 h20,
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Expanded(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            setState(() {
-                              dateType = 1;
-                              dateTime = '';
-                              calculatedNepEDD = null;
-                              invalid=false;
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            side: BorderSide(
-                                color: ColorManager.black
-                            ),
-                            minimumSize: const Size(double.infinity, 50),
-                            elevation: 0,
-                            backgroundColor: dateType==1? ColorManager.primary : ColorManager.white,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)
-                            ),
-                          ),
-                          child: Text('A.D.',style: getRegularStyle(color: dateType == 1 ? ColorManager.white:ColorManager.black),),
-                        )
+                    ElevatedButton(
+                      onPressed: () async {
+                        setState(() {
+                          dateType = 1;
+                          dateTime = '';
+                          calculatedNepEDD = null;
+                          invalid=false;
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: Size(50, 50),
+                        side: BorderSide(
+                            color: ColorManager.black
+                        ),
+                        elevation: 0,
+                        backgroundColor: dateType==1? ColorManager.primary : ColorManager.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)
+                        ),
+                      ),
+                      child: Text('A.D.',style: getRegularStyle(color: dateType == 1 ? ColorManager.white:ColorManager.black),),
                     ),
                     w10,
-                    Expanded(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            setState(() {
-                              dateType = 2;
-                              nepDateTime = '';
-                              calculatedEDD = null;
-                              invalid=false;
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            side: BorderSide(
-                                color: ColorManager.black
-                            ),
-                            minimumSize: const Size(double.infinity, 50),
-                            textStyle: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                                color: dateType == 2 ? ColorManager.white:ColorManager.black
-                            ),
-                            elevation: 0,
-                            backgroundColor:dateType==2? ColorManager.red.withOpacity(0.4) : ColorManager.white,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)
-                            ),
-                          ),
-                          child: Text('B.S.',style: getRegularStyle(color: dateType == 2 ? ColorManager.white:ColorManager.black)),
-                        )
+                    ElevatedButton(
+                      onPressed: () async {
+                        setState(() {
+                          dateType = 2;
+                          nepDateTime = '';
+                          calculatedEDD = null;
+                          invalid=false;
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: Size(50, 50),
+                        side: BorderSide(
+                            color: ColorManager.black
+                        ),
+                        textStyle: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            color: dateType == 2 ? ColorManager.white:ColorManager.black
+                        ),
+                        elevation: 0,
+                        backgroundColor:dateType==2? ColorManager.red.withOpacity(0.4) : ColorManager.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)
+                        ),
+                      ),
+                      child: Text('B.S.',style: getRegularStyle(color: dateType == 2 ? ColorManager.white:ColorManager.black)),
                     ),
                   ],
                 ),
                 h20,
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
@@ -188,81 +184,65 @@ class _EDDState extends State<EDD> {
                       ),
                     ),
                     w10,
-                    Expanded(
-                      child: dateType == 1
-                          ? ElevatedButton(
-                          onPressed: () async {
-                            final DateTime currentDate = DateTime.now();
-                            final DateTime nineMonthsAgo = currentDate.subtract(Duration(days: 9 * 30));
-                            final DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: initialDate ?? DateTime.now(),
-                              firstDate: nineMonthsAgo,
-                              lastDate: DateTime.now(),
-                            );
-                            setState(() {
-                              dateTime = DateFormat('yyyy-MM-dd').format(pickedDate!);
-                              initialDate = pickedDate;
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(double.infinity, 50),
-                            textStyle: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            elevation: 0,
-                            backgroundColor: ColorManager.primary,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)
-                            ),
+                    dateType == 1
+                        ? ElevatedButton(
+                        onPressed: () async {
+                          final DateTime currentDate = DateTime.now();
+                          final DateTime nineMonthsAgo = currentDate.subtract(Duration(days: 9 * 30));
+                          final DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: initialDate ?? DateTime.now(),
+                            firstDate: nineMonthsAgo,
+                            lastDate: DateTime.now(),
+                          );
+                          setState(() {
+                            dateTime = DateFormat('yyyy-MM-dd').format(pickedDate!);
+                            initialDate = pickedDate;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          fixedSize: Size(50,50),
+                          textStyle: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
                           ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.more_time, size: 26, color: Colors.white,),
-                              SizedBox(width: 10,),
-                              Text('Pick Time'),
-                            ],
-                          )
-                      )
-                          : ElevatedButton(
-                          onPressed: () async {
-                            final NepaliDateTime currentNepaliDate = NepaliDateTime.now();
-                            final NepaliDateTime nineMonthsAgo = currentNepaliDate.subtract(Duration(days: 9 * 30));
-                            picker.NepaliDateTime? _selectedNepaliDate = await picker.showMaterialDatePicker(
-                              context: context,
-                              initialDate: initialNepDate?? NepaliDateTime.now(),
-                              firstDate: nineMonthsAgo,
-                              lastDate: NepaliDateTime.now(),
-                              initialDatePickerMode: DatePickerMode.day,
-                            );
-                            setState(() {
-                              nepDateTime = NepaliDateFormat('yyyy-MM-dd').format(_selectedNepaliDate!);
-                              initialNepDate = _selectedNepaliDate;
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(double.infinity, 50),
-                            textStyle: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            elevation: 0,
-                            backgroundColor: ColorManager.red.withOpacity(0.4),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)
-                            ),
+                          elevation: 0,
+                          backgroundColor: ColorManager.primary,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)
                           ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.more_time, size: 26, color: Colors.white,),
-                              SizedBox(width: 10,),
-                              Text('Pick Time'),
-                            ],
-                          )
-                      ),
+                        ),
+                        child: FaIcon(Icons.calendar_month,color: ColorManager.white,)
+                    )
+                        : ElevatedButton(
+                        onPressed: () async {
+                          final NepaliDateTime currentNepaliDate = NepaliDateTime.now();
+                          final NepaliDateTime nineMonthsAgo = currentNepaliDate.subtract(Duration(days: 9 * 30));
+                          picker.NepaliDateTime? _selectedNepaliDate = await picker.showMaterialDatePicker(
+                            context: context,
+                            initialDate: initialNepDate?? NepaliDateTime.now(),
+                            firstDate: nineMonthsAgo,
+                            lastDate: NepaliDateTime.now(),
+                            initialDatePickerMode: DatePickerMode.day,
+                          );
+                          setState(() {
+                            nepDateTime = NepaliDateFormat('yyyy-MM-dd').format(_selectedNepaliDate!);
+                            initialNepDate = _selectedNepaliDate;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          fixedSize: Size(50,50),
+                          textStyle: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          elevation: 0,
+                          backgroundColor: ColorManager.red.withOpacity(0.4),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                        ),
+                        child: FaIcon(Icons.calendar_month,color: ColorManager.white,)
                     ),
                   ],
                 ),
@@ -311,6 +291,8 @@ class _EDDState extends State<EDD> {
                               setState(() {
                                 dateTime = '';
                                 calculatedEDD = null;
+                                calculatedNepEDD = null;
+                                nepDateTime = '';
                                 invalid=false;
                               });
                             },

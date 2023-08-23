@@ -99,7 +99,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
       return dartz.Right(response.data);
     } on DioException catch (err) {
       print(err.response);
-      throw Exception('Dio error: ${err.message}');
+      throw Exception('1. ${err.response!.data['message']}');
     }}
 
   Future<dartz.Either<String, dynamic>> subscriptionPlanDoctor({
@@ -129,7 +129,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
       print(err.response);
 
 
-      throw Exception('Dio error: ${err.message}');
+      throw Exception('2. ${err.response!.data['message']}');
     }}
 
 
@@ -148,7 +148,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
             "contactNo": widget.registerDoctorModel.contactNo,
             "panNo": 0,
             "natureID": 0,
-            "liscenceNo": widget.registerDoctorModel.licenseNo,
+            "liscenceNo": 0,
             "email": widget.registerDoctorModel.email,
             "roleID": 2,
             "joinedDate": "${DateFormat('yyyy-MM-dd').format(DateTime.now()).toString()}",
@@ -166,7 +166,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
       print(err.response);
 
 
-      throw Exception('Dio error: ${err.message}');
+      throw Exception('3. ${err.response!.data['message']}');
     }}
 
 
@@ -822,7 +822,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
 
                       h20,
                       Container(
-                        height: 300,
+                        height: 250.h,
                         child: ListView.builder(
                           scrollDirection: Axis.vertical,
                           itemCount: schemeYear.length,

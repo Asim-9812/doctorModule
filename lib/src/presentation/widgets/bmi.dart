@@ -32,8 +32,7 @@ class BMIState extends State<BMI> {
   List bmiList = bmiCategories;
   int category = 0;
   int unit =1;
-  int invalidType = 0;
-  int invalidType2 = 0;
+  bool disableValidate = true;
 
   double _calculateHeight(double y){
     double res = 10 - (y * 10).toPrecision(1);
@@ -199,6 +198,8 @@ class BMIState extends State<BMI> {
                   onPressed: (){
                     setState(() {
                       isLoading = false;
+                      _formKey.currentState!.reset();
+                      disableValidate = true;
                     });
                     Navigator.pop(context);
                   },
@@ -362,153 +363,78 @@ class BMIState extends State<BMI> {
                               Text('Age',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
                               h10,
                               Container(
-                                margin: EdgeInsets.symmetric(horizontal: 18.w),
-                                decoration: BoxDecoration(
-                                    color: ageValid
-                                        ? ColorManager.dotGrey.withOpacity(0.2)
-                                        : Colors.red.withOpacity(0.2),
-                                    border: Border.all(
-                                      color: ageValid
-                                          ? ColorManager.dotGrey.withOpacity(0.5)
-                                          : Colors.red.withOpacity(0.5),
-                                    )
-                                ),
-                                padding:EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h) ,
+                                padding: EdgeInsets.symmetric(horizontal: 18.w),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Container(
-                                      width: 50.w,
+                                    Expanded(
                                       child: TextFormField(
-                                        controller: ageController,
+                                        autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
                                         validator: (value){
                                           if(value!.isEmpty){
-                                            setState(() {
-                                              invalidType = 1;
-                                              ageValid = false;
-                                            });
-                                          }
-                                          else if(double.parse(value)<10 && double.parse(value)>100 ){
-                                            setState(() {
-                                              invalidType = 2;
-                                              ageValid = false;
-                                            });
+                                            return 'Required';
                                           }
                                           else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                                            setState(() {
-                                              invalidType = 2;
-                                              ageValid = false;
-                                            });
+                                            return 'Enter a valid number';
                                           }
                                           else{
-                                            setState(() {
-                                              ageValid= true;
-                                            });
+
                                             return null;
                                           }
                                         },
-                                        style: getRegularStyle(color: ColorManager.black,fontSize: 18),
+                                        controller: ageController,
                                         keyboardType: TextInputType.phone,
+                                        style: getMediumStyle(color: ColorManager.black),
                                         decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.only(left: 8.w,top: 24.h),
-                                            border: UnderlineInputBorder()
+                                            filled: true,
+                                            fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                                            border: OutlineInputBorder(
+                                            )
                                         ),
                                       ),
                                     ),
-                                    Container(
-                                      width: 70.w,
-                                      child: Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: Text('yrs old',style: getRegularStyle(color: ColorManager.black,fontSize: 20),)),
-                                    ),
-
+                                    w10,
+                                    Text('yrs old')
                                   ],
                                 ),
                               ),
-                              if (!ageValid)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-                                  child: Text(
-                                    '${validationLists[invalidType]}',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                ),
                               h20,
                               Text('Weight',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
                               h10,
                               Container(
-                                margin: EdgeInsets.symmetric(horizontal: 18.w),
-                                decoration: BoxDecoration(
-                                  color: weightValid
-                                      ? ColorManager.dotGrey.withOpacity(0.2)
-                                      : Colors.red.withOpacity(0.2),
-                                  border: Border.all(
-                                    color: weightValid
-                                        ? ColorManager.dotGrey.withOpacity(0.5)
-                                        : Colors.red.withOpacity(0.5),
-                                  )
-                                ),
-                                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
+                                padding: EdgeInsets.symmetric(horizontal: 18.w),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Container(
-                                      width: 50.w,
+                                    Expanded(
                                       child: TextFormField(
-                                        controller: weightController,
+                                        autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
                                         validator: (value){
                                           if(value!.isEmpty){
-                                            setState(() {
-                                              invalidType2 = 1;
-                                              weightValid = false;
-                                            });
+                                            return 'Required';
                                           }
                                           else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                                            setState(() {
-                                              invalidType2 = 2;
-                                              weightValid = false;
-                                            });
+                                            return 'Enter a valid number';
                                           }
                                           else{
-                                            setState(() {
-                                              invalidType2 = 2;
-                                              weightValid = true;
-                                            });
+
                                             return null;
                                           }
                                         },
-                                        style: getRegularStyle(color: ColorManager.black, fontSize: 18),
+                                        controller: weightController,
                                         keyboardType: TextInputType.phone,
+                                        style: getMediumStyle(color: ColorManager.black),
                                         decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.only(left: 8.w, top: 24.h),
-                                          border: UnderlineInputBorder(),
+                                            filled: true,
+                                            fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                                            border: OutlineInputBorder(
+                                            )
                                         ),
                                       ),
                                     ),
-                                    Container(
-                                      width: 70.w,
-                                      child: Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Text(
-                                          'in KGs',
-                                          style: getRegularStyle(
-                                              color: ColorManager.black, fontSize: 20),
-                                        ),
-                                      ),
-                                    ),
+                                    w10,
+                                    Text('in Kgs')
                                   ],
                                 ),
                               ),
-                              if (!weightValid)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-                                  child: Text(
-                                    '${validationLists[invalidType2]}',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                ),
                               h20,
                               Text('Height',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
                               h10,
@@ -667,11 +593,17 @@ class BMIState extends State<BMI> {
                         if(ageValid == true && weightValid == true){
                           if(unit == 1 ){
                             _calculateBMI(w: double.parse(weightController.text), h: heightCM);
+                            setState(() {
+                              disableValidate = false;
+                            });
                             weightController.clear();
                             ageController.clear();
                           }
                           else{
                             _calculateBMI(w: double.parse(weightController.text), h: convertToCm);
+                            setState(() {
+                              disableValidate = false;
+                            });
                             weightController.clear();
                             ageController.clear();
                           }

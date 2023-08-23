@@ -73,10 +73,8 @@ class _BSAState extends State<BSA> {
                       else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
                         return 'Enter a valid number';
                       }
-                      else{
+                      return null;
 
-                        return null;
-                      }
                     },
                     controller: _weightController,
                     keyboardType: TextInputType.phone,
@@ -271,7 +269,7 @@ class _BSAState extends State<BSA> {
                         ),
                         onPressed: () {
 
-                          if(_formKey.currentState!.validate()){
+                          if(_formKey.currentState!.validate()) {
                             _calculateDose(
                                 w: double.parse(_weightController.text),
                                 d: double.parse(_dosageController.text),
@@ -283,16 +281,18 @@ class _BSAState extends State<BSA> {
                                     : null,
                                 inch: format == 2 ? _selectedInch : null);
 
-                          }
-                          setState(() {
-                            disableValidate = false;
-                          });
-                          _weightController.clear();
-                          _dosageController.clear();
-                          _ftController.clear();
-                          _inchController.clear();
-                          _cmController.clear();
 
+                            setState(() {
+                              disableValidate = false;
+                              _selectedInch = 1;
+                            });
+                            _weightController.clear();
+                            _dosageController.clear();
+                            _ftController.clear();
+                            _inchController.clear();
+                            _cmController.clear();
+
+                          }
 
                         },
                         child: Text('Calculate',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
@@ -377,7 +377,6 @@ class _BSAState extends State<BSA> {
                         _formKey.currentState!.reset();
                         disableValidate = true;
                       });
-
                       FocusScope.of(context).unfocus();
                       Navigator.pop(context);
                     }, child: Text('OK')),

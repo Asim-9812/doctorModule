@@ -71,7 +71,7 @@ class _BSAState extends State<ABW> {
                         return 'Required';
                       }
                       else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                        return 'Invalid';
+                        return 'Invalid value';
                       }
                       else{
 
@@ -147,7 +147,7 @@ class _BSAState extends State<ABW> {
                         return 'Required';
                       }
                       else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                        return 'Please enter a valid value';
+                        return 'Invalid value';
                       }
                       else{
 
@@ -177,7 +177,7 @@ class _BSAState extends State<ABW> {
                               return 'Required';
                             }
                             else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                              return 'Invalid';
+                              return 'Invalid value';
                             }
                             else{
 
@@ -295,7 +295,7 @@ class _BSAState extends State<ABW> {
                         return 'Required';
                       }
                       else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                        return 'Please enter a valid value';
+                        return 'Invalid value';
                       }
                       else{
 
@@ -338,6 +338,7 @@ class _BSAState extends State<ABW> {
                               );
                               setState(() {
                                 disableValidate = false;
+                                _selectedInch = 1;
                               });
                               _weightController.clear();
                               _ftController.clear();

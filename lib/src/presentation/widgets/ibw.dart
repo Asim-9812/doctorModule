@@ -33,6 +33,7 @@ class IBWState extends State<IBW> {
   int category = 0;
   int unit =1;
   int invalidType = 0;
+  bool disableValidate = true;
 
   double _calculateHeight(double y){
     double res = 10 - (y * 10).toPrecision(1);
@@ -58,51 +59,6 @@ class IBWState extends State<IBW> {
   }
 
 
-  double _getSize() {
-
-    if(result >= 0.0 && result < 16){
-      setState(() {
-        category = 0;
-      });
-      return 0.1;
-    } else if(result >=16 && result < 17){
-      setState(() {
-        category = 0;
-      });
-      return 0.18;
-    } else if(result >=17 && result < 18.5){
-      setState(() {
-        category = 0;
-      });
-      return 0.23;
-    } else if(result >=18.5 && result < 25){
-      setState(() {
-        category = 1;
-      });
-      return 0.35;
-    } else if(result >=25 && result < 30){
-      setState(() {
-        category = 2;
-      });
-      return 0.47;
-    } else if(result >=30 && result < 35){
-      setState(() {
-        category = 3;
-      });
-      return 0.53;
-    } else if(result >=35 && result < 40){
-      setState(() {
-        category =4;
-      });
-      return 0.575;
-    } else{
-      setState(() {
-        category = 5;
-      });
-      return 0.7;
-    }
-
-  }
 
   (String,int,int) _convertCmToFeetAndInches(double cm) {
     final int totalInches = (cm * 0.393701).round();
@@ -155,7 +111,14 @@ class IBWState extends State<IBW> {
                       fixedSize: Size.fromWidth(200.w),
                       backgroundColor: ColorManager.primary
                   ),
-                  onPressed: ()=>Navigator.pop(context),
+                  onPressed: () {
+                    setState(() {
+                      isLoading = false;
+                      _formKey.currentState!.reset();
+                      disableValidate = true;
+                    });
+                    Navigator.pop(context);
+                  },
                   child: Text('OK',style: getMediumStyle(color: Colors.white,fontSize: 16),)
               )
             ],
@@ -314,78 +277,40 @@ class IBWState extends State<IBW> {
                               Text('Age',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
                               h10,
                               Container(
-                                margin: EdgeInsets.symmetric(horizontal: 18.w),
-                                decoration: BoxDecoration(
-                                    color: ageValid
-                                        ? ColorManager.dotGrey.withOpacity(0.2)
-                                        : Colors.red.withOpacity(0.2),
-                                    border: Border.all(
-                                      color: ageValid
-                                          ? ColorManager.dotGrey.withOpacity(0.5)
-                                          : Colors.red.withOpacity(0.5),
-                                    )
-                                ),
-                                padding:EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h) ,
+                                padding: EdgeInsets.symmetric(horizontal: 18.w),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Container(
-                                      width: 50.w,
+                                    Expanded(
                                       child: TextFormField(
-                                        controller: ageController,
+                                        autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
                                         validator: (value){
                                           if(value!.isEmpty){
-                                            setState(() {
-                                              invalidType = 1;
-                                              ageValid = false;
-                                            });
-                                          }
-                                          else if(double.parse(value)<10 && double.parse(value)>100 ){
-                                            setState(() {
-                                              invalidType = 2;
-                                              ageValid = false;
-                                            });
+                                            return 'Required';
                                           }
                                           else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                                            setState(() {
-                                              invalidType = 2;
-                                              ageValid = false;
-                                            });
+                                            return 'Enter a valid number';
                                           }
                                           else{
-                                            setState(() {
-                                              ageValid= true;
-                                            });
+
                                             return null;
                                           }
                                         },
-                                        style: getRegularStyle(color: ColorManager.black,fontSize: 18),
+                                        controller: ageController,
                                         keyboardType: TextInputType.phone,
+                                        style: getMediumStyle(color: ColorManager.black),
                                         decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.only(left: 8.w,top: 24.h),
-                                            border: UnderlineInputBorder()
+                                            filled: true,
+                                            fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                                            border: OutlineInputBorder(
+                                            )
                                         ),
                                       ),
                                     ),
-                                    Container(
-                                      width: 70.w,
-                                      child: Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: Text('yrs old',style: getRegularStyle(color: ColorManager.black,fontSize: 20),)),
-                                    ),
-
+                                    w10,
+                                    Text('yrs old')
                                   ],
                                 ),
                               ),
-                              if (!ageValid)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-                                  child: Text(
-                                    '${validationLists[invalidType]}',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                ),
                               h20,
                               Text('Height',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
                               h10,
@@ -434,30 +359,7 @@ class IBWState extends State<IBW> {
                                   ],
                                 ),
                               ),
-                              h20,
-                              Container(
-                                height: 140,
-                                  padding:EdgeInsets.symmetric(horizontal: 8.w) ,
-                                child:  Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        FaIcon(CupertinoIcons.info,color: ColorManager.black,),
-                                        w10,
-                                        Text('Disclaimer',style: getMediumStyle(color: ColorManager.black,fontSize: 20.sp),)
-                                      ],
-                                    ),
-                                    h10,
-                                    Expanded(child: Text('The calculator employs the B.J. Devine Formula (1974) for estimating ideal body weight based on limited input parameters; its results are indicative and not a substitute for professional medical advice.'
-                                      ,textAlign: TextAlign.justify,
-                                      )),
-                                  ],
-                                ),
-                              )
+
                             ],
                           ),
                         ),
@@ -568,12 +470,18 @@ class IBWState extends State<IBW> {
                           if(unit == 1){
                             int x=  _calculateIBW(h:heightCM.toPrecision(1),g: 50 );
                             _showDialog(x,isWideScreen,isNarrowScreen);
+                            setState(() {
+                              disableValidate = false;
+                            });
                             weightController.clear();
                             ageController.clear();
                           }
                           else{
                             int x=  _calculateIBW( h:convertToCm.toPrecision(1),g: 50 );
                             _showDialog(x,isWideScreen,isNarrowScreen);
+                            setState(() {
+                              disableValidate = false;
+                            });
                             weightController.clear();
                             ageController.clear();
                           }
@@ -582,12 +490,18 @@ class IBWState extends State<IBW> {
                           if(unit == 1){
                             int x=  _calculateIBW(h:heightCM.toPrecision(1),g: 45.5 );
                             _showDialog(x,isWideScreen,isNarrowScreen);
+                            setState(() {
+                              disableValidate = false;
+                            });
                             weightController.clear();
                             ageController.clear();
                           }
                           else{
                             int x=  _calculateIBW(h:convertToCm.toPrecision(1),g: 45.5 );
                             _showDialog(x,isWideScreen,isNarrowScreen);
+                            setState(() {
+                              disableValidate = false;
+                            });
                             weightController.clear();
                             ageController.clear();
                           }
@@ -599,6 +513,30 @@ class IBWState extends State<IBW> {
                     }
                   },
                   child:isLoading? SpinKitDualRing(color: ColorManager.white): Text('Calculate'),
+                ),
+              ),
+              h10,
+              Container(
+                height: 140,
+                padding:EdgeInsets.symmetric(horizontal: 8.w) ,
+                child:  Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        FaIcon(CupertinoIcons.info,color: ColorManager.black,),
+                        w10,
+                        Text('Disclaimer',style: getMediumStyle(color: ColorManager.black,fontSize: 20.sp),)
+                      ],
+                    ),
+                    h10,
+                    Expanded(child: Text('The calculator employs the B.J. Devine Formula (1974) for estimating ideal body weight based on limited input parameters; its results are indicative and not a substitute for professional medical advice.'
+                      ,textAlign: TextAlign.justify,
+                    )),
+                  ],
                 ),
               )
             ],
