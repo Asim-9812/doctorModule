@@ -252,13 +252,13 @@ class BMIState extends State<BMI> {
                 child: GestureDetector(
                   onVerticalDragUpdate: (value) {
                     double yValue = value.delta.dy;
-                    if ((y > -0.8 && y <= 0.7) || (yValue > 0 && y <= 0.7)) {
+                    if ((y > -1.0 && y <= 0.7) || (yValue > 0 && y <= 0.7)) {
                       // Only allow dragging if y is in the range of -0.1 to 0.5
                       setState(() {
                         y += yValue * 0.004;
 
                         // Limit y within the range of -0.1 to 0.5
-                        y = y.clamp(-0.8, 0.7);
+                        y = y.clamp(-1.0, 0.7);
 
 
                       });
@@ -492,7 +492,7 @@ class BMIState extends State<BMI> {
                                       child: Align(
                                         alignment: Alignment.bottomCenter,
                                         child: Text(
-                                          'in KG',
+                                          'in KGs',
                                           style: getRegularStyle(
                                               color: ColorManager.black, fontSize: 20),
                                         ),
@@ -569,21 +569,19 @@ class BMIState extends State<BMI> {
                             color: ColorManager.primary,
                             border: BorderDirectional(
                                 start: BorderSide(
-                                    color: ColorManager.primaryDark
+                                    color: ColorManager.primaryDark,
                                 ),
                                 bottom: BorderSide(
                                     color: ColorManager.primaryDark
-                                )
+                                ),
+
                             )
                         ),
                         child: Container(
                           color: ColorManager.white,
                           child: Stack(
                             children: [
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Text(unit == 1 ?'In CM' : 'In ft/inch',style: getMediumStyle(color: ColorManager.black),),
-                              ),
+
                               Align(
                                 alignment: Alignment.bottomLeft,
                                 child:  Container(
@@ -632,12 +630,9 @@ class BMIState extends State<BMI> {
                                           height: 50,
                                           width: 100,
                                           child: Center(
-                                            child: Text(
-                                              '${unit ==1 ? heightCM.toPrecision(1):_convertCmToFeetAndInches(heightCM).$1}',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 20,
-                                              ),
+                                            child: Text(unit ==1 ?
+                                              '${ heightCM.toPrecision(1)} cm':'${_convertCmToFeetAndInches(heightCM).$1} ft' ,
+                                              style: getRegularStyle(color: ColorManager.white),
                                             ),
                                           ),
                                         ),
@@ -645,7 +640,7 @@ class BMIState extends State<BMI> {
                                       Container(
                                         height: 2,
                                         width: double.infinity,
-                                        color: Colors.black,
+                                        color: ColorManager.primaryDark,
                                       ),
                                     ],
                                   ),

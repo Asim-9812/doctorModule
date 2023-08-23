@@ -1,300 +1,328 @@
-
-
-
-import 'package:nepali_date_picker/nepali_date_picker.dart' as picker;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
-import 'package:medical_app/src/core/resources/style_manager.dart';
-import 'package:nepali_date_picker/nepali_date_picker.dart';
+import 'package:medical_app/src/core/resources/string_manager.dart';
+import 'package:medical_app/src/test/test2.dart';
+
+import '../core/resources/style_manager.dart';
 import '../core/resources/value_manager.dart';
+import '../presentation/widgets/list_of_bmi_category/bmi_list.dart';
 
-class Test extends StatefulWidget {
-  const Test({super.key});
 
+class TEST extends StatefulWidget {
   @override
-  State<Test> createState() => _TestState();
+  TESTState createState() => TESTState();
 }
 
-class _TestState extends State<Test> {
-  final TextEditingController _dayController = TextEditingController();
-  final TextEditingController _monthController = TextEditingController();
-  final TextEditingController _yearController = TextEditingController();
+class TESTState extends State<TEST> {
+  double _linePositionY = 200.0;
+  double y = 0.4; // Initial Y position of the line
+  int selectedOption = 1;
+  final TextEditingController weightController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+  final TextEditingController heightController = TextEditingController();
+  // final TextEditingController inchController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  String? calculatedEDD;
+  bool isLoading = false;
+  double result = 0.0;
+  List bmiList = bmiCategories;
+  int category = 0;
+  int unit =1;
+  int invalidType = 0;
+  int invalidType2 = 0;
 
-  // Function to calculate EDD
-  String calculateEDD() {
-    int day = int.tryParse(_dayController.text) ?? 1;
-    int month = int.tryParse(_monthController.text) ?? 1;
-    int year = int.tryParse(_yearController.text) ?? DateTime.now().year;
+  double _calculateHeight(double y){
+    double res = 10 - (y * 10).toPrecision(1);
+    return res;
+  }
 
-    DateTime lastPeriodDate = DateTime(year, month, day);
-    DateTime edd = lastPeriodDate.add(Duration(days: 280)); // Adding 280 days for EDD
+  double _convertCM(double y){
+    double res = 11.75*y+55.75 ;
+    setState(() {
+      heightController.text = '${res.toPrecision(1)}';
+    });
+    return res;
+  }
 
-    return DateFormat('MMMM dd, yyyy').format(edd); // Format EDD date
+
+  void _calculateBMI({
+    required double w,
+    required double h
+  }) {
+    double m = h/100;
+    double bmi = w/(m*m);
+    setState(() {
+      result = bmi;
+      isLoading = false;
+    });
+  }
+
+  (String,int,int) _convertCmToFeetAndInches(double cm) {
+    final int totalInches = (cm * 0.393701).round();
+    final int feet = totalInches ~/ 12;
+    final int inches = totalInches % 12;
+
+    return ('$feet\'$inches"',feet,inches);
+  }
+
+  double convertFeetAndInchesToCm(int feet, int inches) {
+    double totalCm = (feet * 30.48) + (inches * 2.54);
+    return totalCm;
   }
 
 
 
-  bool invalid = false;
+  bool weightValid = true;
+  bool ageValid = true;
+
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+
+    // Check if width is greater than height
+    bool isWideScreen = screenSize.width > 500;
+    bool isNarrowScreen = screenSize.width < 380;
+
+    double fontSize = isWideScreen?14: 14.sp;
+    double height = _calculateHeight(y);
+    double heightCM = _convertCM(height);
+    double size = isWideScreen? ((_calculateHeight(y).toPrecision(1) * 25)+40):((_calculateHeight(y).toPrecision(1) * 25)+40).sp;
+    double convertToCm = convertFeetAndInchesToCm(_convertCmToFeetAndInches(heightCM).$2,_convertCmToFeetAndInches(heightCM).$3);
+    print(size);
+    // Get the screen size
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: ColorManager.white,
         appBar: AppBar(
           elevation: 3,
           backgroundColor: ColorManager.primary,
-          title: Text('EDD Calculator'),
-          centerTitle: true,
+          title: Text('BMI Calculator'),
           titleTextStyle: getMediumStyle(color: ColorManager.white),
-
+          centerTitle: true,
         ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 18.w),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                h20,
-                Text(
-                  'When was the first day of your last period?',
-                  style: getMediumStyle(color: ColorManager.black, fontSize: 20.sp),
-                ),
-                h20,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text('Day', style: getRegularStyle(color: ColorManager.black)),
-                        h10,
-                        Container(
-                          decoration:BoxDecoration(
-                              border: Border.all(
-                                  color: ColorManager.black.withOpacity(0.5)
-                              ),
-                              borderRadius: BorderRadius.circular(5)
-                          ),
-                          padding: EdgeInsets.symmetric(horizontal: 12.w),
-                          child: DropdownButton<int>(
-                            menuMaxHeight: 400,
-                            value: _dayController.text.isNotEmpty ? int.tryParse(_dayController.text) : null,
-                            onChanged: (value) {
-                              if (value != null) {
-                                setState(() {
-                                  _dayController.text = value.toString();
-                                });
-                              }
-                            },
-                            items: List.generate(32, (index) => index + 1)
-                                .map<DropdownMenuItem<int>>(
-                                  (value) => DropdownMenuItem<int>(
-                                value: value,
-                                child: Text(value.toString()),
-                              ),
-                            )
-                                .toList(),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 1.4 / 2,
+                child: GestureDetector(
+                  onVerticalDragUpdate: (value) {
+                    double yValue = value.delta.dy;
+                    if ((y > -1.0 && y <= 0.7) || (yValue > 0 && y <= 0.7)) {
+                      // Only allow dragging if y is in the range of -0.1 to 0.5
+                      setState(() {
+                        y += yValue * 0.004;
+
+                        // Limit y within the range of -0.1 to 0.5
+                        y = y.clamp(-1.0, 0.7);
+
+
+                      });
+                      // print(yValue > 0 ? 'downward' : 'upward');
+                    }
+                  },
+                  child: Row(
+                    children: [
+                      Form(
+                        key:_formKey,
+                        child: Container(
+                          width:MediaQuery.of(context).size.width * 1/ 2 ,
+                          padding: EdgeInsets.symmetric(vertical: 24.h),
+                          height: MediaQuery.of(context).size.height ,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+
+                              Text('Height',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
+                              h10,
+                              Container(
+                                margin: EdgeInsets.symmetric(horizontal: 18.w),
+                                color: ColorManager.dotGrey.withOpacity(0.2),
+                                padding:EdgeInsets.symmetric(horizontal: 8.w,vertical: 12.h) ,
+                                child: Column(
+                                  children: [
+                                    TextFormField(
+                                      validator: (value){
+
+                                        if(value!.isEmpty){
+                                          return 'Required';
+                                        }
+                                        else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                                          return 'Enter a valid number';
+                                        }
+                                        else{
+
+                                          return null;
+                                        }
+                                      },
+                                      onChanged: (value){
+                                        setState(() {
+                                          heightController.text = value;
+                                        });
+                                      },
+                                      controller: heightController,
+                                      keyboardType: TextInputType.phone,
+                                      style: getMediumStyle(color: ColorManager.black),
+                                      decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                                          border: OutlineInputBorder(
+                                          )
+                                      ),
+
+                                    ),
+                                    h10,
+                                    Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        InkWell(
+                                          onTap: (){
+                                            setState(() {
+                                              unit =1;
+                                            });
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: unit == 1? ColorManager.primary : ColorManager.white,
+                                                border: unit !=1 ?Border.all(
+                                                    color: ColorManager.black.withOpacity(0.5)
+                                                ):null
+                                            ),
+                                            padding: EdgeInsets.symmetric(horizontal: 20.w,vertical: 20.h),
+                                            child: Text('CM',style: getMediumStyle(color:unit ==1 ? ColorManager.white: ColorManager.black,fontSize: 20),),
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: (){
+                                            setState(() {
+                                              unit =2 ;
+                                            });
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: unit == 2? ColorManager.primary : ColorManager.white,
+                                                border: unit !=2 ?Border.all(
+                                                    color: ColorManager.black.withOpacity(0.5)
+                                                ):null
+                                            ),
+                                            padding: EdgeInsets.symmetric(horizontal: 20.w,vertical: 20.h),
+                                            child: Text('FT',style: getMediumStyle(color:unit==2?ColorManager.white: ColorManager.black,fontSize: 20),),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text('Month', style: getRegularStyle(color: ColorManager.black)),
-                        h10,
-                        Container(
-                          decoration:BoxDecoration(
-                              border: Border.all(
-                                  color: ColorManager.black.withOpacity(0.5)
-                              ),
-                              borderRadius: BorderRadius.circular(5)
-                          ),
-                          padding: EdgeInsets.symmetric(horizontal: 12.w),
-                          child: DropdownButton<int>(
-
-                            menuMaxHeight: 400,
-                            value: _monthController.text.isNotEmpty ? int.tryParse(_monthController.text) : null,
-                            onChanged: (value) {
-                              if (value != null) {
-                                setState(() {
-                                  _monthController.text = value.toString();
-                                });
-                              }
-                            },
-                            items: List.generate(12, (index) => index + 1)
-                                .map<DropdownMenuItem<int>>(
-                                  (value) => DropdownMenuItem<int>(
-                                value: value,
-                                child: Text(DateFormat('MMMM').format(DateTime(2000, value))),
-                              ),
-                            )
-                                .toList(),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text('Year',style: getRegularStyle(color: ColorManager.black),),
-                        h10,
-                        SizedBox(
-                          width: 75,
-                          child: TextFormField(
-                            controller: _yearController,
-                            keyboardType: TextInputType.phone,
-                            validator: (value){
-                              if(value!.isEmpty){
-                                return 'Year';
-                              }else if(DateTime(2023).isBefore(DateTime(int.parse(value)))||DateTime(2022).isAfter(DateTime(int.parse(value)))){
-                                return 'Valid Year';
-                              }else{
-                                return null;
-                              }
-                            },
-                            style: getRegularStyle(color: ColorManager.black,fontSize: 20),
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(horizontal: 14.w),
-                                border: OutlineInputBorder()
-                            ),
-                            inputFormatters: [LengthLimitingTextInputFormatter(4)],
-                          ),
-                        )
-                      ],
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.calendar_today),
-                      onPressed: () async {
-                        final DateTime currentDate = DateTime.now();
-                        final DateTime nineMonthsAgo = currentDate.subtract(Duration(days: 9 * 30)); // Subtract 9 months worth of days
-
-                        final selectedDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: nineMonthsAgo,
-                          lastDate: DateTime.now(),
-                          initialDatePickerMode: DatePickerMode.day,
-                        );
-                        if (selectedDate != null) {
-                          setState(() {
-                            _dayController.text = selectedDate.day.toString();
-                            _monthController.text = selectedDate.month.toString();
-                            _yearController.text = selectedDate.year.toString();
-                          });
-                        }
-                      },
-                    ),
-                  ],
-                ),
-                h20,
-                h20,
-                Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: ColorManager.primaryDark
-                            ),
-                            onPressed: (){
-
-                              final DateTime date = DateTime.parse(DateFormat('yyyy-MM-dd').format(DateTime(int.parse(_yearController.text),int.parse(_monthController.text),int.parse(_dayController.text))));
-                              final now = DateTime.parse(DateFormat('yyyy-MM-dd').format(DateTime.now()));
-
-                              if(date.isAfter(now)){
-                                setState(() {
-                                  invalid = true;
-                                  calculatedEDD = null;
-                                });
-                              }
-                              else {
-                                if (_formKey.currentState!.validate()) {
-                                  setState(() {
-                                    invalid = false;
-                                    calculatedEDD = calculateEDD();
-                                  });
-                                }
-                              }
-                            },
-                            child: Text('Calculate')
-                        ),
-                        w10,
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                backgroundColor: ColorManager.dotGrey
-                            ),
-                            onPressed: (){
-                              setState(() {
-                                _dayController.clear();
-                                _monthController.clear();
-                                _yearController.clear();
-                                calculatedEDD = null;
-                                invalid=false;
-                              });
-                            },
-                            child: Text('Clear',style: getRegularStyle(color: ColorManager.black),)
-                        ),
-                      ],
-                    )
-                ),
-                h10,
-                if(invalid)
-                  Center(child: Text('Date cannot be after current date',style: getRegularStyle(color: ColorManager.red),)),
-                h20,
-                if (calculatedEDD != null)
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20.h),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            'Estimated Due Date :',
-                            style: getMediumStyle(color: ColorManager.black, fontSize: 18),
-                          ),
-                          SizedBox(height: 10.h),
-                          Text(
-                            '$calculatedEDD',
-                            style: getMediumStyle(color: ColorManager.primaryDark, fontSize: 18),
-                          ),
-                          SizedBox(height: 30.h),
-                          Text(calculateEDDRange(),style: getRegularStyle(color: ColorManager.black,fontSize: 16),),
-                          SizedBox(height: 10.h),
-                          Text(
-                            'Please note that due dates are estimates and can vary for each individual. Factors such as menstrual cycle length, ovulation, and other medical considerations can influence the actual delivery date. Consult with a healthcare professional for personalized guidance.',
-                            style: getRegularStyle(color: ColorManager.black, fontSize: 16),
-                            textAlign: TextAlign.justify,
-                          ),
-                        ],
                       ),
-                    ),
-                  ),
+                      Container(
+                        width:MediaQuery.of(context).size.width * 1/ 2 ,
+                        padding: EdgeInsets.symmetric(vertical: 24.h),
+                        height: MediaQuery.of(context).size.height ,
+                        decoration: BoxDecoration(
+                            color: ColorManager.primary,
+                            border: BorderDirectional(
+                              start: BorderSide(
+                                color: ColorManager.primaryDark,
+                              ),
+                              bottom: BorderSide(
+                                  color: ColorManager.primaryDark
+                              ),
 
-              ],
-            ),
+                            )
+                        ),
+                        child: Container(
+                          color: ColorManager.white,
+                          child: Stack(
+                            children: [
+
+                              Align(
+                                alignment: Alignment.bottomLeft,
+                                child:  Container(
+                                  width: 50,
+                                  height: MediaQuery.of(context).size.height*0.8,
+                                  decoration: BoxDecoration(
+                                      color: ColorManager.primary,
+                                      border: Border.all(
+                                          color: ColorManager.primaryDark
+                                      )
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: List.generate(
+                                      50, // Number of scale divisions
+                                          (index) {
+                                        double position =  index *0.01;
+                                        return Container(
+                                          height: 5,
+                                          color: Colors.white,
+                                          margin: EdgeInsets.only(top: position),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 24.w,vertical: 5.h),
+                                  child: Image.asset(selectedOption == 1 ? 'assets/icons/man.png':'assets/icons/woman.png',width: 120.w,height: size,fit: BoxFit.fitHeight,),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment(0, y),
+                                child: Container(
+                                  height: 100,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Container(
+                                          color: ColorManager.primary,
+                                          height: 50,
+                                          width: 100,
+                                          child: Center(
+                                            child: Text(
+                                            '${ heightController.text}' ,
+                                              style: getRegularStyle(color: ColorManager.white),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        height: 2,
+                                        width: double.infinity,
+                                        color: ColorManager.primaryDark,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
-  }
-
-  // Function to calculate EDD range
-  String calculateEDDRange() {
-    DateTime edd = DateFormat('MMMM dd, yyyy').parse(calculatedEDD!); // Parse calculated EDD
-    DateTime eddMinus7 = edd.subtract(Duration(days: 7)); // Subtract 7 days
-    DateTime eddPlus7 = edd.add(Duration(days: 7)); // Add 7 days
-
-    return DateFormat('MMMM dd, yyyy').format(eddMinus7) + ' to ' + DateFormat('MMMM dd, yyyy').format(eddPlus7);
   }
 }

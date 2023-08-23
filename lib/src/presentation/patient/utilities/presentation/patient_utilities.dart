@@ -22,6 +22,7 @@ import '../../../../core/resources/value_manager.dart';
 import '../../../../test/test.dart';
 import '../../../widgets/bmi.dart';
 import '../../../widgets/bmr.dart';
+import '../../../widgets/edd.dart';
 
 class PatientUtilitiesPage extends StatefulWidget {
   final bool isWideScreen;
@@ -528,7 +529,11 @@ class _PatientUtilitiesPageState extends State<PatientUtilitiesPage> {
                   name: 'Calories',
                   onTap: (){}
               ),
-              _buildCalculators(icon: 'due-date', name: 'Due Date', onTap: (){})
+              _buildCalculators(
+                  icon: 'due-date',
+                  name: 'Due Date',
+                  onTap: ()=>Get.to(()=>EDD())
+              )
             ],
           ),
           h100,

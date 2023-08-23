@@ -29,10 +29,9 @@ class _BSAState extends State<ABW> {
   final _formKey = GlobalKey<FormState>();
   int format = 1;
   int gender = 1;
+  int _selectedInch = 1;
+  bool disableValidate = true;
 
-  bool weightValid = true;
-  bool heightValid = true;
-  bool doseValid = true;
 
   @override
   Widget build(BuildContext context) {
@@ -64,44 +63,32 @@ class _BSAState extends State<ABW> {
                   h20,
                   Text('1. Patient\'s weight in KG?',style: getRegularStyle(color: ColorManager.black),),
                   h10,
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                    color:weightValid == true? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
-                    child: TextFormField(
-                      validator: (value){
-                        if(value!.isEmpty){
-                          setState(() {
-                            weightValid = false;
-                          });
-                        }
-                        else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                          setState(() {
-                            weightValid = false;
-                          });
-                        }
-                        else{
-                          setState(() {
-                            weightValid = true;
-                          });
-                          return null;
-                        }
-                      },
-                      controller: _weightController,
-                      keyboardType: TextInputType.phone,
-                      style: getMediumStyle(color: ColorManager.black),
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder()
-                      ),
+                  TextFormField(
+                    autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                    validator: (value){
+
+                      if(value!.isEmpty){
+                        return 'Required';
+                      }
+                      else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                        return 'Invalid';
+                      }
+                      else{
+
+                        return null;
+                      }
+                    },
+                    controller: _weightController,
+                    keyboardType: TextInputType.phone,
+                    style: getMediumStyle(color: ColorManager.black),
+                    decoration: InputDecoration(
+                        filled: true,
+                        fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                        border: OutlineInputBorder(
+                        )
                     ),
+
                   ),
-                  if (!weightValid)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-                      child: Text(
-                        'Please enter a valid weight',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
                   h20,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -152,58 +139,48 @@ class _BSAState extends State<ABW> {
                   ),
                   h10,
                   format ==1
-                      ? Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                    color:heightValid == true? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
-                    child: TextFormField(
-                      validator: (value){
-                        if(value!.isEmpty){
-                          setState(() {
-                            heightValid = false;
-                          });
-                        }
-                        else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                          setState(() {
-                            heightValid = false;
-                          });
-                        }
-                        else{
-                          setState(() {
-                            heightValid = true;
-                          });
-                          return null;
-                        }
-                      },
-                      controller: _cmController,
-                      keyboardType: TextInputType.phone,
-                      style: getMediumStyle(color: ColorManager.black),
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder()
-                      ),
+                      ? TextFormField(
+                    autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                    validator: (value){
+
+                      if(value!.isEmpty){
+                        return 'Required';
+                      }
+                      else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                        return 'Please enter a valid value';
+                      }
+                      else{
+
+                        return null;
+                      }
+                    },
+                    controller: _cmController,
+                    keyboardType: TextInputType.phone,
+                    style: getMediumStyle(color: ColorManager.black),
+                    decoration: InputDecoration(
+                        filled: true,
+                        fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                        border: OutlineInputBorder(
+                        )
                     ),
+
                   )
                       : Row(
                     children: [
                       Container(
-                        width: 50,
-                        padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                        color:heightValid == true? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
+                        width: 100,
                         child: TextFormField(
+                          autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
                           validator: (value){
+
                             if(value!.isEmpty){
-                              setState(() {
-                                heightValid = false;
-                              });
+                              return 'Required';
                             }
                             else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                              setState(() {
-                                heightValid = false;
-                              });
+                              return 'Invalid';
                             }
                             else{
-                              setState(() {
-                                heightValid = true;
-                              });
+
                               return null;
                             }
                           },
@@ -211,9 +188,11 @@ class _BSAState extends State<ABW> {
                           keyboardType: TextInputType.phone,
                           style: getMediumStyle(color: ColorManager.black),
                           decoration: InputDecoration(
-                              border: UnderlineInputBorder()
+                              filled: true,
+                              fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                              border: OutlineInputBorder(
+                              )
                           ),
-                          inputFormatters: [LengthLimitingTextInputFormatter(1)],
 
                         ),
                       ),
@@ -221,49 +200,41 @@ class _BSAState extends State<ABW> {
                       Text('ft',style: getMediumStyle(color: ColorManager.black),),
                       w20,
                       Container(
-                        width: 50,
-                        padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                        color:heightValid == true? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
-                        child: TextFormField(
-                          validator: (value){
-                            if(value!.isEmpty){
-                              setState(() {
-                                heightValid = false;
-                              });
-                            }
-                            else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                              setState(() {
-                                heightValid = false;
-                              });
-                            }
-                            else{
-                              setState(() {
-                                heightValid = true;
-                              });
+                        width: 100,
+                        child: DropdownButtonFormField<int>(
+                          menuMaxHeight: 300,
+                          autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Required';
+                            } else {
                               return null;
                             }
                           },
-                          controller: _inchController,
-                          keyboardType: TextInputType.phone,
-                          style: getMediumStyle(color: ColorManager.black),
+                          value: _selectedInch,
+                          onChanged: (newValue) {
+                            setState(() {
+                              _selectedInch = newValue!;
+                            });
+                          },
+                          items: List<DropdownMenuItem<int>>.generate(13, (index) {
+                            return DropdownMenuItem<int>(
+                              value: index +1 ,
+                              child: Text('${index}',style: getMediumStyle(color: ColorManager.black),),
+                            );
+                          }),
                           decoration: InputDecoration(
-                              border: UnderlineInputBorder()
+                            filled: true,
+                            fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                            border: OutlineInputBorder(),
                           ),
-                          inputFormatters: [LengthLimitingTextInputFormatter(2)],
                         ),
                       ),
                       w10,
                       Text('in',style: getMediumStyle(color: ColorManager.black),),
                     ],
                   ),
-                  if (!heightValid)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-                      child: Text(
-                        'Please enter a valid height',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
+
                   h20,
                   h20,
                   Row(
@@ -316,44 +287,32 @@ class _BSAState extends State<ABW> {
                   h20,
                   Text('4. Recommended dosage per kg?',style: getRegularStyle(color: ColorManager.black),),
                   h10,
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                    color:doseValid == true? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
-                    child: TextFormField(
-                      validator: (value){
-                        if(value!.isEmpty){
-                          setState(() {
-                            doseValid = false;
-                          });
-                        }
-                        else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                          setState(() {
-                            doseValid = false;
-                          });
-                        }
-                        else{
-                          setState(() {
-                            doseValid = true;
-                          });
-                          return null;
-                        }
-                      },
-                      controller: _dosageController,
-                      keyboardType: TextInputType.phone,
-                      style: getMediumStyle(color: ColorManager.black),
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder()
-                      ),
+                  TextFormField(
+                    autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                    validator: (value){
+
+                      if(value!.isEmpty){
+                        return 'Required';
+                      }
+                      else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                        return 'Please enter a valid value';
+                      }
+                      else{
+
+                        return null;
+                      }
+                    },
+                    controller: _dosageController,
+                    keyboardType: TextInputType.phone,
+                    style: getMediumStyle(color: ColorManager.black),
+                    decoration: InputDecoration(
+                        filled: true,
+                        fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                        border: OutlineInputBorder(
+                        )
                     ),
+
                   ),
-                  if (!doseValid)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-                      child: Text(
-                        'Please enter a valid dosage',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
                   h20,
 
                   Center(
@@ -364,7 +323,6 @@ class _BSAState extends State<ABW> {
                         ),
                         onPressed: (){
                           if(_formKey.currentState!.validate()){
-                            if(weightValid && heightValid && doseValid){
                               _calculateDose(
                                   w: double.parse(_weightController.text),
                                   d: double.parse(_dosageController.text),
@@ -375,14 +333,18 @@ class _BSAState extends State<ABW> {
                                       ?int.parse(_ftController.text)
                                       :null,
                                   inch: format== 2
-                                      ?int.parse(_inchController.text)
+                                      ?_selectedInch
                                       :null
                               );
+                              setState(() {
+                                disableValidate = false;
+                              });
                               _weightController.clear();
                               _ftController.clear();
                               _inchController.clear();
                               _dosageController.clear();
-                            }
+                              _cmController.clear();
+
                           }
 
                           },
@@ -452,7 +414,7 @@ class _BSAState extends State<ABW> {
                             borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))
                         ),
                         padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-                        child: Text('Calculated amount per single dose',style: getMediumStyle(color: ColorManager.white),),
+                        child: Center(child: Text('Single dose amount',style: getMediumStyle(color: ColorManager.white),)),
                       ),
                       h20,
                       Text('${dose.toPrecision(2)} mg',style: getMediumStyle(color: ColorManager.white),),
@@ -465,7 +427,16 @@ class _BSAState extends State<ABW> {
                     style: ElevatedButton.styleFrom(
                         fixedSize: Size.fromWidth(300)
                     ),
-                    onPressed: ()=>Navigator.pop(context), child: Text('OK')),
+                    onPressed: (){
+                      setState(() {
+                        _formKey.currentState!.reset();
+                        disableValidate = true;
+                      });
+
+
+                      FocusScope.of(context).unfocus();
+                      Navigator.pop(context);
+                    }, child: Text('OK')),
 
 
 

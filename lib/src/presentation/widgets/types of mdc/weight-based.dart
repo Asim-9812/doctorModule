@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:medical_app/src/core/resources/string_manager.dart';
 
 import '../../../core/resources/color_manager.dart';
 import '../../../core/resources/style_manager.dart';
@@ -17,12 +18,16 @@ class WBD extends StatefulWidget {
 }
 
 class _WBDState extends State<WBD> {
-  int frequency = 0;
+  int frequency = 1;
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _dosageController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool weightValid = true;
   bool doseValid = true;
+  int invalidType = 0;
+
+  bool disableValidate = true;
+
 
   @override
   Widget build(BuildContext context) {
@@ -50,91 +55,67 @@ class _WBDState extends State<WBD> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   h20,
-                  Text('1. Patient\'s weight in KG?',style: getRegularStyle(color: ColorManager.black),),
+                  Text('1. Patient\'s weight in KGs?',style: getRegularStyle(color: ColorManager.black),),
                   h10,
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                    color:weightValid == true? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
-                    child: TextFormField(
-                      validator: (value){
-                        if(value!.isEmpty){
-                          setState(() {
-                            weightValid = false;
-                          });
-                        }
-                        else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                          setState(() {
-                            weightValid = false;
-                          });
-                        }
-                        else{
-                          setState(() {
-                            weightValid = true;
-                          });
-                          return null;
-                        }
-                      },
-                      controller: _weightController,
-                      keyboardType: TextInputType.phone,
-                      style: getMediumStyle(color: ColorManager.black),
-                      decoration: InputDecoration(
-                        border: UnderlineInputBorder()
-                      ),
+                  TextFormField(
+                    autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                    validator: (value){
+                      if(value!.isEmpty){
+                        return 'Required';
+                      }
+                      else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                        return 'Enter a valid number';
+                      }
+                      else{
+
+                        return null;
+                      }
+                    },
+                    controller: _weightController,
+                    keyboardType: TextInputType.phone,
+                    style: getMediumStyle(color: ColorManager.black),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                      border: OutlineInputBorder(
+                      )
                     ),
                   ),
-                  if (!weightValid)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-                      child: Text(
-                        'Please enter a valid weight',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
                   h20,
                   Text('2. Recommended dosage per kg in mg/kg?',style: getRegularStyle(color: ColorManager.black),),
                   h10,
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                    color:doseValid == true? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
-                    child: TextFormField(
-                      validator: (value){
-                        if(value!.isEmpty){
-                          setState(() {
-                            doseValid = false;
-                          });
-                        }
-                        else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                          setState(() {
-                            doseValid = false;
-                          });
-                        }
-                        else{
-                          setState(() {
-                            doseValid = true;
-                          });
-                          return null;
-                        }
-                      },
-                      controller: _dosageController,
-                      keyboardType: TextInputType.phone,
-                      style: getMediumStyle(color: ColorManager.black),
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder()
-                      ),
+                  TextFormField(
+                    autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                    validator: (value){
+                      if(value!.isEmpty){
+                        return 'Required';
+                      }
+                      else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                        return 'Enter a valid number';
+                      }
+                      else{
+
+                        return null;
+                      }
+                    },
+                    controller: _dosageController,
+                    keyboardType: TextInputType.phone,
+                    style: getMediumStyle(color: ColorManager.black),
+                    decoration: InputDecoration(
+                        filled: true,
+                        fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                        border: OutlineInputBorder(
+                        )
                     ),
                   ),
-                  if (!doseValid)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-                      child: Text(
-                        'Please enter a valid dosage',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ),
                   h20,
                   Text('3. Frequency of the dosage once/every ?',style: getRegularStyle(color: ColorManager.black),),
                   h10,
-                  Column(
+                  GridView(
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        childAspectRatio: 3/1,
+                        crossAxisCount: 2),
                     children: [
                       RadioListTile<int>(
                         tileColor: ColorManager.dotGrey.withOpacity(0.3),
@@ -235,11 +216,14 @@ class _WBDState extends State<WBD> {
                       ),
                         onPressed: (){
                         if(_formKey.currentState!.validate()){
-                          if(weightValid == true && doseValid == true){
                             _calculateDose(w: double.parse(_weightController.text), d: double.parse(_dosageController.text), f: frequency);
+                            setState(() {
+                              disableValidate = false;
+                            });
                             _weightController.clear();
                             _dosageController.clear();
-                          }
+
+
                         }
 
                         },
@@ -326,7 +310,7 @@ class _WBDState extends State<WBD> {
                               borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))
                           ),
                           padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-                          child: Text('Total daily dosage',style: getMediumStyle(color: ColorManager.white),),
+                          child: Center(child: Text('Total daily dosage',style: getMediumStyle(color: ColorManager.white),)),
                         ),
                         h20,
                         Text('${total.round()}mg/kg',style: getMediumStyle(color: ColorManager.white),),
@@ -339,7 +323,16 @@ class _WBDState extends State<WBD> {
                       style: ElevatedButton.styleFrom(
                         fixedSize: Size.fromWidth(300)
                       ),
-                      onPressed: ()=>Navigator.pop(context), child: Text('OK')),
+                      onPressed: (){
+                        setState(() {
+                          _formKey.currentState!.reset();
+                          disableValidate = true;
+                        });
+
+                        FocusScope.of(context).unfocus();
+                        Navigator.pop(context);
+
+                      }, child: Text('OK')),
                 
 
 

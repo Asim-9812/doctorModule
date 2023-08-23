@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/test/test2.dart';
 
+import '../../core/resources/string_manager.dart';
 import '../../core/resources/style_manager.dart';
 import '../../core/resources/value_manager.dart';
 import 'list_of_bmi_category/bmi_list.dart';
@@ -31,6 +32,7 @@ class IBWState extends State<IBW> {
   List bmiList = bmiCategories;
   int category = 0;
   int unit =1;
+  int invalidType = 0;
 
   double _calculateHeight(double y){
     double res = 10 - (y * 10).toPrecision(1);
@@ -202,13 +204,13 @@ class IBWState extends State<IBW> {
                 child: GestureDetector(
                   onVerticalDragUpdate: (value) {
                     double yValue = value.delta.dy;
-                    if ((y > -0.8 && y <= 0.7) || (yValue > 0 && y <= 0.7)) {
+                    if ((y > -1.0 && y <= 0.7) || (yValue > 0 && y <= 0.7)) {
                       // Only allow dragging if y is in the range of -0.1 to 0.5
                       setState(() {
                         y += yValue * 0.004;
 
                         // Limit y within the range of -0.1 to 0.5
-                        y = y.clamp(-0.8, 0.7);
+                        y = y.clamp(-1.0, 0.7);
 
 
                       });
@@ -335,16 +337,19 @@ class IBWState extends State<IBW> {
                                         validator: (value){
                                           if(value!.isEmpty){
                                             setState(() {
+                                              invalidType = 1;
                                               ageValid = false;
                                             });
                                           }
                                           else if(double.parse(value)<10 && double.parse(value)>100 ){
                                             setState(() {
+                                              invalidType = 2;
                                               ageValid = false;
                                             });
                                           }
                                           else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
                                             setState(() {
+                                              invalidType = 2;
                                               ageValid = false;
                                             });
                                           }
@@ -377,7 +382,7 @@ class IBWState extends State<IBW> {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4.0, left: 8.0),
                                   child: Text(
-                                    'Please enter a valid age',
+                                    '${validationLists[invalidType]}',
                                     style: TextStyle(color: Colors.red),
                                   ),
                                 ),
@@ -426,6 +431,30 @@ class IBWState extends State<IBW> {
                                         child: Text('FT',style: getMediumStyle(color:unit==2?ColorManager.white: ColorManager.black,fontSize: 20),),
                                       ),
                                     ),
+                                  ],
+                                ),
+                              ),
+                              h20,
+                              Container(
+                                height: 140,
+                                  padding:EdgeInsets.symmetric(horizontal: 8.w) ,
+                                child:  Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        FaIcon(CupertinoIcons.info,color: ColorManager.black,),
+                                        w10,
+                                        Text('Disclaimer',style: getMediumStyle(color: ColorManager.black,fontSize: 20.sp),)
+                                      ],
+                                    ),
+                                    h10,
+                                    Expanded(child: Text('The calculator employs the B.J. Devine Formula (1974) for estimating ideal body weight based on limited input parameters; its results are indicative and not a substitute for professional medical advice.'
+                                      ,textAlign: TextAlign.justify,
+                                      )),
                                   ],
                                 ),
                               )
@@ -500,12 +529,9 @@ class IBWState extends State<IBW> {
                                           height: 50,
                                           width: 100,
                                           child: Center(
-                                            child: Text(
-                                              '${unit ==1 ? heightCM.toPrecision(1):_convertCmToFeetAndInches(heightCM).$1}',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 20,
-                                              ),
+                                            child: Text(unit ==1 ?
+                                            '${ heightCM.toPrecision(1)} cm':'${_convertCmToFeetAndInches(heightCM).$1} ft' ,
+                                              style: getRegularStyle(color: ColorManager.white),
                                             ),
                                           ),
                                         ),
@@ -513,7 +539,7 @@ class IBWState extends State<IBW> {
                                       Container(
                                         height: 2,
                                         width: double.infinity,
-                                        color: Colors.black,
+                                        color: ColorManager.primaryDark,
                                       ),
                                     ],
                                   ),

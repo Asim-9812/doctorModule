@@ -26,10 +26,7 @@ class _CNDState extends State<CND> {
   final TextEditingController _fvController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   int format = 1;
-
-  bool icValid = true;
-  bool fcValid = true;
-  bool fvValid = true;
+  bool disableValidate = true;
 
   @override
   Widget build(BuildContext context) {
@@ -68,24 +65,18 @@ class _CNDState extends State<CND> {
                         children: [
                           Container(
                             width: 75,
-                            padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                            color: icValid == true ? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
                             child: TextFormField(
+                              autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
                               validator: (value){
+
                                 if(value!.isEmpty){
-                                  setState(() {
-                                    icValid = false;
-                                  });
+                                  return 'Required';
                                 }
                                 else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                                  setState(() {
-                                    icValid = false;
-                                  });
+                                  return 'Invalid';
                                 }
                                 else{
-                                  setState(() {
-                                    icValid = true;
-                                  });
+
                                   return null;
                                 }
                               },
@@ -93,8 +84,12 @@ class _CNDState extends State<CND> {
                               keyboardType: TextInputType.phone,
                               style: getMediumStyle(color: ColorManager.black),
                               decoration: InputDecoration(
-                                  border: UnderlineInputBorder()
+                                  filled: true,
+                                  fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                                  border: OutlineInputBorder(
+                                  )
                               ),
+
                             ),
                           ),
                           w10,
@@ -113,24 +108,18 @@ class _CNDState extends State<CND> {
                         children: [
                           Container(
                             width: 75,
-                            padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                            color: fcValid == true ? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
                             child: TextFormField(
+                              autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
                               validator: (value){
+
                                 if(value!.isEmpty){
-                                  setState(() {
-                                    fcValid = false;
-                                  });
+                                  return 'Required';
                                 }
                                 else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                                  setState(() {
-                                    fcValid = false;
-                                  });
+                                  return 'Invalid';
                                 }
                                 else{
-                                  setState(() {
-                                    fcValid = true;
-                                  });
+
                                   return null;
                                 }
                               },
@@ -138,8 +127,12 @@ class _CNDState extends State<CND> {
                               keyboardType: TextInputType.phone,
                               style: getMediumStyle(color: ColorManager.black),
                               decoration: InputDecoration(
-                                  border: UnderlineInputBorder()
+                                  filled: true,
+                                  fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                                  border: OutlineInputBorder(
+                                  )
                               ),
+
                             ),
                           ),
                           w10,
@@ -158,24 +151,18 @@ class _CNDState extends State<CND> {
                         children: [
                           Container(
                             width: 75,
-                            padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 8.h),
-                            color: fvValid == true ? ColorManager.dotGrey.withOpacity(0.2):ColorManager.red.withOpacity(0.2),
                             child: TextFormField(
+                              autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
                               validator: (value){
+
                                 if(value!.isEmpty){
-                                  setState(() {
-                                    fvValid = false;
-                                  });
+                                  return 'Required';
                                 }
                                 else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                                  setState(() {
-                                    fvValid = false;
-                                  });
+                                  return 'Invalid';
                                 }
                                 else{
-                                  setState(() {
-                                    fvValid = true;
-                                  });
+
                                   return null;
                                 }
                               },
@@ -183,9 +170,13 @@ class _CNDState extends State<CND> {
                               keyboardType: TextInputType.phone,
                               style: getMediumStyle(color: ColorManager.black),
                               decoration: InputDecoration(
-                                  border: UnderlineInputBorder()
+                                  filled: true,
+                                  fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                                  border: OutlineInputBorder(
+                                  )
                               ),
-                            ),
+
+                            )
                           ),
                           w10,
                           Text('mL',style: getRegularStyle(color: ColorManager.black),),
@@ -203,29 +194,25 @@ class _CNDState extends State<CND> {
                         ),
                         onPressed: () {
                           if(_formKey.currentState!.validate()){
-                            if(icValid && fcValid && fvValid){
                               _calculateDose(c1: double.parse(_icController.text),
                                   c2: double.parse(_fcController.text),
                                   v2: double.parse(_fvController.text));
-                              _fcController.clear();
-                              _fvController.clear();
+
+                              setState(() {
+                                disableValidate = false;
+                              });
                               _icController.clear();
+                              _fvController.clear();
+                              _fcController.clear();
+
+
                             }
-                          }
+
 
                         },
                         child: Text('Calculate',style: getMediumStyle(color: ColorManager.white,fontSize: 16),)),
                   ),
-                  if(!icValid || !fcValid || !fvValid)
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-                        child: Text(
-                          'Please enter a valid numeric value',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      ),
-                    ),
+
 
                   h100,
 
@@ -242,7 +229,7 @@ class _CNDState extends State<CND> {
     required double v2,
     required double c2,
 
-  }){
+  })async{
     final screenSize = MediaQuery.of(context).size;
 
     // Check if width is greater than height
@@ -250,7 +237,7 @@ class _CNDState extends State<CND> {
     bool isNarrowScreen = screenSize.width < 380;
 
     final v1  = (c2*v2)/c1;
-    return showDialog(
+    await showDialog(
         context: context,
         builder: (context){
           return AlertDialog(
@@ -280,7 +267,7 @@ class _CNDState extends State<CND> {
                             borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))
                         ),
                         padding: EdgeInsets.symmetric(horizontal: 18.w,vertical: 12.h),
-                        child: Text('Initial Volume should be',style: getMediumStyle(color: ColorManager.white),),
+                        child: Center(child: Text('Initial Volume',style: getMediumStyle(color: ColorManager.white),)),
                       ),
                       h20,
                       Text('${v1.toPrecision(2)} mL',style: getMediumStyle(color: ColorManager.white),),
@@ -293,14 +280,31 @@ class _CNDState extends State<CND> {
                     style: ElevatedButton.styleFrom(
                         fixedSize: Size.fromWidth(300)
                     ),
-                    onPressed: ()=>Navigator.pop(context), child: Text('OK')),
+                    onPressed: () {
+
+                      setState(() {
+                        _formKey.currentState!.reset();
+                        disableValidate = true;
+                      });
+
+
+                      FocusScope.of(context).unfocus();
+                      Navigator.pop(context);
+                    }, child: Text('OK')),
 
 
 
               ],
             ),
           );
+
+
         }
     );
+
+
   }
+
+
+
 }

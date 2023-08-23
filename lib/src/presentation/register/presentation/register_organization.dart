@@ -230,6 +230,21 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
               if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
                 return 'Please enter a valid email address';
               }
+              if (value.indexOf('@') != value.lastIndexOf('@')) {
+                return 'Email should contain only one "@" symbol';
+              }
+              if (!value.contains('.')) {
+                return 'Email should contain a domain extension';
+              }
+              if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[a-zA-Z]{2,4}$').hasMatch(value)) {
+                return 'Please enter a valid email address';
+              }
+              if (value.contains('__')) {
+                return 'Only one underscore "_" is allowed';
+              }
+              if (value.length > 50) {
+                return 'Email length must be 50 characters or less';
+              }
               return null;
             },
             keyboardType: TextInputType.emailAddress,

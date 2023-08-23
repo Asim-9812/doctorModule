@@ -71,7 +71,7 @@ class _PatientReportPageState extends State<DoctorUtilityPage> {
             ),
           ),
           InkWell(
-            onTap: ()=>Get.to(()=>Test()),
+            onTap: ()=>Get.to(()=>EDD()),
             child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
