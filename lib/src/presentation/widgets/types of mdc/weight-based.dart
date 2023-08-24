@@ -59,20 +59,25 @@ class _WBDState extends State<WBD> {
                   h10,
                   TextFormField(
                     autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
-                    validator: (value){
-                      if(value!.isEmpty){
+                    validator: (value) {
+                      if (value!.isEmpty) {
                         return 'Required';
-                      }
-                      else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                        return 'Enter a valid number';
-                      }
-                      else{
-
+                      } else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value) || RegExp(r'^(?=.*?[a-z])').hasMatch(value) || RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
+                        return 'Invalid';
+                      } else {
+                        try {
+                          final numericValue = double.tryParse(value.replaceAll(',', '.').trim());
+                          if (numericValue == null || numericValue <= 0) {
+                            return 'Invalid';
+                          }
+                        } catch (e) {
+                          return 'Invalid';
+                        }
                         return null;
                       }
                     },
                     controller: _weightController,
-                    keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
                     style: getMediumStyle(color: ColorManager.black),
                     decoration: InputDecoration(
                       filled: true,
@@ -86,20 +91,25 @@ class _WBDState extends State<WBD> {
                   h10,
                   TextFormField(
                     autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
-                    validator: (value){
-                      if(value!.isEmpty){
+                    validator: (value) {
+                      if (value!.isEmpty) {
                         return 'Required';
-                      }
-                      else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                        return 'Enter a valid number';
-                      }
-                      else{
-
+                      } else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value) || RegExp(r'^(?=.*?[a-z])').hasMatch(value) || RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
+                        return 'Invalid';
+                      } else {
+                        try {
+                          final numericValue = double.tryParse(value.replaceAll(',', '.').trim());
+                          if (numericValue == null || numericValue <= 0) {
+                            return 'Invalid';
+                          }
+                        } catch (e) {
+                          return 'Invalid';
+                        }
                         return null;
                       }
                     },
                     controller: _dosageController,
-                    keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
                     style: getMediumStyle(color: ColorManager.black),
                     decoration: InputDecoration(
                         filled: true,

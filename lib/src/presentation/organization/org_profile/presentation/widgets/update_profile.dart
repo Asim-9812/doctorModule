@@ -201,7 +201,7 @@ class _UpdateOrgProfileState extends ConsumerState<UpdateOrgProfile> {
                   referredID: 0,
                   parentID: 0,
                   firstName: _firstNameController.text.trim(),
-                  lastName: _lastNameController.text.trim(),
+                  lastName: '',
                   password: '',
                   countryID: countryId!,
                   provinceID: provinceId!,

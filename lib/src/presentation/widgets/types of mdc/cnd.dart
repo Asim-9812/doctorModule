@@ -66,32 +66,36 @@ class _CNDState extends State<CND> {
                           Container(
                             width: 75,
                             child: TextFormField(
-                              autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
-                              validator: (value){
-
-                                if(value!.isEmpty){
+                              autovalidateMode: disableValidate ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                              validator: (value) {
+                                if (value!.isEmpty) {
                                   return 'Required';
-                                }
-                                else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                                } else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value) || RegExp(r'^(?=.*?[a-z])').hasMatch(value) || RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
                                   return 'Invalid';
-                                }
-                                else{
-
+                                } else {
+                                  try {
+                                    final numericValue = double.tryParse(value.replaceAll(',', '.').trim());
+                                    if (numericValue == null || numericValue <= 0) {
+                                      return 'Invalid';
+                                    }
+                                  } catch (e) {
+                                    return 'Invalid';
+                                  }
                                   return null;
                                 }
                               },
                               controller: _icController,
-                              keyboardType: TextInputType.phone,
+                              keyboardType: TextInputType.numberWithOptions(decimal: true),
                               style: getMediumStyle(color: ColorManager.black),
                               decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: ColorManager.dotGrey.withOpacity(0.2),
-                                  border: OutlineInputBorder(
-                                  )
+                                filled: true,
+                                fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                                border: OutlineInputBorder(),
                               ),
-
                             ),
                           ),
+
+
                           w10,
                           Text('mg/mL',style: getRegularStyle(color: ColorManager.black),),
                         ],
@@ -109,30 +113,32 @@ class _CNDState extends State<CND> {
                           Container(
                             width: 75,
                             child: TextFormField(
-                              autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
-                              validator: (value){
-
-                                if(value!.isEmpty){
+                              autovalidateMode: disableValidate ? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
+                              validator: (value) {
+                                if (value!.isEmpty) {
                                   return 'Required';
-                                }
-                                else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                                } else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value) || RegExp(r'^(?=.*?[a-z])').hasMatch(value) || RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
                                   return 'Invalid';
-                                }
-                                else{
-
+                                } else {
+                                  try {
+                                    final numericValue = double.tryParse(value.replaceAll(',', '.').trim());
+                                    if (numericValue == null || numericValue <= 0) {
+                                      return 'Invalid';
+                                    }
+                                  } catch (e) {
+                                    return 'Invalid';
+                                  }
                                   return null;
                                 }
                               },
                               controller: _fcController,
-                              keyboardType: TextInputType.phone,
+                              keyboardType: TextInputType.numberWithOptions(decimal: true),
                               style: getMediumStyle(color: ColorManager.black),
                               decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: ColorManager.dotGrey.withOpacity(0.2),
-                                  border: OutlineInputBorder(
-                                  )
+                                filled: true,
+                                fillColor: ColorManager.dotGrey.withOpacity(0.2),
+                                border: OutlineInputBorder(),
                               ),
-
                             ),
                           ),
                           w10,
@@ -153,21 +159,25 @@ class _CNDState extends State<CND> {
                             width: 75,
                             child: TextFormField(
                               autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
-                              validator: (value){
-
-                                if(value!.isEmpty){
+                              validator: (value) {
+                                if (value!.isEmpty) {
                                   return 'Required';
-                                }
-                                else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                                } else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value) || RegExp(r'^(?=.*?[a-z])').hasMatch(value) || RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
                                   return 'Invalid';
-                                }
-                                else{
-
+                                } else {
+                                  try {
+                                    final numericValue = double.tryParse(value.replaceAll(',', '.').trim());
+                                    if (numericValue == null || numericValue <= 0) {
+                                      return 'Invalid';
+                                    }
+                                  } catch (e) {
+                                    return 'Invalid';
+                                  }
                                   return null;
                                 }
                               },
                               controller: _fvController,
-                              keyboardType: TextInputType.phone,
+                              keyboardType: TextInputType.numberWithOptions(decimal: true),
                               style: getMediumStyle(color: ColorManager.black),
                               decoration: InputDecoration(
                                   filled: true,

@@ -34,6 +34,7 @@ class DocProfilePage extends ConsumerWidget {
     bool isNarrowScreen = screenSize.width < 380;
     return userInfo.when(
         data: (data){
+          print(data.liscenceNo);
          return  Scaffold(
              backgroundColor: ColorManager.white.withOpacity(0.99),
              appBar: AppBar(
@@ -70,9 +71,9 @@ class DocProfilePage extends ConsumerWidget {
                              children: [
                                Text('Details',style: getMediumStyle(color: ColorManager.black,fontSize:isNarrowScreen?24.sp: 24),),
                                h10,
-                               _profileItems(screenSize: screenSize,title: 'Phone Number', icon: FontAwesomeIcons.phone, onTap: (){},subtitle: '${user.contactNo}'),
-                               _profileItems(screenSize: screenSize,title: 'E-Mail', icon: Icons.email_outlined, onTap: (){},subtitle: '${user.email}'),
-                               _profileItems(screenSize: screenSize,title: 'License No.', icon: FontAwesomeIcons.idCard, onTap: (){},subtitle: '${user.liscenceNo}'),
+                               _profileItems(screenSize: screenSize,title: 'Phone Number', icon: FontAwesomeIcons.phone, onTap: (){},subtitle: '${data.contactNo}'),
+                               _profileItems(screenSize: screenSize,title: 'E-Mail', icon: Icons.email_outlined, onTap: (){},subtitle: '${data.email}'),
+                               _profileItems(screenSize: screenSize,title: 'License No.', icon: FontAwesomeIcons.idCard, onTap: (){},subtitle: '${data.liscenceNo}'),
                              ],
                            ),
                          ),

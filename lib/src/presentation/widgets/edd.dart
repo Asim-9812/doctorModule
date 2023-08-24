@@ -12,6 +12,7 @@ import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:nepali_date_picker/nepali_date_picker.dart';
 
 import '../../core/resources/value_manager.dart';
+import '../common/snackbar.dart';
 
 class EDD extends StatefulWidget {
   const EDD({super.key});
@@ -257,6 +258,15 @@ class _EDDState extends State<EDD> {
                                 backgroundColor: ColorManager.primaryDark
                             ),
                             onPressed: (){
+                              final scaffoldMessage = ScaffoldMessenger.of(context);
+                              if(dateTime == ''){
+                                scaffoldMessage.showSnackBar(
+                                  SnackbarUtil.showFailureSnackbar(
+                                    message: 'Please pick a date',
+                                    duration: const Duration(milliseconds: 1400),
+                                  ),
+                                );
+                              }
 
                               final DateTime date = DateTime.parse(DateFormat('yyyy-MM-dd').format(DateTime.parse(dateTime)));
 
@@ -271,6 +281,15 @@ class _EDDState extends State<EDD> {
                                 backgroundColor: ColorManager.primaryDark
                             ),
                             onPressed: (){
+                              final scaffoldMessage = ScaffoldMessenger.of(context);
+                              if(nepDateTime == ''){
+                                scaffoldMessage.showSnackBar(
+                                  SnackbarUtil.showFailureSnackbar(
+                                    message: 'Please pick a date',
+                                    duration: const Duration(milliseconds: 1400),
+                                  ),
+                                );
+                              }
 
                               final NepaliDateTime date = NepaliDateTime.parse(NepaliDateFormat('yyyy-MM-dd').format(NepaliDateTime.parse(nepDateTime)));
 

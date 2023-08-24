@@ -58,7 +58,7 @@ class UpdateProfile{
         'referredID': referredID,
         'parentID': parentID,
         'firstName': firstName,
-        'lastName': 'organization',
+        'lastName': lastName,
         'password': password,
         'countryID': countryID,
         'provinceID': provinceID,

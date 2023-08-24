@@ -298,7 +298,7 @@ class BMIState extends State<BMI> {
                                         children: [
                                           Container(
                                             decoration: BoxDecoration(
-                                              border: Border.all(color: selectedOption == 2 ? ColorManager.primaryDark : ColorManager.dotGrey),
+                                              border: Border.all(color: selectedOption == 1 ? ColorManager.primaryDark : ColorManager.dotGrey),
                                               shape: BoxShape.circle,
                                               color: selectedOption == 1 ? ColorManager.primary : Colors.transparent,
                                             ),
@@ -350,7 +350,7 @@ class BMIState extends State<BMI> {
                                           h10,
                                           Text(
                                             'Female',
-                                            style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
+                                            style: getRegularStyle(color: selectedOption == 2 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
                                           )
                                         ],
                                       ),
@@ -375,6 +375,9 @@ class BMIState extends State<BMI> {
                                           }
                                           else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
                                             return 'Enter a valid number';
+                                          }
+                                          else if (int.parse(value) <= 0){
+                                            return 'Must be greater than 0';
                                           }
                                           else{
 
@@ -407,20 +410,25 @@ class BMIState extends State<BMI> {
                                     Expanded(
                                       child: TextFormField(
                                         autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
-                                        validator: (value){
-                                          if(value!.isEmpty){
+                                        validator: (value) {
+                                          if (value!.isEmpty) {
                                             return 'Required';
-                                          }
-                                          else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                                            return 'Enter a valid number';
-                                          }
-                                          else{
-
+                                          } else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value) || RegExp(r'^(?=.*?[a-z])').hasMatch(value) || RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
+                                            return 'Invalid';
+                                          } else {
+                                            try {
+                                              final numericValue = double.tryParse(value.replaceAll(',', '.').trim());
+                                              if (numericValue == null || numericValue <= 0) {
+                                                return 'Invalid';
+                                              }
+                                            } catch (e) {
+                                              return 'Invalid';
+                                            }
                                             return null;
                                           }
                                         },
                                         controller: weightController,
-                                        keyboardType: TextInputType.phone,
+                                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                                         style: getMediumStyle(color: ColorManager.black),
                                         decoration: InputDecoration(
                                             filled: true,

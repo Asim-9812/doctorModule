@@ -11,6 +11,7 @@ class Api{
    ///register type accounts ...
    static const registerOrganization = '$baseUrl/api/Organization/Register';
    static const registerDoctor = '$baseUrl/api/DoctorRegistration/DoctorRegister';
+   static const checkEmailOrCode = '$baseUrl/api/DoctorRegistration/CheckCodeEmail';
 
    /// User...
    static const userRegister = '$baseUrl/api/Users/UserRegister';

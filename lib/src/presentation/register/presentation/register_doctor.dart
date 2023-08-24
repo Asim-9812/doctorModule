@@ -6,17 +6,20 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:medical_app/src/presentation/register/domain/checkEmailCode/check_service.dart';
 import 'package:medical_app/src/presentation/register/domain/register_model/register_model.dart';
 import 'package:medical_app/src/presentation/subscription-plan/presentation/subscription_page_doctor.dart';
 
 import '../../../core/api.dart';
 import '../../../core/resources/color_manager.dart';
 import '../../../core/resources/style_manager.dart';
+import '../../../core/resources/value_manager.dart';
 import '../../common/snackbar.dart';
 import '../../subscription-plan/presentation/subscription_page_organization.dart';
 import '../data/register_provider.dart';
@@ -35,6 +38,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
   final TextEditingController _passController = TextEditingController();
   final TextEditingController _passConfirmController = TextEditingController();
   final TextEditingController _licenseController = TextEditingController();
+  final TextEditingController _codeController = TextEditingController();
 
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -52,6 +56,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
 
 
   bool _obscureText = true ;
+  bool _obscureText2 = true ;
   bool _isChecked = false;
 
   bool isPostingData = false;
@@ -134,26 +139,69 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
           SizedBox(
             height: 18.h,
           ),
-          TextFormField(
-            controller: _licenseController,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (value){
-              if (value!.isEmpty) {
-                return 'License is required';
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-                floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                labelText: 'License No.',
-                labelStyle: getRegularStyle(color: ColorManager.black),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                        color: ColorManager.black
-                    )
-                )
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: _licenseController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value){
+                    if (value!.isEmpty) {
+                      return 'License is required';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                      floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                      labelText: 'License No.',
+                      labelStyle: getRegularStyle(color: ColorManager.black),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                              color: ColorManager.black
+                          )
+                      )
+                  ),
+                ),
+              ),
+              w10,
+              Expanded(
+                child: TextFormField(
+                  controller: _codeController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value){
+                    if (value!.isEmpty) {
+                      return 'Required';
+                    }
+                    if (value.length !=3) {
+                      return 'Invalid Code';
+                    }
+                    if (value.contains(' ')) {
+                      return 'Do not enter spaces';
+                    }
+                    if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                      return 'Invalid';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                      floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                      labelText: 'Code',
+                      labelStyle: getRegularStyle(color: ColorManager.black),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                              color: ColorManager.black
+                          )
+                      )
+                  ),
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(3)
+                  ],
+                ),
+              ),
+            ],
           ),
           SizedBox(
             height: 18.h,
@@ -409,7 +457,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
               return null;
             },
             controller: _passConfirmController,
-            obscureText: _obscureText,
+            obscureText: _obscureText2,
             decoration: InputDecoration(
                 floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
                 labelText: 'Confirm Password',
@@ -423,10 +471,10 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
                 suffixIcon: IconButton(
                   onPressed: (){
                     setState(() {
-                      _obscureText = !_obscureText;
+                      _obscureText2 = !_obscureText2;
                     });
                   },
-                  icon: _obscureText? FaIcon(CupertinoIcons.eye,color: ColorManager.black,):FaIcon(CupertinoIcons.eye_slash,color: ColorManager.black,),
+                  icon: _obscureText2? FaIcon(CupertinoIcons.eye,color: ColorManager.black,):FaIcon(CupertinoIcons.eye_slash,color: ColorManager.black,),
                 )
             ),
           ),
@@ -437,23 +485,75 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
           ElevatedButton(
             onPressed: () async {
               if(formKey.currentState!.validate()){
+                setState(() {
+                  isPostingData = true;
+                });
                 final scaffoldMessage = ScaffoldMessenger.of(context);
-                registerDoctorModel = RegisterDoctorModel(
-                    licenseNo:_licenseController.text.trim(),
-                    genderId: genderId,
-                    contactNo: _mobileController.text.trim(),
-                    password: _passController.text.trim(),
-                    email: _emailController.text.trim(),
-                    lastName: _lastNameController.text.trim(),
-                    firstName: _firstNameController.text.trim()
+
+                final response = await ref.read(checkProvider).checkEmail(
+                    email: _emailController.text.trim()
                 );
-                scaffoldMessage.showSnackBar(
-                  SnackbarUtil.showProcessSnackbar(
-                      message: 'Please select a plan',
-                      duration: const Duration(seconds: 2)
-                  ),
-                );
-                Get.to(()=>SubscriptionPageDoctor(registerDoctorModel: registerDoctorModel!));
+
+                if (response.isLeft()) {
+                  final leftValue = response.fold(
+                        (left) => left,
+                        (right) => '', // Empty string here as we are only interested in the left value
+                  );
+
+                  scaffoldMessage.showSnackBar(
+                    SnackbarUtil.showFailureSnackbar(
+                      message: '$leftValue',
+                      duration: const Duration(milliseconds: 1400),
+                    ),
+                  );
+                  setState(() {
+                    isPostingData = false;
+                  });
+                }
+                else{
+                  final codeResponse = await ref.read(checkProvider).checkCode(
+                      code: _codeController.text.trim().toUpperCase()
+                  );
+                  if (codeResponse.isLeft()) {
+                    final leftValue = codeResponse.fold(
+                          (left) => left,
+                          (right) => '', // Empty string here as we are only interested in the left value
+                    );
+
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showFailureSnackbar(
+                        message: '$leftValue',
+                        duration: const Duration(milliseconds: 1400),
+                      ),
+                    );
+                    setState(() {
+                      isPostingData = false;
+                    });
+                  }
+                  else{
+                    registerDoctorModel = RegisterDoctorModel(
+                        licenseNo:_licenseController.text.trim(),
+                        genderId: genderId,
+                        contactNo: _mobileController.text.trim(),
+                        password: _passController.text.trim(),
+                        email: _emailController.text.trim(),
+                        lastName: _lastNameController.text.trim(),
+                        firstName: _firstNameController.text.trim(),
+                        code: _codeController.text.trim().toUpperCase()
+                    );
+                    scaffoldMessage.showSnackBar(
+                      SnackbarUtil.showProcessSnackbar(
+                          message: 'Please select a plan',
+                          duration: const Duration(seconds: 2)
+                      ),
+                    );
+                    Get.to(()=>SubscriptionPageDoctor(registerDoctorModel: registerDoctorModel!));
+                  }
+
+                }
+
+
+
 
               }
 
@@ -467,7 +567,8 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
                   borderRadius:
                   BorderRadius.circular(10),
                 )),
-            child: Text(
+            child: isPostingData? SpinKitDualRing(color: ColorManager.white,size: 16,):
+            Text(
               'Register',
               style: getMediumStyle(
                   color: ColorManager.white,

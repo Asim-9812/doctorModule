@@ -86,7 +86,8 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
             "entryDate": "2023-07-17T10:43:10.315Z",
             "genderID": 1,
             "key": "12",
-            "flag": "Insert"
+            "flag": "Insert",
+            "code":widget.registerDoctorModel.code
           }
       );
 

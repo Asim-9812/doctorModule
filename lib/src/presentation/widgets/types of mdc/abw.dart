@@ -65,21 +65,25 @@ class _BSAState extends State<ABW> {
                   h10,
                   TextFormField(
                     autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
-                    validator: (value){
-
-                      if(value!.isEmpty){
+                    validator: (value) {
+                      if (value!.isEmpty) {
                         return 'Required';
-                      }
-                      else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                        return 'Invalid value';
-                      }
-                      else{
-
+                      } else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value) || RegExp(r'^(?=.*?[a-z])').hasMatch(value) || RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
+                        return 'Invalid';
+                      } else {
+                        try {
+                          final numericValue = double.tryParse(value.replaceAll(',', '.').trim());
+                          if (numericValue == null || numericValue <= 0) {
+                            return 'Invalid';
+                          }
+                        } catch (e) {
+                          return 'Invalid';
+                        }
                         return null;
                       }
                     },
                     controller: _weightController,
-                    keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
                     style: getMediumStyle(color: ColorManager.black),
                     decoration: InputDecoration(
                         filled: true,
@@ -141,21 +145,25 @@ class _BSAState extends State<ABW> {
                   format ==1
                       ? TextFormField(
                     autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
-                    validator: (value){
-
-                      if(value!.isEmpty){
+                    validator: (value) {
+                      if (value!.isEmpty) {
                         return 'Required';
-                      }
-                      else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                        return 'Invalid value';
-                      }
-                      else{
-
+                      } else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value) || RegExp(r'^(?=.*?[a-z])').hasMatch(value) || RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
+                        return 'Invalid';
+                      } else {
+                        try {
+                          final numericValue = double.tryParse(value.replaceAll(',', '.').trim());
+                          if (numericValue == null || numericValue <= 0) {
+                            return 'Invalid';
+                          }
+                        } catch (e) {
+                          return 'Invalid';
+                        }
                         return null;
                       }
                     },
                     controller: _cmController,
-                    keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
                     style: getMediumStyle(color: ColorManager.black),
                     decoration: InputDecoration(
                         filled: true,
@@ -171,16 +179,20 @@ class _BSAState extends State<ABW> {
                         width: 100,
                         child: TextFormField(
                           autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
-                          validator: (value){
-
-                            if(value!.isEmpty){
+                          validator: (value) {
+                            if (value!.isEmpty) {
                               return 'Required';
-                            }
-                            else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                              return 'Invalid value';
-                            }
-                            else{
-
+                            } else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value) || RegExp(r'^(?=.*?[a-z])').hasMatch(value) || RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
+                              return 'Invalid';
+                            } else {
+                              try {
+                                final numericValue = double.tryParse(value.replaceAll(',', '.').trim());
+                                if (numericValue == null || numericValue <= 0) {
+                                  return 'Invalid';
+                                }
+                              } catch (e) {
+                                return 'Invalid';
+                              }
                               return null;
                             }
                           },
@@ -207,9 +219,11 @@ class _BSAState extends State<ABW> {
                           validator: (value) {
                             if (value == null) {
                               return 'Required';
-                            } else {
+                            }
+                            else {
                               return null;
                             }
+
                           },
                           value: _selectedInch,
                           onChanged: (newValue) {
@@ -294,6 +308,12 @@ class _BSAState extends State<ABW> {
                       if(value!.isEmpty){
                         return 'Required';
                       }
+                      else if (int.parse(value) <= 0){
+                        return 'Must be greater than 0';
+                      }
+                      else if (int.parse(value) <= 0){
+                        return 'Must be greater than 0';
+                      }
                       else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
                         return 'Invalid value';
                       }
@@ -303,7 +323,7 @@ class _BSAState extends State<ABW> {
                       }
                     },
                     controller: _dosageController,
-                    keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
                     style: getMediumStyle(color: ColorManager.black),
                     decoration: InputDecoration(
                         filled: true,

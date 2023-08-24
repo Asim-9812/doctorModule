@@ -115,7 +115,7 @@ class SnackbarUtil {
             ),
           )
       ),
-      backgroundColor: ColorManager.dotGrey.withOpacity(0.3),
+      backgroundColor: ColorManager.dotGrey.withOpacity(0.7),
       behavior: SnackBarBehavior.floating,
       elevation: 0,
       margin: const EdgeInsets.fromLTRB(40, 0, 40, 50),

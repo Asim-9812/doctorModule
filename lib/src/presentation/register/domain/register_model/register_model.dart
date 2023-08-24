@@ -9,6 +9,7 @@ class RegisterDoctorModel {
   final String licenseNo;
   final String password;
   final int genderId;
+  final String code;
 
   RegisterDoctorModel({
     required this.licenseNo,
@@ -17,7 +18,8 @@ class RegisterDoctorModel {
     required this.password,
     required this.email,
     required this.lastName,
-    required this.firstName
+    required this.firstName,
+    required this.code,
 });
 
 }

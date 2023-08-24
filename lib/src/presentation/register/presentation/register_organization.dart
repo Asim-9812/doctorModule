@@ -6,6 +6,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -15,6 +16,7 @@ import 'package:get/get.dart';
 import '../../../core/api.dart';
 import '../../../core/resources/color_manager.dart';
 import '../../../core/resources/style_manager.dart';
+import '../../../core/resources/value_manager.dart';
 import '../../common/snackbar.dart';
 import '../../subscription-plan/presentation/subscription_page_organization.dart';
 import '../data/register_provider.dart';
@@ -38,6 +40,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
   final TextEditingController _firstNameController = TextEditingController();
 
   final TextEditingController _mobileController = TextEditingController();
+  final TextEditingController _codeController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
 
@@ -45,6 +48,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
   int natureId = 0;
   String selectedNatureType = 'Select Nature Type';
   bool _obscureText = true ;
+  bool _obscureText2 = true ;
   bool _isChecked = false;
 
   bool isPostingData = false;
@@ -68,6 +72,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
   Future<Either<String, dynamic>> orgRegister({
 
     required String orgName,
+    required String code,
     required int pan,
     required String email,
     required String mobileNo,
@@ -83,7 +88,8 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
             "email": email,
             "contact": mobileNo,
             "natureId":natureId,
-            "password":password
+            "password":password,
+            "code":code
           }
       );
 
@@ -160,36 +166,80 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
           SizedBox(
             height: 18.h,
           ),
-          TextFormField(
-            controller: _panController,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            keyboardType: TextInputType.phone,
-            validator: (value){
-              if (value!.isEmpty) {
-                return 'PAN is required';
-              }
-              if (value.length !=9) {
-                return 'Enter a valid PAN number';
-              }
-              if (value.contains(' ')) {
-                return 'Do not enter spaces';
-              }
-              if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
-                return 'PAN can only be in digits';
-              }
-              return null;
-            },
-            decoration: InputDecoration(
-                floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
-                labelText: 'PAN',
-                labelStyle: getRegularStyle(color: ColorManager.black),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                        color: ColorManager.black
-                    )
-                )
-            ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: TextFormField(
+                  controller: _panController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  keyboardType: TextInputType.phone,
+                  validator: (value){
+                    if (value!.isEmpty) {
+                      return 'Required';
+                    }
+                    if (value.length !=9) {
+                      return 'Enter a valid PAN number';
+                    }
+                    if (value.contains(' ')) {
+                      return 'Do not enter spaces';
+                    }
+                    if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
+                      return 'PAN can only be in digits';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                      floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                      labelText: 'PAN',
+                      labelStyle: getRegularStyle(color: ColorManager.black),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                              color: ColorManager.black
+                          )
+                      )
+                  ),
+                ),
+              ),
+              w10,
+              Expanded(
+                child: TextFormField(
+                  controller: _codeController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value){
+                    if (value!.isEmpty) {
+                      return 'Required';
+                    }
+                    if (value.length !=3) {
+                      return 'Invalid Code';
+                    }
+                    if (value.contains(' ')) {
+                      return 'Do not enter spaces';
+                    }
+                    if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                      return 'Invalid';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                      floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
+                      labelText: 'Code',
+                      labelStyle: getRegularStyle(color: ColorManager.black),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                              color: ColorManager.black
+                          )
+                      )
+                  ),
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(3)
+                  ],
+                ),
+              ),
+            ],
           ),
           SizedBox(
             height: 18.h,
@@ -273,7 +323,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
               if (value!.isEmpty) {
                 return 'Contact number is required';
               }
-              if (value.length != 7 && value.length != 9 && value.length != 10) {
+              if (value.length != 10) {
                 return 'Enter a valid number';
               }
 
@@ -359,7 +409,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
               return null;
             },
             controller: _passConfirmController,
-            obscureText: _obscureText,
+            obscureText: _obscureText2,
             decoration: InputDecoration(
                 floatingLabelStyle: getRegularStyle(color: ColorManager.primary),
                 labelText: 'Confirm Password',
@@ -373,10 +423,10 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
                 suffixIcon: IconButton(
                   onPressed: (){
                     setState(() {
-                      _obscureText = !_obscureText;
+                      _obscureText2 = !_obscureText2;
                     });
                   },
-                  icon: _obscureText? FaIcon(CupertinoIcons.eye,color: ColorManager.black,):FaIcon(CupertinoIcons.eye_slash,color: ColorManager.black,),
+                  icon: _obscureText2? FaIcon(CupertinoIcons.eye,color: ColorManager.black,):FaIcon(CupertinoIcons.eye_slash,color: ColorManager.black,),
                 )
             ),
           ),
@@ -401,7 +451,8 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
                   email: _emailController.text.trim(),
                   mobileNo: _mobileController.text.trim(),
                   natureId: natureId,
-                  password: _passController.text.trim()
+                  password: _passController.text.trim(),
+                  code: _codeController.text.trim()
                   ).then((value) {
                     scaffoldMessage.showSnackBar(
                       SnackbarUtil.showProcessSnackbar(

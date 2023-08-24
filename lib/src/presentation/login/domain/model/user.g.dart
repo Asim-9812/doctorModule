@@ -48,13 +48,14 @@ class UserAdapter extends TypeAdapter<User> {
       natureID: fields[28] as int?,
       liscenceNo: fields[29] as int?,
       flag: fields[30] as String?,
+      code: fields[31] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, User obj) {
     writer
-      ..writeByte(31)
+      ..writeByte(32)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -116,7 +117,9 @@ class UserAdapter extends TypeAdapter<User> {
       ..writeByte(29)
       ..write(obj.liscenceNo)
       ..writeByte(30)
-      ..write(obj.flag);
+      ..write(obj.flag)
+      ..writeByte(31)
+      ..write(obj.code);
   }
 
   @override

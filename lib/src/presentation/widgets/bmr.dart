@@ -260,7 +260,7 @@ class BMRState extends State<BMR> {
                                         children: [
                                           Container(
                                             decoration: BoxDecoration(
-                                              border: Border.all(color: selectedOption == 2 ? ColorManager.primaryDark : ColorManager.dotGrey),
+                                              border: Border.all(color: selectedOption == 1 ? ColorManager.primaryDark : ColorManager.dotGrey),
                                               shape: BoxShape.circle,
                                               color: selectedOption == 1 ? ColorManager.primary : Colors.transparent,
                                             ),
@@ -312,7 +312,7 @@ class BMRState extends State<BMR> {
                                           h10,
                                           Text(
                                             'Female',
-                                            style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
+                                            style: getRegularStyle(color: selectedOption == 2 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
                                           )
                                         ],
                                       ),
@@ -351,10 +351,16 @@ class BMRState extends State<BMR> {
                                               ageValid = false;
                                             });
                                           }
+                                          else if (int.parse(value) <= 0){
+                                            return 'Must be greater than 0';
+                                          }
                                           else if(double.parse(value)<10 && double.parse(value)>100 ){
                                             setState(() {
                                               ageValid = false;
                                             });
+                                          }
+                                          else if (double.tryParse(value) == null) {
+                                            return 'Invalid';
                                           }
                                           else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
                                             setState(() {
@@ -369,7 +375,7 @@ class BMRState extends State<BMR> {
                                           }
                                         },
                                         style: getRegularStyle(color: ColorManager.black,fontSize: 18),
-                                        keyboardType: TextInputType.phone,
+                                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                                         decoration: InputDecoration(
                                             contentPadding: EdgeInsets.only(left: 8.w,top: 24.h),
                                             border: UnderlineInputBorder()
@@ -418,26 +424,25 @@ class BMRState extends State<BMR> {
                                       width: 50.w,
                                       child: TextFormField(
                                         controller: weightController,
-                                        validator: (value){
-                                          if(value!.isEmpty){
-                                            setState(() {
-                                              weightValid = false;
-                                            });
-                                          }
-                                          else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                                            setState(() {
-                                              weightValid = false;
-                                            });
-                                          }
-                                          else{
-                                            setState(() {
-                                              weightValid = true;
-                                            });
+                                        validator: (value) {
+                                          if (value!.isEmpty) {
+                                            return 'Required';
+                                          } else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value) || RegExp(r'^(?=.*?[a-z])').hasMatch(value) || RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
+                                            return 'Invalid';
+                                          } else {
+                                            try {
+                                              final numericValue = double.tryParse(value.replaceAll(',', '.').trim());
+                                              if (numericValue == null || numericValue <= 0) {
+                                                return 'Invalid';
+                                              }
+                                            } catch (e) {
+                                              return 'Invalid';
+                                            }
                                             return null;
                                           }
                                         },
                                         style: getRegularStyle(color: ColorManager.black, fontSize: 18),
-                                        keyboardType: TextInputType.phone,
+                                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                                         decoration: InputDecoration(
                                           contentPadding: EdgeInsets.only(left: 8.w, top: 24.h),
                                           border: UnderlineInputBorder(),

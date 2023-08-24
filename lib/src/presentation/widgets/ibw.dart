@@ -212,7 +212,7 @@ class IBWState extends State<IBW> {
                                         children: [
                                           Container(
                                             decoration: BoxDecoration(
-                                              border: Border.all(color: selectedOption == 2 ? ColorManager.primaryDark : ColorManager.dotGrey),
+                                              border: Border.all(color: selectedOption == 1 ? ColorManager.primaryDark : ColorManager.dotGrey),
                                               shape: BoxShape.circle,
                                               color: selectedOption == 1 ? ColorManager.primary : Colors.transparent,
                                             ),
@@ -264,7 +264,7 @@ class IBWState extends State<IBW> {
                                           h10,
                                           Text(
                                             'Female',
-                                            style: getRegularStyle(color: selectedOption == 3 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
+                                            style: getRegularStyle(color: selectedOption == 2 ? ColorManager.black : ColorManager.textGrey, fontSize: fontSize),
                                           )
                                         ],
                                       ),
@@ -287,6 +287,9 @@ class IBWState extends State<IBW> {
                                           if(value!.isEmpty){
                                             return 'Required';
                                           }
+                                          else if (int.parse(value) <= 0){
+                                            return 'Must be greater than 0';
+                                          }
                                           else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
                                             return 'Enter a valid number';
                                           }
@@ -296,7 +299,7 @@ class IBWState extends State<IBW> {
                                           }
                                         },
                                         controller: ageController,
-                                        keyboardType: TextInputType.phone,
+                                        keyboardType: TextInputType.numberWithOptions(decimal: true),
                                         style: getMediumStyle(color: ColorManager.black),
                                         decoration: InputDecoration(
                                             filled: true,
