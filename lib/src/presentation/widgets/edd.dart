@@ -124,7 +124,7 @@ class _EDDState extends State<EDD> {
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                        fixedSize: Size(50, 50),
+                        fixedSize: Size(60, 50),
                         side: BorderSide(
                             color: ColorManager.black
                         ),
@@ -147,7 +147,7 @@ class _EDDState extends State<EDD> {
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                        fixedSize: Size(50, 50),
+                        fixedSize: Size(60, 50),
                         side: BorderSide(
                             color: ColorManager.black
                         ),

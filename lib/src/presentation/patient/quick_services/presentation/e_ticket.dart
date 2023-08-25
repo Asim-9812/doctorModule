@@ -58,6 +58,7 @@ class _ETicketState extends ConsumerState<ETicket> {
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _policyController = TextEditingController();
   final TextEditingController _wardController = TextEditingController();
+  final TextEditingController _codeController = TextEditingController();
 
   List<Country> countries = [];
   int? countryId;
@@ -334,7 +335,8 @@ class _ETicketState extends ConsumerState<ETicket> {
                         email: _emailController.text.trim(),
                         contact: int.parse(_mobileController.text),
                         entrydate1: DateTime.now().toString(),
-                        doctorID: doctorId!
+                        doctorID: doctorId!,
+                        code: 'RPC'
                     );
 
 

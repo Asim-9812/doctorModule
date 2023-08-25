@@ -157,7 +157,8 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
             "genderID": 0,
             "entryDate": "${DateFormat('yyyy-MM-dd').format(DateTime.now()).toString()}",
             "key": "12",
-            "flag": "Register"
+            "flag": "Register",
+            "code":widget.registerDoctorModel.code
           }
       );
 
@@ -265,7 +266,8 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
                               duration: const Duration(seconds: 2)
                           ),
                         );
-                      }else if(schemePlanName.toLowerCase() =='trail 15 days'||schemePlanName.toLowerCase() =='trial 15 days' ){
+                      }
+                      else if(schemePlanName.toLowerCase() =='trail 15 days'||schemePlanName.toLowerCase() =='trial 15 days' ){
                         setState(() {
                           isPostingData = true; // Show loading spinner
                         });
@@ -291,7 +293,8 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
                           );
 
                         });
-                      } else{
+                      }
+                      else{
 
                         await docRegister().then((value) {
                           showModalBottomSheet(
@@ -372,7 +375,9 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
                                                 fixedSize: Size.fromWidth(300)
 
                                             ),
-                                            onPressed: () {
+                                            onPressed: isPostingData
+                                                ? null // Disable the button while posting data
+                                                : () {
                                               setState(() {
                                                 isPostingData = true; // Show loading spinner
                                               });
@@ -396,7 +401,9 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
                                               }
 
                                             },
-                                            child: Text('Select',style: getRegularStyle(color: ColorManager.white),),
+                                            child:isPostingData
+                                                ?SpinKitDualRing(color: ColorManager.white,size: 20,)
+                                                : Text('Select',style: getRegularStyle(color: ColorManager.white),),
                                           ),
                                         ],
                                       ),
@@ -493,6 +500,9 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
           duration: const Duration(seconds: 2)
       ),
     );
+    setState(() {
+      isPostingData = true;
+    });
     if(success.status.toLowerCase() == 'complete'){
       final paymentResponse = await ref.read(paymentSuccessProvider).InsertPaymentInfo(
           token: '',
@@ -586,6 +596,9 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPageDoctor> {
           duration: const Duration(seconds: 2)
       ),
     );
+    setState(() {
+      isPostingData = true;
+    });
     final response = await ref.read(verificationProvider).VerificationProcess(token: success.token, amount: success.amount);
     if(response.isLeft()){
       final leftValue= response.fold(

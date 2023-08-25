@@ -347,30 +347,20 @@ class BMRState extends State<BMR> {
                                         controller: ageController,
                                         validator: (value){
                                           if(value!.isEmpty){
-                                            setState(() {
-                                              ageValid = false;
-                                            });
+                                            return 'Required';
                                           }
-                                          else if (int.parse(value) <= 0){
-                                            return 'Must be greater than 0';
-                                          }
-                                          else if(double.parse(value)<10 && double.parse(value)>100 ){
-                                            setState(() {
-                                              ageValid = false;
-                                            });
-                                          }
-                                          else if (double.tryParse(value) == null) {
+                                          else if (int.tryParse(value) == null || int.parse(value) <= 0) {
                                             return 'Invalid';
                                           }
+
                                           else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                                            setState(() {
-                                              ageValid = false;
-                                            });
+                                            return 'Invalid';
+                                          }
+                                          else if (int.parse(value) <= 0){
+                                            return 'Invalid';
                                           }
                                           else{
-                                            setState(() {
-                                              ageValid= true;
-                                            });
+
                                             return null;
                                           }
                                         },
@@ -392,14 +382,6 @@ class BMRState extends State<BMR> {
                                   ],
                                 ),
                               ),
-                              if (!ageValid)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-                                  child: Text(
-                                    'Please enter a valid age',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                ),
                               h20,
                               Text('Weight',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
                               h10,
@@ -463,14 +445,6 @@ class BMRState extends State<BMR> {
                                   ],
                                 ),
                               ),
-                              if (!weightValid)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-                                  child: Text(
-                                    'Please enter a valid weight',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                ),
                               h20,
                               Text('Height',style: getMediumStyle(color: ColorManager.black,fontSize: 18),),
                               h10,

@@ -1,3 +1,4 @@
+import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,13 +9,14 @@ import 'package:medical_app/src/core/resources/color_manager.dart';
 import 'package:medical_app/src/presentation/doctor/doctor_dashboard/presentation/doctor_home_page.dart';
 import 'package:medical_app/src/presentation/doctor/doctor_utilities/presentation/doctor_utilities.dart';
 import 'package:medical_app/src/presentation/doctor/documents/presentation/document_page.dart';
+import 'package:medical_app/src/presentation/patient_registration/presentation/patient_registration.dart';
 import 'package:medical_app/src/test/test1.dart';
 import 'package:medical_app/src/test/testpage.dart';
 import 'package:stylish_bottom_bar/model/bar_items.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-
+import '../../../../test/test.dart';
 import '../../../patient/documents/presentation/document_page.dart';
 import '../../../patient/scan/presentation/qr_scan.dart';
 import '../../../patient/settings/presentation/settings_page.dart';
@@ -34,10 +36,30 @@ class DoctorMainPage extends StatefulWidget {
   State<DoctorMainPage> createState() => _AnimatedBarExampleState();
 }
 
-class _AnimatedBarExampleState extends State<DoctorMainPage> {
+class _AnimatedBarExampleState extends State<DoctorMainPage> with SingleTickerProviderStateMixin {
   dynamic selected;
   PageController controller = PageController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  late Animation<double> _animation;
+  late AnimationController _animationController;
+  bool set = false;
+
+  @override
+  void initState(){
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 260),
+    );
+
+    final curvedAnimation = CurvedAnimation(curve: Curves.easeInOut, parent: _animationController);
+    _animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
+
+
+    super.initState();
+
+
+  }
 
 
   @override
@@ -123,12 +145,66 @@ class _AnimatedBarExampleState extends State<DoctorMainPage> {
 
         },
       ),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          backgroundColor: ColorManager.primaryDark,
-          child: FaIcon(CupertinoIcons.chat_bubble_2_fill,size: isWideScreen?40:40.sp,)
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+
+        //Init Floating Action Bubble
+        floatingActionButton: FloatingActionBubble(
+          // Menu items
+          items: <Bubble>[
+
+
+            // Floating action menu item
+            Bubble(
+              title:'Add a patient',
+              iconColor :Colors.white,
+              bubbleColor : ColorManager.primary,
+              icon:Icons.person_add,
+              titleStyle:TextStyle(fontSize: 16 , color: Colors.white),
+              onPress: () {
+                Get.to(()=>PatientRegistrationForm(isWideScreen, isNarrowScreen));
+                _animationController.reverse();
+                setState(() {
+                  set = !set;
+                });
+              },
+            ),
+            //Floating action menu item
+            Bubble(
+              title:"Chat",
+              iconColor :Colors.white,
+              bubbleColor : ColorManager.primary,
+              icon:CupertinoIcons.bubble_left_bubble_right_fill,
+              titleStyle:TextStyle(fontSize: 16 , color: Colors.white),
+              onPress: () {
+                _animationController.reverse();
+                setState(() {
+                  set = !set;
+                });
+              },
+            ),
+          ],
+
+          // animation controller
+          animation: _animation,
+
+          // On pressed change animation state
+          onPress: ()
+          {
+            _animationController.isCompleted
+                ? _animationController.reverse()
+                : _animationController.forward();
+            setState(() {
+              set=!set;
+            });
+          },
+
+          // Floating Action button Icon color
+          iconColor: ColorManager.white,
+
+          // Flaoting Action button Icon
+          iconData: !set? Icons.menu : CupertinoIcons.xmark,
+          backGroundColor: ColorManager.primary,
+        ),
       body: PageView(
         physics: NeverScrollableScrollPhysics(),
         controller: controller,

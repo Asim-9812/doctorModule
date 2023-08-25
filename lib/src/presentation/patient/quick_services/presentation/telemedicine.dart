@@ -365,7 +365,8 @@ class _TeleMedicineState extends ConsumerState<TeleMedicine> {
                         email: _emailController.text.trim(),
                         contact: int.parse(_mobileController.text),
                         entrydate1: DateTime.now().toString(),
-                        doctorID: doctorId!
+                        doctorID: doctorId!,
+                      code: 'RPC'
                     );
 
 

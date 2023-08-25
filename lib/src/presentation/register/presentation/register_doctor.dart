@@ -175,7 +175,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
                       return 'Required';
                     }
                     if (value.length !=3) {
-                      return 'Invalid Code';
+                      return 'Invalid';
                     }
                     if (value.contains(' ')) {
                       return 'Do not enter spaces';
@@ -512,7 +512,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
                 }
                 else{
                   final codeResponse = await ref.read(checkProvider).checkCode(
-                      code: _codeController.text.trim().toUpperCase()
+                      code: _codeController.text.trim()
                   );
                   if (codeResponse.isLeft()) {
                     final leftValue = codeResponse.fold(
@@ -539,7 +539,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterDoctor> {
                         email: _emailController.text.trim(),
                         lastName: _lastNameController.text.trim(),
                         firstName: _firstNameController.text.trim(),
-                        code: _codeController.text.trim().toUpperCase()
+                        code: _codeController.text.trim()
                     );
                     scaffoldMessage.showSnackBar(
                       SnackbarUtil.showProcessSnackbar(

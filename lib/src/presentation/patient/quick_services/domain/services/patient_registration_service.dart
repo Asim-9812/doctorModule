@@ -48,7 +48,8 @@ class PatientRegistration{
     required String email,
     required int contact,
     required String entrydate1,
-    required int doctorID
+    required int doctorID,
+    required String code
 }) async {
     try{
       Map<String, dynamic> data = {
@@ -83,7 +84,8 @@ class PatientRegistration{
         'email': email,
         'contact': contact,
         'entrydate1': entrydate1,
-        'doctorID' : doctorID
+        'doctorID' : doctorID,
+        'code': code
       };
 
       FormData formData = FormData.fromMap(data);

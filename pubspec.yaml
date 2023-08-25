@@ -182,6 +182,9 @@ dependencies:
 
   nepali_date_picker: ^5.3.1
 
+#  pie_menu: ^2.0.2
+
+  floating_action_bubble: ^1.1.4
 
 
 

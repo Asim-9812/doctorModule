@@ -202,7 +202,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
       context: context,
       initialDate: selectedDOB ?? DateTime.now(),
       firstDate: DateTime(2020),
-      lastDate: DateTime(2025),
+      lastDate: DateTime.now(),
     );
 
     if (picked != null && picked != selectedDOB) {
@@ -217,7 +217,7 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate ?? DateTime.now(),
-      firstDate: DateTime(2020),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2025),
     );
 
@@ -337,7 +337,9 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                         email: _emailController.text.trim(),
                         contact: int.parse(_mobileController.text),
                         entrydate1: DateTime.now().toString(),
-                        doctorID: doctorId!
+                        doctorID: doctorId!,
+                        code : _codeController.text.trim()
+
                     );
 
 
@@ -703,9 +705,16 @@ class _ETicketState extends ConsumerState<PatientRegistrationForm> {
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value){
                   if (value!.isEmpty) {
-                    return 'Code is required';
-                  } else if(value.length >3){
-                    return 'Enter valid code';
+                    return 'Required';
+                  }
+                  if (value.length !=3) {
+                    return 'Invalid Code';
+                  }
+                  if (value.contains(' ')) {
+                    return 'Do not enter spaces';
+                  }
+                  if (RegExp(r'^(?=.*?[0-9])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
+                    return 'Invalid';
                   }
                   return null;
                 },

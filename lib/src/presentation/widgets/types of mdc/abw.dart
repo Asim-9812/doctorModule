@@ -303,22 +303,20 @@ class _BSAState extends State<ABW> {
                   h10,
                   TextFormField(
                     autovalidateMode: disableValidate? AutovalidateMode.onUserInteraction : AutovalidateMode.disabled,
-                    validator: (value){
-
-                      if(value!.isEmpty){
+                    validator: (value) {
+                      if (value!.isEmpty) {
                         return 'Required';
-                      }
-                      else if (int.parse(value) <= 0){
-                        return 'Must be greater than 0';
-                      }
-                      else if (int.parse(value) <= 0){
-                        return 'Must be greater than 0';
-                      }
-                      else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                        return 'Invalid value';
-                      }
-                      else{
-
+                      } else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value) || RegExp(r'^(?=.*?[a-z])').hasMatch(value) || RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value)) {
+                        return 'Invalid';
+                      } else {
+                        try {
+                          final numericValue = double.tryParse(value.replaceAll(',', '.').trim());
+                          if (numericValue == null || numericValue <= 0) {
+                            return 'Invalid';
+                          }
+                        } catch (e) {
+                          return 'Invalid';
+                        }
                         return null;
                       }
                     },

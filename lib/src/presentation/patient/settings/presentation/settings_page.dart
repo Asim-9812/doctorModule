@@ -15,7 +15,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_app/src/core/resources/style_manager.dart';
 import 'package:medical_app/src/presentation/login/domain/service/login_service.dart';
-import 'package:pie_chart/pie_chart.dart';
+
 import 'package:weather/weather.dart';
 import 'package:flutter/material.dart';
 import 'package:medical_app/src/core/resources/color_manager.dart';

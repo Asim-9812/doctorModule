@@ -213,7 +213,7 @@ class _RegisterOrganizationState extends ConsumerState<RegisterOrganization> {
                       return 'Required';
                     }
                     if (value.length !=3) {
-                      return 'Invalid Code';
+                      return 'Invalid';
                     }
                     if (value.contains(' ')) {
                       return 'Do not enter spaces';

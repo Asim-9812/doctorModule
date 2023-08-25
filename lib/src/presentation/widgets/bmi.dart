@@ -373,11 +373,15 @@ class BMIState extends State<BMI> {
                                           if(value!.isEmpty){
                                             return 'Required';
                                           }
+                                          else if (int.tryParse(value) == null || int.parse(value) <= 0) {
+                                            return 'Invalid';
+                                          }
+
                                           else if (RegExp(r'^(?=.*?[A-Z])').hasMatch(value)||RegExp(r'^(?=.*?[a-z])').hasMatch(value)||RegExp(r'^(?=.*?[!@#&*~])').hasMatch(value))  {
-                                            return 'Enter a valid number';
+                                            return 'Invalid';
                                           }
                                           else if (int.parse(value) <= 0){
-                                            return 'Must be greater than 0';
+                                            return 'Invalid';
                                           }
                                           else{
 
