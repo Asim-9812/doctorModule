@@ -6,9 +6,10 @@ class Api{
 
    static const bearerToken = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJiZjZhNTdmNC1iN2JmLTQzYmItODgzNy0yY2NiZDE4NDM5ODIiLCJ2YWxpZCI6IjEiLCJ1c2VyaWQiOiJET0MwMDAxIiwiZXhwIjoxNzIxMjc3NDc0LCJpc3MiOiJsb2NhbGhvc3QiLCJhdWQiOiJXZWxjb21lIn0.o7_teFlpwxmG7EOBO9eL46bfOwLySS6Qyc1Yj8ZgcyI';
 
-   static const baseUrl = 'http://192.168.101.110:404';
+   static const baseUrl = 'http://192.168.1.110:404';
 
    ///register type accounts ...
+   static const registerPatient = '$baseUrl/api/Member/Insert';
    static const registerOrganization = '$baseUrl/api/Organization/Register';
    static const registerDoctor = '$baseUrl/api/DoctorRegistration/DoctorRegister';
    static const checkEmailOrCode = '$baseUrl/api/DoctorRegistration/CheckCodeEmail';
@@ -28,6 +29,7 @@ class Api{
 
    ///user Login...
    static const userLogin = '$baseUrl/api/Users/UserLogin';
+   static const patientLogin = '$baseUrl/api/Member/MemberLogin';
 
 
    /// Patient registration...

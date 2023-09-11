@@ -22,33 +22,44 @@ class LoginProvider{
 
     if(connectivityResult == ConnectivityResult.mobile || connectivityResult == ConnectivityResult.wifi){
       try{
-        final response = await dio.post(Api.userLogin, data: {
-          "key":'12',
-          "email": email,
-          "password": password,
-          "flag":'Login'
-        });
+
         if(accountId ==0){
           return Left('Please select an account type');
         }
+        else{
+          if(accountId == 4){
+            return Left('Coming soon...');
+          }
+          else{
+            final response = await dio.post(Api.userLogin, data: {
+              "key":'12',
+              "email": email,
+              "password": password,
+              "flag":'Login'
+            });
 
 
-        if(response.statusCode == 200 && response.data["result"]["userID"] != null){
 
-          if(response.data["result"]["typeID"] == accountId){
-            final token = response.data["result"]["token"];
-            Box tokenBox = Hive.box<String>('tokenBox');
-            tokenBox.put('accessToken', token);
-            print(response.data);
-            return Right(response.data);
-          }else{
-            return Left('Account Type doesn\'t match');
+            if(response.statusCode == 200 && response.data["result"]["userID"] != null){
+
+              if(response.data["result"]["typeID"] == accountId){
+                final token = response.data["result"]["token"];
+                Box tokenBox = Hive.box<String>('tokenBox');
+                tokenBox.put('accessToken', token);
+                print(response.data);
+                return Right(response.data);
+              }else{
+                return Left('Account Type doesn\'t match');
+              }
+
+            }else{
+              print(response.data);
+              return Left('Invalid Credential');
+            }
+          }
           }
 
-        }else{
-          print(response.data);
-          return Left('Invalid Credential');
-        }
+
       } on DioException catch(err){
         print(err);
         return Left('Something went wrong');

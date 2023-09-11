@@ -51,7 +51,7 @@ void main() async {
   Hive.registerAdapter<User>(UserAdapter());
   final userBox = await Hive.openBox<String>('user1');
   await Hive.openBox<String>('tokenBox');
-  final userSession = await Hive.openBox<User>('session');
+  final userSession = await Hive.openBox< User>('session');
   userBox2 = await Hive.openBox('user');
   runApp(ProviderScope(
       overrides: [

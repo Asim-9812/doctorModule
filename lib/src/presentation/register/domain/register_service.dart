@@ -85,4 +85,48 @@ class RegisterService {
 
 
 
+  Future<Either<String, dynamic>> patientRegister({
+
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String password,
+    required String mobileNo,
+    required String userName,
+    required int genderId
+  }) async {
+    try {
+      final response = await dio.post(
+          Api.registerPatient,
+          data: {
+            "userName": userName,
+            "password": password,
+            "firstName": firstName,
+            "lastName": lastName,
+            "gender": genderId,
+            "email": email,
+            "contact": mobileNo
+          }
+      );
+
+      print(response.data['result']['id']);
+      
+      if(response.data['result']['id']==0){
+        return left('Username already exist');
+      }
+      else{
+        return Right(response.data);
+      }
+
+
+
+
+    } on DioException catch (err) {
+      print(err.response);
+      return Left('Something went wrong');
+    }}
+
+
+
+
 }
